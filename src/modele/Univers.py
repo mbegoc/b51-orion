@@ -1,10 +1,15 @@
 class Univers(Object):
     def __init__(self, x, y):
-        self.vaisseaux = []
+        self.joueurs = []
         self.systemes = []
         
-    def ajouterVaisseau(self, vaisseau):
-        self.vaisseaux.append(vaisseau)
+    def ajouterJoueur(self):
+        vaisseaux = []
+        self.joueurs.append(vaisseaux)
+        return len(self.joueurs)-1
+        
+    def ajouterVaisseau(self, joueur, vaisseau):
+        self.joueurs[joueur].append(vaisseau)
         
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)
