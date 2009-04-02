@@ -24,12 +24,14 @@ class Vue(object):
 class MenuBas(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
+        self.nom = Label(self, text="Menu du bas")
         self.bouton1 = Button(self, text="Bouton 1")
         self.bouton2 = Button(self, text="Bouton 2")
         self.bouton3 = Button(self, text="Bouton 3")
-        self.bouton1.pack()
-        self.bouton2.pack()
-        self.bouton3.pack()
+        self.nom.pack(side=LEFT)
+        self.bouton1.pack(side=LEFT)
+        self.bouton2.pack(side=LEFT)
+        self.bouton3.pack(side=LEFT)
     
 class MenuCote(Frame):
     def __init__(self, parent):
@@ -37,6 +39,8 @@ class MenuCote(Frame):
         self.bouton1 = Button(self, text="Bouton 1")
         self.bouton2 = Button(self, text="Bouton 2")
         self.bouton3 = Button(self, text="Bouton 3")
+        self.nom = Label(self, text="Menu de cote")
+        self.nom.pack()
         self.bouton1.pack()
         self.bouton2.pack()
         self.bouton3.pack()
