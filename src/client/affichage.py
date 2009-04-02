@@ -7,19 +7,33 @@ from Tkinter import *
 #server='http://chryana.bounceme.net:6900'
 #talkServer = xmlrpclib.ServerProxy(server) 
 
-class Affichage:
+
+
+#le canevas principal du jeu. variable globale pour l'instant en attendant que le jeu soit davantage developpe.
+
+class ecranGalaxie:
     def __init__(self):
-        #self.parent=parent
         self.root=Tk()
         self.root.title("Master of Orion")
+
         self.largeur=500
         self.hauteur=600
 
-        self.canevas=Canvas(self.root,width=self.largeur, height=self.hauteur, bg="black")
+        lecanevas=Canvas(self.root,width=self.largeur, height=self.hauteur, bg="black")#fix this
+        allo=Dessin(lecanevas)
+        self.root.mainloop()
 
-        self.canevas.bind("<Button-1>", self.sendPosition)
 
-        self.canevas.pack(side=TOP)
+class Dessin:
+    def __init__(self, canevas):
+        #self.parent=parent
+
+
+
+        canevas.bind("<Button-1>", self.sendPosition)
+
+
+        canevas.pack(side=TOP)
 
         ###code pour ajouter les menus
         #menu = Menu(self.root)
@@ -28,11 +42,10 @@ class Affichage:
         #menu.add_cascade(label="Menu", command=)
 
         ########to delete
-        planete=self.canevas.create_oval(100, 100, 105, 105, fill="white")
+        ##section affichage d'elements avec un element statique pour le moment. eventuellement, recevra une liste d'objets a afficher a l'ecran.
+        planete=canevas.create_oval(100, 100, 105, 105, fill="white")
 
-        self.root.mainloop()
-
-
+        
 
 
     def sendPosition(self,event): #envoie la coordonnee de la souris au controleur
@@ -40,13 +53,8 @@ class Affichage:
         print event.x
         print event.y
 
+x=ecranGalaxie()
 
-
-
-        
-
-
-allo=Affichage()
 
 
 
