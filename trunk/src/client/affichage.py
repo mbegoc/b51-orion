@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from Tkinter import *
 
 
@@ -7,9 +9,6 @@ from Tkinter import *
 #server='http://chryana.bounceme.net:6900'
 #talkServer = xmlrpclib.ServerProxy(server) 
 
-
-
-#le canevas principal du jeu. variable globale pour l'instant en attendant que le jeu soit davantage developpe.
 
 class ecranGalaxie:
     def __init__(self):

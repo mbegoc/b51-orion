@@ -1,6 +1,6 @@
 #l'univers
-class Univers(Object):
-    def __init__(self, x, y):
+class Univers(object):
+    def __init__(self):
         self.joueurs = []
         self.systemes = []
         
