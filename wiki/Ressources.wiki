@@ -7,3 +7,7 @@ La page sur les RTS de wikipedia. Je trouve qu'elle résume bien l'histoire de c
 [http://fr.wikipedia.org/wiki/Jeu_de_strat%C3%A9gie_en_temps_r%C3%A9el Page RTS en français]
 
 [http://es.wikipedia.org/wiki/Juego_de_estrategia_en_tiempo_real Page RTS en espagnol]
+
+La page de freeciv (libre) sur wikipedia, un clone de Civilisation. Il existe en espanol et peut permettre de se familiariser avec les concepts d'arbres technologiques, etc.  pour ceux qui ne connaissent pas.
+
+[http://fr.wikipedia.org/wiki/Freeciv Freeciv sur wikipedia]
