@@ -1,5 +1,5 @@
 class Joueur(object):
-    def __init__(self, parent, id, coleur, systInit):
+    def __init__(self, parent, id, couleur, systInit):
         self.parent=parent
         self.couleur = couleur
         self.id = id
