@@ -5,7 +5,6 @@ Created on 2009-04-02
 '''
 
 from Tkinter import *
-from PIL import Image, ImageTk
 import glob, os
 
 class Vue(object):
@@ -104,38 +103,37 @@ class SsCanvas(Canvas):
     sur la classe et passer en parametre l'instance d'un SsCanvas dans lequel la liste d'images sera cree'''
     #genere un dictionnaire des images contenues dans le repertoire images. La clef utilisee comme entree du dictionnaire est le nom de base du fichier (sans extension)
     def __genererImages__(instance):
-        for file in glob.glob("images/*"):
-            image = Image.open(file)
-            photo = ImageTk.PhotoImage(image)
-            key = os.path.splitext(os.path.split(file)[1])[0]
+        for image in glob.glob("images/*"):
+            photo = PhotoImage(file=image)
+            key = os.path.splitext(os.path.split(image)[1])[0]
             instance.images[key] = photo
 
     def representerJeu(self):
         self.dessinerImage("abasourdi", 115, 100)
-        self.dessinerImage("bise", 65, 100)
-        self.dessinerImage("cligne", 50, 170)
+        self.dessinerImage("clindoeil", 65, 100)
+        self.dessinerImage("confus", 50, 170)
         self.dessinerImage("etonne", 70, 190)
-        self.dessinerImage("prof", 90, 190)
+        self.dessinerImage("larme", 90, 190)
         self.dessinerImage("ricane", 110, 190)
-        self.dessinerImage("yeuxLeves", 130, 170)
+        self.dessinerImage("yeux-barres", 130, 170)
         
     def deleteJeu(self):
         self.delete("abasourdi")
-        self.delete("bise")
-        self.delete("cligne")
+        self.delete("clindoeil")
+        self.delete("confus")
         self.delete("etonne")
-        self.delete("prof")
+        self.delete("larme")
         self.delete("ricane")
-        self.delete("yeuxLeves")
+        self.delete("yeux-barres")
         
     def moveJeu(self):
         self.move("abasourdi", 5, 5)
-        self.move("bise", 5, 5)
-        self.move("cligne", 5, 5)
+        self.move("clindoeil", 5, 5)
+        self.move("confus", 5, 5)
         self.move("etonne", 5, 5)
-        self.move("prof", 5, 5)
+        self.move("larme", 5, 5)
         self.move("ricane", 5, 5)
-        self.move("yeuxLeves", 5, 5)
+        self.move("yeux-barres", 5, 5)
         
 if __name__ == "__main__":
     vue = Vue()
