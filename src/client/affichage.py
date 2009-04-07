@@ -11,7 +11,7 @@ from Tkinter import *
 
 class ecranGalaxie:
     def __init__(self,parent):
-        self.parent = parent #parent étant le controlleur
+        self.parent = parent #parent etant le controlleur
         self.root=Tk()
         self.root.title("Master of Orion")
 
@@ -24,7 +24,7 @@ class ecranGalaxie:
 
 class Dessin:
     def __init__(self, canevas,parent):
-        self.parent=parent #parent étant ecranGalaxie
+        self.parent=parent #parent etant ecranGalaxie
 
         canevas.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
 
