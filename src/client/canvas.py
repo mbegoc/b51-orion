@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from Tkinter import *
+import glob, os
 
 class ZoneDeJeu(Canvas):
     def __init__(self, mere):
