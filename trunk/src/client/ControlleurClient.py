@@ -6,7 +6,7 @@ from Vue import Vue
                 
 class Controlleur(object):
     def __init__(self):
-        self.vue=Vue()
+        self.vue=Vue(self)
         self.systeme = Systeme(50,100)
         self.player = Joueur(self, "01", "yellow", self.systeme)
         self.player.ajouterVaisseau(50, 50)
@@ -14,6 +14,7 @@ class Controlleur(object):
         self.t.start()
         self.serveur = xmlrpclib.ServerProxy('http://localhost:8000')
         self.vue.root.mainloop()
+        self.t.cancel()
 
     
     def clickEvent(self,event):
@@ -25,11 +26,12 @@ class Controlleur(object):
 
     def sendNewDeplacement(self):
         print "sync deplacement"
-        self.t = Timer(0.5, self.sendNewDeplacement)
+        self.t = Timer(0.5, self.sendNewDeplacement) # pour entrer danss cette fonction continuellement
         self.t.start()
         #self.serveur.player.vaisseaux= self.joueur.vaisseaux
         
     def EtatAttaque(self):
+        
         print "sync etat attaque"
         
         
