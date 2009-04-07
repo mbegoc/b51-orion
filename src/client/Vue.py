@@ -11,7 +11,7 @@ class Vue(object):
     def __init__(self, parent):
         self.root = Tk()
         self.root.title = "Galax"
-        self.root.parent = parent
+        self.parent = parent
         
         self.menuBas = MenuBas(self)
         self.menuBas.grid(column=0, row=2)
