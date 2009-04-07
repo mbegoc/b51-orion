@@ -10,29 +10,45 @@ class Controlleur(object):
         self.systeme = Systeme(50,100)
         self.player = Joueur(self, "01", "yellow", self.systeme)
         self.player.ajouterVaisseau(50, 50)
-        self.t = Timer(0.5, self.sendNewDeplacement)
-        self.t.start()
+        self.tDeplacement = Timer(0.5, self.sendNewDeplacement)
+        self.tDeplacement.start()
+        self.nbClick = 0
         self.serveur = xmlrpclib.ServerProxy('http://localhost:8000')
         self.vue.root.mainloop()
-        self.t.cancel()
+        self.tDeplacement.cancel()
 
-    
     def clickEvent(self,event):
+        self.nbClick = self.nbClick+1
+        if self.nbClick == 1:
+            self.selectionneEntite(event)
+        elif self.nbClick == 2:
+            self.action(event)
+            self.nbClick = 0
+        print event.type
+            
+    def selectionneEntite(self,event):
+        print "entite selectione"
+    
+    def action(self,event):
         print self.player.vaisseaux[0].xArrivee
         self.player.vaisseaux[0].xArrivee = event.x
         self.player.vaisseaux[0].yArrivee = event.y
         self.player.vaisseaux[0].deplacer
         print self.player.vaisseaux[0].xArrivee
-
-    def sendNewDeplacement(self):
-        print "sync deplacement"
-        self.t = Timer(0.5, self.sendNewDeplacement) # pour entrer danss cette fonction continuellement
-        self.t.start()
-        #self.serveur.player.vaisseaux= self.joueur.vaisseaux
+        
+        
         
     def EtatAttaque(self):
         print "sync etat attaque"
         
+    def sendNewDeplacement(self):
+        print "sync deplacement"
+        self.tDeplacement = Timer(0.5, self.sendNewDeplacement) # pour entrer danss cette fonction continuellement
+        self.tDeplacement.start()
+        #self.serveur.player.vaisseaux= self.joueur.vaisseaux
+        
+    def refresh(self):
+        print "sync serveur"
         
 
 
