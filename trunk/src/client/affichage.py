@@ -26,16 +26,10 @@ class Dessin:
     def __init__(self, canevas,parent):
         self.parent=parent #parent étant ecranGalaxie
 
-        canevas.bind("<Button-1>", self.parent.parent.clickEvent) #envoit l'objet event au controlleur
+        canevas.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
 
 
         canevas.pack(side=TOP)
-
-        ###code pour ajouter les menus
-        #menu = Menu(self.root)
-        #self.root.config(menu = menu)
-        #PrincipalMenu = Menu(menu)
-        #menu.add_cascade(label="Menu", command=)
 
         ########to delete
         ##section affichage d'elements avec un element statique pour le moment. eventuellement, recevra une liste d'objets a afficher a l'ecran.
