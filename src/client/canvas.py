@@ -19,6 +19,7 @@ class ZoneDeJeu(Canvas):
 
 
         self.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
+        self.bind("<Button-3>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
 
     #cette fonction ne sert qu'a 
     def dessinerImage(self, nom, x, y):
