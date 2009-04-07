@@ -4,11 +4,11 @@ from Tkinter import *
 import glob, os
 
 class ZoneDeJeu(Canvas):
-    def __init__(self, mere):
+    def __init__(self, parent):
         #appel au constructeur de la super classe
-        Canvas.__init__(self, mere.root, width=1000, height=600, background="#000000", scrollregion=(0, 0, 2000, 2000))
-        #on garde une reference vers la classe mere
-        self.mere = mere
+        Canvas.__init__(self, parent.root, width=1000, height=600, background="#000000", scrollregion=(0, 0, 2000, 2000))
+        #on garde une reference vers la classe parent
+        self.parent = parent
         
         #initialisation des images disponibles
         self.images = {}
@@ -18,7 +18,7 @@ class ZoneDeJeu(Canvas):
         self.create_line(2000, 0, 0, 2000, fill="#ffffff")
 
 
-        canevas.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
+        self.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
 
     #cette fonction ne sert qu'a 
     def dessinerImage(self, nom, x, y):
