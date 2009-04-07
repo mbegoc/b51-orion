@@ -7,6 +7,5 @@ class Vaisseau(object):
         
     def deplacer(self, x, y):
         pass
-	#suggestion de code temporaire
-	#self.xArrivee = x
-	#self.yArrivee = y
+	#rajouter un self.etat qui est initialise a une string "rien"
+    
