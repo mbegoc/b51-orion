@@ -2,7 +2,6 @@
 
 from Tkinter import *
 
-
 ###this should be part of Controler
 #import xmlrpclib
 #
@@ -11,7 +10,8 @@ from Tkinter import *
 
 
 class ecranGalaxie:
-    def __init__(self):
+    def __init__(self,parent):
+        self.parent = parent #parent étant le controlleur
         self.root=Tk()
         self.root.title("Master of Orion")
 
@@ -19,17 +19,14 @@ class ecranGalaxie:
         self.hauteur=600
 
         lecanevas=Canvas(self.root,width=self.largeur, height=self.hauteur, bg="black")#fix this
-        allo=Dessin(lecanevas)
-        self.root.mainloop()
+        allo=Dessin(lecanevas,self)
 
 
 class Dessin:
-    def __init__(self, canevas):
-        #self.parent=parent
+    def __init__(self, canevas,parent):
+        self.parent=parent #parent étant ecranGalaxie
 
-
-
-        canevas.bind("<Button-1>", self.sendPosition)
+        canevas.bind("<Button-1>", self.parent.parent.clickEvent) #envoit l'objet event au controlleur
 
 
         canevas.pack(side=TOP)
@@ -47,12 +44,12 @@ class Dessin:
         
 
 
-    def sendPosition(self,event): #envoie la coordonnee de la souris au controleur
+    #def sendPosition(self,event): #envoie la coordonnee de la souris au controleur
         #parent.sPosition(event.x,event.y)
-        print event.x
-        print event.y
+        #print event.x
+        #print event.y
 
-x=ecranGalaxie()
+#x=ecranGalaxie()
 
 
 
