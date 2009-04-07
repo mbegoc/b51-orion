@@ -2,9 +2,17 @@
 
 #ce fichier test initialise un univers tres simple afin de tester le fonctonnement de la vue.
 
-from modele.Univers import Univers
-from modele.Systeme import Systeme
-from modele.Vaisseau import Vaisseau
+import sys
+
+sys.path.append('../client:../modele')
+
+
+from Univers import Univers
+from Systeme import Systeme
+from Vaisseau import Vaisseau
+
+from affichage import *
+
 
 class UniversTest:
     def __init__(self):
@@ -17,6 +25,9 @@ class UniversTest:
         lUnivers.ajouterSysteme(planeteY)
 
         #j'interagit entre le modele et la vue pour des raisons de test
+        x=Dessin()
+        x.refreshSystemes(lUnivers.systemes)
 
 
+unUnivers=UniversTest()
 
