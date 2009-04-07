@@ -16,3 +16,9 @@ class Joueur(object):
         self.vaisseaux.append(Vaisseau(posX,posY))
         
   
+  
+  
+  
+  
+  
+  
