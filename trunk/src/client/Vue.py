@@ -34,11 +34,11 @@ class Vue(object):
             self.root.mainloop()
     
 class MenuBas(Frame):
-    def __init__(self, mere):
+    def __init__(self, parent):
         #appel au constructeur de la super classe
-        Frame.__init__(self, mere.root)
-        #on garde une reference vers la classe mere
-        self.mere = mere
+        Frame.__init__(self, parent.root)
+        #on garde une reference vers la classe parent
+        self.parent = parent
 
         self.nom = Label(self, text="Menu du bas")
         self.bouton1 = Button(self, text="Bouton 1")
@@ -50,11 +50,11 @@ class MenuBas(Frame):
         self.bouton3.pack(side=LEFT)
 
 class MenuCote(Frame):
-    def __init__(self, mere):
+    def __init__(self, parent):
         #appel au constructeur de la super classe
-        Frame.__init__(self, mere.root)
-        #on garde une reference vers la classe mere
-        self.mere = mere
+        Frame.__init__(self, parent.root)
+        #on garde une reference vers la classe parent
+        self.parent = parent
 
         self.bouton1 = Button(self, text="Dessiner jeu")
         self.bouton1.bind("<Button-1>", self.representerJeu)
@@ -69,13 +69,13 @@ class MenuCote(Frame):
         self.bouton3.pack()
 
     def representerJeu(self, evt):
-        self.mere.ssCanvas.representerJeu()
+        self.parent.zoneJeu.representerJeu()
         
     def deleteJeu(self, evt):
-        self.mere.ssCanvas.deleteJeu()
+        self.parent.zoneJeu.deleteJeu()
     
     def moveJeu(self, evt):
-        self.mere.ssCanvas.moveJeu()
+        self.parent.zoneJeu.moveJeu()
 
 if __name__ == "__main__":
     vue = Vue()
