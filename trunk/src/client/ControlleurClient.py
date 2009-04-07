@@ -10,8 +10,8 @@ class Controlleur(object):
         self.systeme = Systeme(50,100)
         self.player = Joueur(self, "01", "yellow", self.systeme)
         self.player.ajouterVaisseau(50, 50)
-        #self.t = Timer(0.5, self.sendNewDeplacement)
-        #self.sendNewDeplacement()
+        self.t = Timer(0.5, self.sendNewDeplacement)
+        self.t.start()
         self.serveur = xmlrpclib.ServerProxy('http://localhost:8000')
         self.vue.root.mainloop()
 
@@ -25,6 +25,9 @@ class Controlleur(object):
 
     def sendNewDeplacement(self):
         print "entre"
+        self.t = Timer(0.5, self.sendNewDeplacement)
+        self.t.start()
+        #self.serveur.player.vaisseaux= self.joueur.vaisseaux
         
 
 
