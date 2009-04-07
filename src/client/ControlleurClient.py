@@ -31,7 +31,6 @@ class Controlleur(object):
         #self.serveur.player.vaisseaux= self.joueur.vaisseaux
         
     def EtatAttaque(self):
-        
         print "sync etat attaque"
         
         
