@@ -2,50 +2,65 @@
 
 from Tkinter import *
 
-###this should be part of Controler
-#import xmlrpclib
-#
-#server='http://chryana.bounceme.net:6900'
-#talkServer = xmlrpclib.ServerProxy(server) 
+class ZoneDeJeu(Canvas):
+    def __init__(self, mere):
+        #appel au constructeur de la super classe
+        Canvas.__init__(self, mere.root, width=1000, height=600, background="#000000", scrollregion=(0, 0, 2000, 2000))
+        #on garde une reference vers la classe mere
+        self.mere = mere
+        
+        #initialisation des images disponibles
+        self.images = {}
+        ZoneDeJeu.__genererImages__(self)
 
+        self.create_line(0, 0, 2000, 2000, fill="#ffffff")
+        self.create_line(2000, 0, 0, 2000, fill="#ffffff")
 
-class ecranGalaxie:
-    def __init__(self,parent):
-        self.parent = parent #parent etant le controlleur
-        self.root=Tk()
-        self.root.title("Master of Orion")
-
-        self.largeur=500
-        self.hauteur=600
-
-        lecanevas=Canvas(self.root,width=self.largeur, height=self.hauteur, bg="black")#fix this
-        allo=Dessin(lecanevas,self)
-
-
-class Dessin:
-    def __init__(self, canevas,parent):
-        self.parent=parent #parent etant ecranGalaxie
 
         canevas.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
 
+    #cette fonction ne sert qu'a 
+    def dessinerImage(self, nom, x, y):
+        if nom in self.images:
+            self.create_image(x, y, image=self.images[nom], tags=nom)
+            return 1
+        else:
+            return 0
 
-        canevas.pack(side=TOP)
+    '''ATTENTION: cette fonction doit imperativement etre appelee a travers la classe de l'objet, par par l'objet lui meme (ZoneDeJeu.__genererImages__(objet) )
+    Je ne sais pas pourquoi, mais si l'image est generee dans l'objet sur lequel elle va etre affichee, ca ne marche pas. Il faut donc appeler cette methode
+    sur la classe et passer en parametre l'instance d'un ZoneDeJeu dans lequel la liste d'images sera cree'''
+    #genere un dictionnaire des images contenues dans le repertoire images. La clef utilisee comme entree du dictionnaire est le nom de base du fichier (sans extension)
+    def __genererImages__(instance):
+        for image in glob.glob("images/*"):
+            photo = PhotoImage(file=image)
+            key = os.path.splitext(os.path.split(image)[1])[0]
+            instance.images[key] = photo
 
-        ########to delete
-        ##section affichage d'elements avec un element statique pour le moment. eventuellement, recevra une liste d'objets a afficher a l'ecran.
-        planete=canevas.create_oval(100, 100, 105, 105, fill="white")
-
+    def representerJeu(self):
+        self.dessinerImage("abasourdi", 115, 100)
+        self.dessinerImage("clindoeil", 65, 100)
+        self.dessinerImage("confus", 50, 170)
+        self.dessinerImage("etonne", 70, 190)
+        self.dessinerImage("larme", 90, 190)
+        self.dessinerImage("ricane", 110, 190)
+        self.dessinerImage("yeux-barres", 130, 170)
         
-
-
-    #def sendPosition(self,event): #envoie la coordonnee de la souris au controleur
-        #parent.sPosition(event.x,event.y)
-        #print event.x
-        #print event.y
-
-#x=ecranGalaxie()
-
-
-
-
+    def deleteJeu(self):
+        self.delete("abasourdi")
+        self.delete("clindoeil")
+        self.delete("confus")
+        self.delete("etonne")
+        self.delete("larme")
+        self.delete("ricane")
+        self.delete("yeux-barres")
+        
+    def moveJeu(self):
+        self.move("abasourdi", 5, 5)
+        self.move("clindoeil", 5, 5)
+        self.move("confus", 5, 5)
+        self.move("etonne", 5, 5)
+        self.move("larme", 5, 5)
+        self.move("ricane", 5, 5)
+        self.move("yeux-barres", 5, 5)
 
