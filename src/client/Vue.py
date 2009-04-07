@@ -8,9 +8,10 @@ from client.canvas import ZoneDeJeu
 from Tkinter import *
 
 class Vue(object):
-    def __init__(self):
+    def __init__(self, parent):
         self.root = Tk()
         self.root.title = "Galax"
+        self.root.parent = parent
         
         self.menuBas = MenuBas(self)
         self.menuBas.grid(column=0, row=2)
