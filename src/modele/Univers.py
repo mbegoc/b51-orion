@@ -1,5 +1,7 @@
 #l'univers
-class Univers(Object):
+from modele.Joueur import Joueur
+
+class Univers(object):
     def __init__(self):
         self.tailleX=500
         self.tailleY=600
