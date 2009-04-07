@@ -5,16 +5,12 @@ class Univers(Object):
         self.tailleY=600
         self.joueurs = []
         self.systemes = []
-        self.couleurscivs=["blue","green","purple","orange","yellow", "red"]    # Une couleur pour chaque joueur
-        ## creer 10 systemes
+        self.couleursJoueurs=["blue","green","purple","orange","yellow","red"]    # Une couleur pour chaque joueur
         
-    def ajouterJoueur(self):
-        vaisseaux = []
-        self.joueurs.append(vaisseaux)
-        return len(self.joueurs)-1
-        
-#    def ajouterVaisseau(self, joueur, vaisseau): ## Les vaisseaux appartienent aux joueurs
-#        self.joueurs[joueur].append(vaisseau)
+    def ajouterJoueur(self,id):
+        couleur=self.couleursJoueurs.pop()
+        system=self.systemes.pop()
+        self.joueurs[id]=Joueur(self,id,couleur,system)
         
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)
