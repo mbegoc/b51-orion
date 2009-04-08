@@ -9,7 +9,9 @@ class ZoneDeJeu(Canvas):
         Canvas.__init__(self, parent.root, width=1000, height=600, background="#000000", scrollregion=(0, 0, 2000, 2000))
         #on garde une reference vers la classe parent
         self.parent = parent
-        
+        self.rondSelection = None # rond autour de l'entite selectionne
+        self.croix1 = None # x qui represente le cible de deplacement ou d'attaque besoin de 2 lignes
+        self.croix2 = None
         #initialisation des images disponibles
         self.images = {}
         ZoneDeJeu.__genererImages__(self)
@@ -65,4 +67,14 @@ class ZoneDeJeu(Canvas):
         self.move("larme", 5, 5)
         self.move("ricane", 5, 5)
         self.move("yeux-barres", 5, 5)
+        
+    def drawCroix(self,event):
+        self.croix1 = self.create_line(event.x-10, event.y, event.x+10, event.y, fill="green",width=3)
+        self.croix2 = self.create_line(event.x, event.y-10, event.x, event.y+10, fill="green",width=3)
+        
+    def deleteCroix(self):
+        self.delete(self.croix1)
+        self.delete(self.croix2)
+        
+        
 

@@ -14,6 +14,8 @@ class Vue(object):
         self.root.title = "Galax"
         self.parent = parent
         
+        
+        
         self.menuBas = MenuBas(self)
         self.menuBas.grid(column=0, row=2)
         
@@ -43,10 +45,16 @@ class MenuBas(Frame):
         self.parent = parent
 
         self.nom = Label(self, text="Menu du bas")
+        self.cadreEnvoie=Frame(self) # test du chat
+        self.lignemsg=Entry(self.cadreEnvoie) # test du chat
+        self.bouton4=Button(self.cadreEnvoie,text="Envoie",command=self.parent.parent.chat.sendMessage)# test du chat
         self.bouton1 = Button(self, text="Bouton 1")
         self.bouton2 = Button(self, text="Bouton 2")
         self.bouton3 = Button(self, text="Bouton 3")
-        self.nom.pack(side=LEFT)
+        self.cadreEnvoie.pack(side=LEFT)# test du chat
+        self.lignemsg.pack(side=LEFT)# test du chat
+        self.nom.pack(side=LEFT)# test du chat
+        self.bouton4.pack(side=LEFT)# test du chat
         self.bouton1.pack(side=LEFT)
         self.bouton2.pack(side=LEFT)
         self.bouton3.pack(side=LEFT)
