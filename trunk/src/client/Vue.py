@@ -6,6 +6,7 @@ Created on 2009-04-02
 
 from client.canvas import ZoneDeJeu
 from Tkinter import *
+import random
 
 class Vue(object):
     def __init__(self, parent):
@@ -63,11 +64,14 @@ class MenuCote(Frame):
         self.bouton2.bind("<Button-1>", self.deleteJeu)
         self.bouton3 = Button(self, text="Move")
         self.bouton3.bind("<Button-1>", self.moveJeu)
+        self.bouton4 = Button(self, text="Systeme ;)")
+        self.bouton4.bind("<Button-1>", self.systeme)
         self.nom = Label(self, text="Menu de cote")
         self.nom.pack()
         self.bouton1.pack()
         self.bouton2.pack()
         self.bouton3.pack()
+        self.bouton4.pack()
 
     def representerJeu(self, evt):
         self.parent.zoneJeu.representerJeu()
@@ -77,6 +81,10 @@ class MenuCote(Frame):
     
     def moveJeu(self, evt):
         self.parent.zoneJeu.moveJeu()
+        
+    def systeme(self, evt):
+        r = random.Random()
+        self.parent.zoneJeu.dessinerImage("systeme", r.randint(0, 2000), r.randint(0, 2000))
 
 if __name__ == "__main__":
     vue = Vue()
