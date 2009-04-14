@@ -1,1 +1,1 @@
-__all__ = ["canvas", "ControlleurClient", "Vue"]
+__all__ = ["Canvas", "ControlleurClient", "Vue"]
