@@ -71,7 +71,7 @@ class Messageur(object):
         
     def sendMessage(self):
         self.nom = "Joueur" + str(self.parent.player.id)
-        laLigne = self.nom +": " + self.parent.vue.menuBas.lignemsg.get()
+        laLigne = self.nom +": " + self.parent.vue.menuBas.message.get()
         print laLigne
         
         
