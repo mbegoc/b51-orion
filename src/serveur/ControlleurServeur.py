@@ -14,10 +14,10 @@ server = SimpleXMLRPCServer(("localhost", 8000),
 
 # Enregistrer l'instance d'une classe
 #Toutes ses fonctions vont etre publiees
-class ControlleurServeur(object):
+class ControleurServeur(object):
     def __init__(self):
         self.idJoueur=0
-    def ConecterJoueur(self):
+    def ConnecterJoueur(self):
         if(len(Univers.joueurs)==0):
            for s in range(1,10):             
               Systeme.x=random.randint(0,50)*10 
@@ -34,9 +34,9 @@ class ControlleurServeur(object):
 
 
 
-server.register_instance(ControlleurServeur())
+server.register_instance(ControleurServeur())
 
 # Demarrer la boucle du serveur
-print "OK, serveur demarrer"
+print "OK, serveur demarre"
 server.serve_forever()
-print "OK, serveur arreter"
+print "OK, serveur arrete"
