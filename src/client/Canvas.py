@@ -69,8 +69,10 @@ class ZoneDeJeu(Canvas):
         self.move("yeux-barres", 5, 5)
         
     def drawCroix(self,event):
-        self.croix1 = self.create_line(event.x-10, event.y, event.x+10, event.y, fill="green",width=3)
-        self.croix2 = self.create_line(event.x, event.y-10, event.x, event.y+10, fill="green",width=3)
+        x = self.xview()[0]*self.largeurMonde+event.x
+        y = self.yview()[0]*self.hauteurMonde+event.y
+        self.croix1 = self.create_line(x-10, y, x+10, y, fill="green",width=3)
+        self.croix2 = self.create_line(x, y-10, x, y+10, fill="green",width=3)
         
     def deleteCroix(self):
         self.delete(self.croix1)
