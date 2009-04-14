@@ -4,7 +4,7 @@ Created on 2009-04-02
 @author: Michel
 '''
 
-from client.canvas import ZoneDeJeu
+from client.Canvas import ZoneDeJeu
 from Tkinter import *
 import random
 
@@ -43,18 +43,22 @@ class MenuBas(Frame):
         Frame.__init__(self, parent.root)
         #on garde une reference vers la classe parent
         self.parent = parent
+        
+        #preparation du chat
+        self.chat=Frame(self)
+        self.message=Entry(self.chat)
+        self.affichage=Text(self.chat)
+        self.envoi=Button(self.chat,text="Envoi",command=self.parent.parent.chat.sendMessage)# test du chat
+        self.message.grid(side=LEFT)# test du chat
+        self.envoi.pack(side=LEFT)# test du chat
+        self.affichage.pack(side=LEFT)
 
         self.nom = Label(self, text="Menu du bas")
-        self.cadreEnvoie=Frame(self) # test du chat
-        self.lignemsg=Entry(self.cadreEnvoie) # test du chat
-        self.bouton4=Button(self.cadreEnvoie,text="Envoie",command=self.parent.parent.chat.sendMessage)# test du chat
         self.bouton1 = Button(self, text="Bouton 1")
         self.bouton2 = Button(self, text="Bouton 2")
         self.bouton3 = Button(self, text="Bouton 3")
-        self.cadreEnvoie.pack(side=LEFT)# test du chat
-        self.lignemsg.pack(side=LEFT)# test du chat
+        self.chat.pack(side=LEFT)# test du chat
         self.nom.pack(side=LEFT)# test du chat
-        self.bouton4.pack(side=LEFT)# test du chat
         self.bouton1.pack(side=LEFT)
         self.bouton2.pack(side=LEFT)
         self.bouton3.pack(side=LEFT)
