@@ -49,7 +49,7 @@ class MenuBas(Frame):
         self.message=Entry(self.chat)
         self.affichage=Text(self.chat)
         self.envoi=Button(self.chat,text="Envoi",command=self.parent.parent.chat.sendMessage)# test du chat
-        self.message.grid(side=LEFT)# test du chat
+        self.message.pack(side=LEFT)# test du chat
         self.envoi.pack(side=LEFT)# test du chat
         self.affichage.pack(side=LEFT)
 

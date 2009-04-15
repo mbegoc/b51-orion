@@ -5,20 +5,16 @@ from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 #import datetime
 
 import random
-from modele.Systeme import Systeme
-from modele.Univers import Univers
-from modele.Joueur import Joueur
+from modele import *
 
-# Creer un serveur
-server = SimpleXMLRPCServer(("localhost", 8000),
-                            requestHandler=SimpleXMLRPCRequestHandler)
+
 
 
 # Enregistrer l'instance d'une classe
 #Toutes ses fonctions vont etre publiees
 class ControleurServeur(object):
     def __init__(self):
-        self.orion=Univers()
+        self.orion=Univers.Univers()
         
         #ce code affiche les coordonnees des systemes crees
         print "debug"
@@ -29,7 +25,7 @@ class ControleurServeur(object):
             print self.orion.systemes[x].x ,
             print "y:",
             print self.orion.systemes[x].y
-        
+
     '''
     def ConnecterJoueur(self):
         if(len(Univers.joueurs)==0):
@@ -47,10 +43,14 @@ class ControleurServeur(object):
         pass
     '''
 
+class Serveur(object):
+    def __init__(self):
+        self.server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=SimpleXMLRPCRequestHandler)
+        self.controleur=ControleurServeur()
+        self.server.register_instance(self.controleur)
 
-server.register_instance(ControleurServeur())
+        # Demarrer la boucle du serveur
+        print "OK, serveur demarre"
+        self.server.serve_forever()
+        print "OK, serveur arrete"
 
-# Demarrer la boucle du serveur
-print "OK, serveur demarre"
-server.serve_forever()
-print "OK, serveur arrete"

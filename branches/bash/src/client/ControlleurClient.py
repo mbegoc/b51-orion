@@ -77,4 +77,4 @@ class Messageur(object):
         
 
 
-controlleur = Controlleur()
+#controlleur = Controlleur()
