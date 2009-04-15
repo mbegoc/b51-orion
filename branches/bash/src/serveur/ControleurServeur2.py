@@ -26,27 +26,17 @@ class ControleurServeur(object):
             print "y:",
             print self.orion.systemes[x].y
 
-    '''
-    def ConnecterJoueur(self):
-        if(len(Univers.joueurs)==0):
-           for s in range(1,10):             
-              Systeme.x=random.randint(0,50)*10 
-              Systeme.y=random.randint(0,60)*10
-              if(Univers.systemes.count(Systeme)):
-                s=s-1
-              else:               
-                Univers.ajouterSysteme(Systeme)
-             
-    def AjouterSysteme(self,x,y):
-        Systeme.x=x
-        Systeme.y=y
-        pass
-    '''
+    def pushSystemes(self):
+        return self.orion
+
 
 class Serveur(object):
     def __init__(self):
         self.server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=SimpleXMLRPCRequestHandler)
         self.controleur=ControleurServeur()
+
+        self.server.register_function(pushSystemes, 'pushSystemes')
+
         self.server.register_instance(self.controleur)
 
         # Demarrer la boucle du serveur
