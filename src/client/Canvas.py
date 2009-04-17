@@ -19,7 +19,6 @@ class ZoneDeJeu(Canvas):
         self.create_line(0, 0, 2000, 2000, fill="#ffffff")
         self.create_line(2000, 0, 0, 2000, fill="#ffffff")
 
-
         self.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
         self.bind("<Button-3>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
 
