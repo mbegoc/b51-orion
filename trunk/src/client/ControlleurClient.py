@@ -69,12 +69,12 @@ class Messageur(object):
         self.message=""
         self.dernierEnvoie=""
         
-    def sendMessage(self):
+    def sendMessage(self, message):
         self.nom = "Joueur" + str(self.parent.player.id)
-        laLigne = self.nom +": " + self.parent.vue.menuBas.message.get()
-        print laLigne
+        laLigne = self.nom +": " + message
+        self.parent.vue.chat.affiche(laLigne, "mauve")#rouge, bleu, cyan, vert, jaune, orange, brun, gris, blanc, mauve, ou rien du tout
         
         
 
-
-#controlleur = Controlleur()
+if __name__=="__main__":
+    controlleur = Controlleur()
