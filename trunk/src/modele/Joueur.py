@@ -8,6 +8,7 @@ class Joueur(object):
         self.vaisseaux = []
         self.systemes = []
         self.ajouterSysteme(systInit)
+        self.message = []
         
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)      
