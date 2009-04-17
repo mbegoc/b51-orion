@@ -27,22 +27,24 @@ class ControlleurServeur(object):
               else:               
                 self.univers.ajouterSysteme(Systeme)
         self.univers.ajouterJoueur(nom)
+        return pickle.dumps(self.univers)
         
     def MiseAJourVaisseaux(self,nom,messVaisseaux):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
         MisaJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
-
+        return "ok"
     
              
-    def MiseAJourMessage(self, nom, codMess, messObj):
+    def MiseAJourMessage(self, nom, codMess, obj):
         for s in self.univers.joueurs:
             if(self.univers.joueurs[s].id <> nom):
-                self.univers.joueurs[s].message.append(nom, codMess, messObj)
+                self.univers.joueurs[s].message.append(nom, codMess, obj)
                 
     def requeteClient(self, nom):
         if(self.univers.joueurs[nom].message):
             return pickle.dumps(self.univers.joueurs[nom].message) 
-
+        else:
+            return "rien"
 
 
 server.register_instance(ControlleurServeur())
