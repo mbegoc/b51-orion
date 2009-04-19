@@ -15,10 +15,16 @@ class Univers(object):
         self.nbrSystemes = 100 #nombre de systemes dans l'univers existant
         self.systemes = range(self.nbrSystemes)#les systemes seront places dans cette variable
         self.initUniverse()
-        
-    def initUniverse(self):
-        for x in range(self.nbrSystemes):#je vais changer ca pour un shuffle plus tard pour eviter les collisions             
-              self.systemes[x]=Systeme(random.randint(0,50)*10,random.randint(0,50)*10) 
+
+    def initUniverse(self):#fonction sans repetition
+        self.tailleU = self.tailleX * self.tailleY
+        self.positions = random.sample(range(self.tailleU), self.nbrSystemes)
+        for a in range(self.nbrSystemes):
+            self.x=self.positions[a]%self.tailleX
+            self.y=self.positions[a]/self.tailleX
+
+            self.systemes[a]=Systeme(self.x,self.y)
+
         
     def ajouterJoueur(self,id):
         couleur=self.couleursJoueurs.pop()
