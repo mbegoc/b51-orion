@@ -17,6 +17,7 @@ from modele import *
 class ControleurServeur(object):
     def __init__(self):
         self.orion=Univers.Univers()
+        self.chat=Chat.Chat()
         
         #ce code affiche les coordonnees des systemes crees
         '''
@@ -32,6 +33,16 @@ class ControleurServeur(object):
 
     def pushSystemes(self):
         return xmlrpclib.Binary(pickle.dumps(self.orion))
+
+    def addMessage(self, nick, message):
+        self.chat.addMessage(nick, message)
+        return 0
+
+    def currentMessage(self):
+        return self.chat.currentMessage()
+
+    def returnMessage(self, numeroMsg):
+        return self.chat.returnMessage(numeroMsg)
 
 
 class Serveur(object):
@@ -49,4 +60,5 @@ class Serveur(object):
             print 'Tapez Control-C pour sortir'
             self.server.serve_forever()
         except KeyboardInterrupt:
+            self.controleur.chat.terminer()
             print 'Termine!'
