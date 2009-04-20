@@ -1,1 +1,1 @@
-__all__ = ["Joueur", "Systeme", "Univers", "Vaisseau"]
+__all__ = ["Joueur", "Systeme", "Univers", "Vaisseau", "Chat"]
