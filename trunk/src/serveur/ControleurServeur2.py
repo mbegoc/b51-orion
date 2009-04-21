@@ -30,19 +30,45 @@ class ControleurServeur(object):
             print "y:",
             print self.orion.systemes[x].y
             '''
-
+    #envoie les systemes au joueur
     def pushSystemes(self):
         return xmlrpclib.Binary(pickle.dumps(self.orion))
 
+    ############################
+    #chat
+
+    #ajoute un message au chat
     def addMessage(self, nick, message):
         self.chat.addMessage(nick, message)
-        return 0
+        return 0 #une reponse est requise par le protocole
 
+    '''
+    renvoie le numero du dernier message sur le serveur.
+    je suggere que cette fonction soit utilisee des qu'un client se connecte pour
+    eviter que le client recoive tous les messages deja envoyes au serveur.
+    '''
     def currentMessage(self):
         return self.chat.currentMessage()
 
     def returnMessage(self, numeroMsg):
         return self.chat.returnMessage(numeroMsg)
+
+    #chat
+    ##############
+    #joueurs
+
+    #ajoute un nouveau joueur
+    def addJoueur(self, nick):
+        if nick in self.orion.joueurs:
+            return ("Ce nom existe deja")
+        else:
+            self.orion.addJoueur(nick)
+            return ("ok")
+
+    #renvoie tous les joueurs au client
+    def pushJoueurs(self):
+        return xmlrpclib.Binary(pickle.dumps(self.orion.joueurs))
+
 
 
 class Serveur(object):

@@ -22,7 +22,7 @@ class Chat(object):
         self.messages.append(message)
         
         #ecrit le chat dans le log
-        self.chatlog.write(time.strftime("%H:%M:%S", time.gmtime()) + " <" +self.nicks[self.nbrMessage] + "> " + self.messages[self.nbrMessage] + "\n")
+        self.chatlog.write(time.strftime("%H:%M:%S", time.localtime()) + " <" +self.nicks[self.nbrMessage] + "> " + self.messages[self.nbrMessage] + "\n")
 
         #debug
         #print self.nicks[self.nbrMessage] + ":" + self.messages[self.nbrMessage]
@@ -34,7 +34,7 @@ class Chat(object):
         return self.nbrMessage
 
     def returnMessage(self, numeroMsg):
-        self.transmission = [self.nicks[numeroMsg], self.messages[numeroMsg]]
+        self.transmission = self.nicks[numeroMsg], self.messages[numeroMsg]
         return self.transmission
 
 
