@@ -4,9 +4,9 @@
 import random
 
 class Systeme(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, id):
         self.x = x
         self.y = y
-        self.id = random.randint(0,100)
+        self.id = id
         self.conquerant = "null"
         
