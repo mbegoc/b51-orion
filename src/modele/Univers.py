@@ -25,7 +25,7 @@ class Univers(object):
             self.x=self.positions[a]%self.tailleX
             self.y=self.positions[a]/self.tailleX
 
-            self.systemes[a]=Systeme(self.x,self.y)
+            self.systemes[a]=Systeme(self.x, self.y, a)
         
     '''
     def ajouterJoueur(self,id):

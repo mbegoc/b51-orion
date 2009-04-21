@@ -49,25 +49,53 @@ class ControleurServeur(object):
         return self.mes  
         '''
 
-    def pushSystemes(self):
-        return xmlrpclib.Binary(pickle.dumps(self.orion))
-
-    def addMessage(self, nick, message):
-        self.chat.addMessage(nick, message)
-        return 0
-
-    def currentMessage(self):
-        return self.chat.currentMessage()
-
-    def returnMessage(self, numeroMsg):
-        return self.chat.returnMessage(numeroMsg)
-    
     '''
     def pushMessages(self,ligne):
         self.listeLigne.append(ligne)
         return pickle.dumps(self.listeLigne)
         self.listeLigne = []
         '''
+
+    
+    #envoie les systemes au joueur
+    def pushSystemes(self):
+        return xmlrpclib.Binary(pickle.dumps(self.orion))
+
+    ############################
+    #chat
+
+    #ajoute un message au chat
+    def addMessage(self, nick, message):
+        self.chat.addMessage(nick, message)
+        return 0#une reponse est requise par le protocole
+
+
+    '''
+    envoie le numero du dernier message sur le serveur.
+    je suggere que cette fonction soit utilisee des qu'un client se connecte
+    pour eviter que le client recoive tous les messages deja envoyes au
+    serveur.
+    '''
+    def currentMessage(self):
+        return self.chat.currentMessage()
+
+    def returnMessage(self, numeroMsg):
+        return self.chat.returnMessage(numeroMsg)
+    #chat
+    ############# 
+    #joueurs
+    ##############
+    #vaisseaux
+
+    def moveVaisseau(self, nick, noVaisseau):
+        pass
+
+    #vaisseaux
+    ##############
+    #fermer le serveur
+
+    def terminer(self):
+        self.chat.terminer()
             
 
 
@@ -85,5 +113,5 @@ class Serveur(object):
             print 'Tapez Control-C pour sortir'
             self.server.serve_forever()
         except KeyboardInterrupt:
-            self.controleur.chat.terminer()
+            self.controleur.terminer()
             print 'Termine!'
