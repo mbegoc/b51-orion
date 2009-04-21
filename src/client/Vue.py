@@ -105,8 +105,7 @@ class Chat(Frame):
         self.envoi.grid(column=2,row=1, columnspan=2)# test du chat
         
     def sendMessage(self, event=None):
-        self.parent.parent.chat.addMessage(self.message.get())
-	self.parent.parent.chat.currentMessage()
+        self.parent.parent.chat.sendMessage(self.message.get())
         self.message.delete(0, END)
         
     def affiche(self, message, couleur=None):
