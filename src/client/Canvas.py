@@ -6,12 +6,15 @@ import glob, os
 class ZoneDeJeu(Canvas):
     def __init__(self, parent):
         #appel au constructeur de la super classe
+        self.largeurMonde = 1000
+        self.hauteurMonde = 600
         Canvas.__init__(self, parent.root, width=1000, height=600, background="#000000", scrollregion=(0, 0, 2000, 2000))
         #on garde une reference vers la classe parent
         self.parent = parent
         self.rondSelection = None # rond autour de l'entite selectionne
         self.croix1 = None # x qui represente le cible de deplacement ou d'attaque besoin de 2 lignes
         self.croix2 = None
+        self.vaisseau = None
         #initialisation des images disponibles
         self.images = {}
         ZoneDeJeu.__genererImages__(self)
@@ -76,6 +79,13 @@ class ZoneDeJeu(Canvas):
     def deleteCroix(self):
         self.delete(self.croix1)
         self.delete(self.croix2)
+        
+    def drawVaisseau(self,x,y):
+        self.vaisseau = self.create_oval(x,y,x+10,y+10,outline="white",width=2)
+        
+    def deleteVaisseau(self):
+        self.delete(self.vaisseau)
+        
         
         
 
