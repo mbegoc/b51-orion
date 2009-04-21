@@ -18,5 +18,10 @@ let SIZEX=$SIZEY+$SIZEY/3
 
 ls -1 *.pov | while read line; do NEWNAME=$(echo ${line} | sed 's/.pov$/.png/'); povray Input_File_Name=${line} Output_File_Name=$NEWNAME Output_File_Type=N Antialias=true Height=$SIZEY Width=$SIZEX DISPLAY=false; done
 
+#separe en deux lignes pour un peu plus de clarte...
+ls -1 *.png | while read line; do NEWNAME=$(echo ${line} | sed 's/.png$/.jpg/'); convert $line $NEWNAME; done
+
+rm *.png
+
 
 exit 0
