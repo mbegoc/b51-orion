@@ -19,7 +19,8 @@ class Client(object):
         self.orion = pickle.loads(serveur.pushSystemes().data)
         self.vue = Vue(self)
         self.selectione = "false" 
-        self.joueur = self.orion.joueurs["benoit"]
+        #self.joueur = self.orion.joueurs["benoit"]
+        serveur.addJoueur('benoit')
         self.joueur.ajouterVaisseau(50,50)
         self.chat = Messageur(self)
         self.tDeplacement = Timer(0.5, self.sendNewDeplacement)

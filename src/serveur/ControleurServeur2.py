@@ -117,7 +117,6 @@ class Serveur(object):
     def __init__(self):
         self.server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=SimpleXMLRPCRequestHandler)
         self.controleur=ControleurServeur()
-        #self.server.register_function(pushSystemes, 'pushSystemes')
 
         self.server.register_instance(self.controleur)
 
