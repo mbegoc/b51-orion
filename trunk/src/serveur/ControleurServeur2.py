@@ -84,6 +84,20 @@ class ControleurServeur(object):
     #chat
     ############# 
     #joueurs
+
+    #ajoute un nouveau joueur
+    def addJoueur(self, nick):
+        if nick in self.orion.joueurs:
+            return ("Ce nom existe deja")
+        else:
+            self.orion.addJoueur(nick)
+            return ("ok")
+ 
+    #renvoie tous les joueurs au client
+    def pushJoueurs(self):
+        return xmlrpclib.Binary(pickle.dumps(self.orion.joueurs))
+
+    #joueurs
     ##############
     #vaisseaux
 
