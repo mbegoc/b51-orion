@@ -18,7 +18,7 @@ class Client(object):
         #serveur.connecterJoueur("benoit") #xmlrpclib.Fault: <Fault 1: "<type 'exceptions.TypeError'>:cannot marshal None unless allow_none is enabled">
         self.orion = pickle.loads(serveur.pushSystemes().data)
         self.vue = Vue(self)
-        #self.selectione = "false" 
+        self.selectione = "false" 
         self.joueur = self.orion.joueurs["benoit"]
         self.joueur.ajouterVaisseau(50,50)
         self.chat = Messageur(self)
@@ -105,10 +105,6 @@ class Client(object):
 class Messageur(object):
     def __init__(self,parent):
         self.parent=parent
-
-        #initialise le compteur de messages au dernier message avant connexion.
-        self.noMsg=serveur.currentMessage()
-
         self.nom=""
         self.message=""
         self.dernierEnvoie=""
@@ -122,26 +118,9 @@ class Messageur(object):
         i = 0
         for i in range (len(liste)):
             self.parent.vue.chat.affiche(liste[i], "mauve")
-
-        def addMessage(self, message):
-            self.nom = set(self.parent.joueur.id)
-            serveur.addMessage(self.nom, message)
-
-        def currentMessage(self):
-            self.pending=serveur.currentMessage()
-            for x in range(self.noMsg, self.pending):
-                self.returnMessage(x)
-            self.noMsg=self.pending
-
-        def returnMessage(self,noMsg):
-            self.message=serveur.returnMessage(noMsg)
-            self.laLigne = self.message[0] + ":" + self.message[1]
-            #le serveur retourne un "tuple"; 0 contient le nom et 1 le message.
-            self.parent.vue.chat.affiche(self.laLigne, "mauve")
-            
-
         
-
+        
+        
 
 #unclient = Client()
 #unclient.testChat()
