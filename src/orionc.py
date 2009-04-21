@@ -8,4 +8,4 @@ from modele import *
 
 
 
-controleur=ControlleurClient.Controlleur()
+controleur=ControlleurClient.Client()
