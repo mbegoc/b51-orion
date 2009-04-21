@@ -13,6 +13,7 @@ serveur = xmlrpclib.Server(adresse_serveur)
 
 class Client(object):
     def __init__(self):
+        self.nick = "chryana"
 
 
         #test des systemes
@@ -45,6 +46,21 @@ class Client(object):
 
 
     #fin de la partie chat
+    ########################
+    #debut de la partie vaisseaux
+
+    '''
+    demande de deplacer un vaisseau. le serveur renvoie l'heure ou il recoit la
+    requete. pour l'instant, il ne fait qu'attendre la reponse pour faire le
+    deplacement, mais je prevois utiliser le timestamp plus tard pour aider la
+    synchronisation du mouvement.
+    '''
+    def moveVaisseau(self, noVaisseau):
+        serveur.moveVaisseau(self.nick, noVaisseau)
+    
+        
+
+    #fin de la partie vaisseaux
     ########################
     #debut de la partie sync
     def syncClient(self):
@@ -79,9 +95,9 @@ class Client(object):
 
 
     def testJoueur(self):
-        print serveur.addJoueur("chryana")
+        print serveur.addJoueur(self.nick)
         #test si accepte deux clients avec nom identique
-        print serveur.addJoueur("chryana")
+        print serveur.addJoueur(self.nick)
 
         self.orion.joueurs=pickle.loads(serveur.pushJoueurs().data)
 
