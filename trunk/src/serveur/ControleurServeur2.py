@@ -18,18 +18,8 @@ class ControleurServeur(object):
     def __init__(self):
         self.orion=Univers.Univers()
         self.chat=Chat.Chat()
+
         
-        #ce code affiche les coordonnees des systemes crees
-        '''
-        print "debug"
-        for x in range (self.orion.nbrSystemes):
-            print "systeme no. ",
-            print x,
-            print " x:",
-            print self.orion.systemes[x].x ,
-            print "y:",
-            print self.orion.systemes[x].y
-            '''
     #envoie les systemes au joueur
     def pushSystemes(self):
         return xmlrpclib.Binary(pickle.dumps(self.orion))
@@ -68,6 +58,18 @@ class ControleurServeur(object):
     #renvoie tous les joueurs au client
     def pushJoueurs(self):
         return xmlrpclib.Binary(pickle.dumps(self.orion.joueurs))
+    #joueurs
+    ##############
+    #vaisseaux
+
+    def moveVaisseau(self, nick, noVaisseau):
+        pass
+    ##############
+    #fermer le serveur
+
+    def terminer(self):
+        self.chat.terminer()
+
 
 
 
@@ -75,8 +77,6 @@ class Serveur(object):
     def __init__(self):
         self.server = SimpleXMLRPCServer(("localhost", 8000), requestHandler=SimpleXMLRPCRequestHandler)
         self.controleur=ControleurServeur()
-
-        #self.server.register_function(pushSystemes, 'pushSystemes')
 
         self.server.register_instance(self.controleur)
 
@@ -86,5 +86,5 @@ class Serveur(object):
             print 'Tapez Control-C pour sortir'
             self.server.serve_forever()
         except KeyboardInterrupt:
-            self.controleur.chat.terminer()
+            self.controleur.terminer()
             print 'Termine!'

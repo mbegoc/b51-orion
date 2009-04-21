@@ -1,0 +1,8 @@
+doit-on inserer les systemes au complet dans l'instance du joueur ou seulement leur id?
+
+
+synchronisation du mouvement
+-creation d'un tuple au nom du joueur qui contient un dictionnaire. la cle du dictionnaire est le nick du joueur. le nick est lie a une liste d'integers qui representent les vaisseaux qui se deplacent.
+-creation d'un tuple au nom du joueur qui contient un dictionnaire. la cle du dictionnaire est le nick du joueur(ou autre info unique). dans ce dictionnaire se trouve un autre dictionnaire qui contient les vaisseaux qui se deplacent. 
+
+Lorsque le deplacement est termine, il faut amender les deux listes.
