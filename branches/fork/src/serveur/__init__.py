@@ -1,1 +1,1 @@
-__all__ = ["ControlleurServeur", "ControleurServeur2"]
+__all__ = ["ControleurServeur"]

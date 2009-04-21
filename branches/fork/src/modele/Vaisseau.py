@@ -10,8 +10,6 @@ class Vaisseau(object):
 
         self.vitesse = 10.0
 
-        self.etat = "rien" # pour s'avoir s'il attaque ou s'il est mort par exemple
-
     #place dans une methode pour eviter de jouer avec les variables de l'objet
     def moveVaisseau(self, x, y):
         self.xArrivee = x
@@ -26,7 +24,7 @@ class Vaisseau(object):
         self.vitesseX = self.vitesse * math.cos(self.angle)
 
 
-    #0 indique au controleur que le deplacement est termine.
+    #False indique au controleur que le deplacement est termine.
     def deplacement(self):
         #va devoir etre ameliore pour eviter les cas ou le vaisseau fait de tres
         #petits changements dans sa direction sur un axe donne

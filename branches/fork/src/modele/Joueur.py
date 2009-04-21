@@ -11,16 +11,11 @@ class Joueur(object):
 
         self.addSysteme(systeme)
         self.addVaisseau(self.systemes[0].x, self.systemes[0].y)
-        #self.parent=parent
-        #self.couleur = couleur
-        #self.id = id
-        #self.message = []
         
     def addSysteme(self, systeme):
         self.systemes[self.unSysteme] = systeme
         self.unSysteme = self.unSysteme + 1
 
-    
     def addVaisseau(self, x, y):
         self.vaisseaux[self.unVaisseau]=Vaisseau(x, y)
         self.unVaisseau = self.unVaisseau + 1

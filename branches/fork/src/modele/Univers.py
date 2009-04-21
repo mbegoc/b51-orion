@@ -35,11 +35,3 @@ class Univers(object):
         self.joueurs[nick] = Joueur(nick, self.systemes[self.systemeAttribue])
         self.systemeAttribue = self.systemeAttribue + 1
 
-
-
-    '''
-    Veut-on vraiment autoriser la creation de systemes apres le debut de la partie?
-    def addSysteme(self, systeme):
-        pass
-        #self.systemes.append(systeme) ne marchera pas. type incompatible
-        '''
