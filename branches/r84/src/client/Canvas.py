@@ -6,6 +6,8 @@ import glob, os
 class ZoneDeJeu(Canvas):
     def __init__(self, parent):
         #appel au constructeur de la super classe
+        self.largeurMonde = 1000
+        self.hauteurMonde = 600
         Canvas.__init__(self, parent.root, width=1000, height=600, background="#000000", scrollregion=(0, 0, 2000, 2000))
         #on garde une reference vers la classe parent
         self.parent = parent
@@ -19,8 +21,8 @@ class ZoneDeJeu(Canvas):
         self.create_line(0, 0, 2000, 2000, fill="#ffffff")
         self.create_line(2000, 0, 0, 2000, fill="#ffffff")
 
-        self.bind("<Button-1>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
-        self.bind("<Button-3>", self.parent.parent.clickEvent) #envoie l'objet event au controlleur
+        self.bind("<Button-1>", self.parent.parent.ClickEvent) #envoie l'objet event au controlleur
+        self.bind("<Button-3>", self.parent.parent.ClickEvent) #envoie l'objet event au controlleur
 
     #cette fonction ne sert qu'a 
     def dessinerImage(self, nom, x, y):
