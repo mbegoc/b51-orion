@@ -16,16 +16,39 @@ server = SimpleXMLRPCServer(("localhost", 8000),
 #Toutes ses fonctions vont etre publiees
 class ControlleurServeur(object):
     def __init__(self):
-        self.univers = Univers
-    def ConnecterJoueur(self, nom):
-        if(not self.univers.joueurs):
-           for s in range(1,10):             
-              Systeme.x=random.randint(0,50)*10 
-              Systeme.y=random.randint(0,60)*10
-              if(self.univers.systemes.count(Systeme)):
-                s=s-1
-              else:               
-                self.univers.ajouterSysteme(Systeme)
+        self.univers = Univers()
+#        self.systeme=Systeme(0,0)
+        self.creerSystemes()
+        self.ConnecterJoueur("Eliana")
+        self.ConnecterJoueur("Eduardo")
+        
+    def creerSystemes(self):
+        s=0
+        while s<10:  
+            x=random.randint(0,50)*10 
+            y=random.randint(0,60)*10
+            if (s>1 and self.univers.validePositionSysteme(x,y)==1):
+                print s
+                print "systeme existant!!!!"
+            else:
+                s=s+1
+                print "nouveau systeme"
+                systeme=Systeme(x,y)
+                self.univers.ajouterSysteme(systeme)
+        
+        print "systCrees!!!"
+        for i in range(len(self.univers.systemes)):
+            print i,
+            print "..[i].x=",
+            print self.univers.systemes[i].x
+            print i,
+            print "..[i].y=",
+            print self.univers.systemes[i].y
+            print "****"        
+
+    def ConnecterJoueur(self, nom):         #Attention: il faut verifier noms differents
+#        if(not self.univers.joueurs):
+        print "Ajoutant joueur"
         self.univers.ajouterJoueur(nom)
         return pickle.dumps(self.univers)
         
@@ -33,7 +56,6 @@ class ControlleurServeur(object):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
         MisaJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
         return "ok"
-    
              
     def MiseAJourMessage(self, nom, codMess, obj):
         for s in self.univers.joueurs:
@@ -45,6 +67,7 @@ class ControlleurServeur(object):
             return pickle.dumps(self.univers.joueurs[nom].message) 
         else:
             return "rien"
+
 
 
 server.register_instance(ControlleurServeur())
