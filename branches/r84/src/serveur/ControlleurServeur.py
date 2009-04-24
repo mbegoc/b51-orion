@@ -19,8 +19,8 @@ class ControlleurServeur(object):
         self.univers = Univers()
 #        self.systeme=Systeme(0,0)
         self.creerSystemes()
-        self.ConnecterJoueur("Eliana")
-        self.ConnecterJoueur("Eduardo")
+#        self.ConnecterJoueur("Eliana")
+#        self.ConnecterJoueur("Eduardo")
         
     def creerSystemes(self):
         s=0
@@ -54,7 +54,7 @@ class ControlleurServeur(object):
         
     def MiseAJourVaisseaux(self,nom,messVaisseaux):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
-        MisaJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
+        MisAJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
         return "ok"
              
     def MiseAJourMessage(self, nom, codMess, obj):
