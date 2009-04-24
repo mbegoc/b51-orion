@@ -240,7 +240,7 @@ class ZoneDeJeu(Canvas):
         self.create_oval(x, y, x+l, y+l, fill=self.parent.bleu)
         
     def deplacerVaisseau(self, vaisseau):
-        self.coords(vaisseau, vaisseau.x-self.baseUnites, vaisseauy-self.baseUnites, vaisseau.x+self.baseUnites, vaisseau.y+self.baseUnites)
+        self.coords(vaisseau.nom, vaisseau.x-self.baseUnites, vaisseau.y-self.baseUnites, vaisseau.x+self.baseUnites, vaisseau.y+self.baseUnites)
         
     def gestionClic(self, event):
         xy = self.calculerPositionReelle((event.x,event.y))
@@ -275,7 +275,15 @@ class ZoneDeJeu(Canvas):
                 position = self.coords(objets[0])
                 self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
         elif len(objets) > 1:
-            print "liste d'objet a ce point" #il va falloir afficher un menu contextuel avec la liste des objets
+            self.menu = Menu(self, tearoff=0)
+            #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
+            self.menu.add_command(label="Type", command=self.getType)
+            self.x,self.y = event.x,event.y
+            self.menu.post(event.x_root, event.y_root)
+        
+    def getType(self):
+        self.item=self.find_closest(self.x,self.y,halo=5)
+        print self.type(self.item)
 
     '''ce calcule est necessaire, car l'event contient la position du clic sur la fenetre, pas sur le canvas. 
     Il faut donc convertir cette position en fonction de la valeur de 'scroll' du canvas''' 
