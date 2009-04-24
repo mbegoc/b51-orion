@@ -13,9 +13,11 @@ class Controlleur(object):
         self.player = self.univers.joueurs["benoit"]
         
         self.player.ajouterVaisseau(50,50)
-
+        self.player.vaisseaux[0].nom = "premier"
+        
         self.chat = Messageur(self)
         self.vue=Vue(self)
+        
         self.vue.zoneJeu.nouveauVaisseauCivil(self.player.vaisseaux[0])
         self.selectione = "false" # a mettre dans les entite
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
@@ -48,9 +50,9 @@ class Controlleur(object):
         
     def SendNewDeplacement(self):
         #print "send un deplacement"
-        print self.player.vaisseaux[0].x
+
         self.player.vaisseaux[0].deplacer()
-        print self.player.vaisseaux[0].x
+
         self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
         pass
     
