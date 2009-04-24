@@ -21,21 +21,27 @@ server = SimpleXMLRPCServer(("localhost", 8000),
 class ControlleurServeur(object):
     def __init__(self):
         self.univers = Univers()
-#        self.systeme=Systeme(0,0)
         self.creerSystemes()
         
-        #seulement pour tester
+
+        # seulement commentaires.....
 #        self.ConnecterJoueur("Eliana")
 #        self.ConnecterJoueur("Eduardo")
 #        vaisseauTest=Vaisseau(20,20)
 #        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest)
 #        self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
-#        mess1=self.requeteClient("Eduardo")
+#     
+#        tempMessage=self.requeteClient("Eduardo")
+#        print tempMessage
+#        self.univers.joueurs["Eduardo"].message=pickle.loads(tempMessage)
+#        message1 = self.univers.joueurs["Eduardo"].message.pop()
 #        print "Message a Eduardo: "
-#        print mess1
-#        mess2=self.requeteClient("Eliana")
-#        print "Message a Eliana: "
-#        print mess2
+#        print message1[0]
+#        print message1[1]
+#        print message1[2]         
+#        listeVaiseauxTemp = pickle.loads(message1[2])
+#        print listeVaiseauxTemp        
+        
         
     def creerSystemes(self):
         s=0
@@ -76,8 +82,8 @@ class ControlleurServeur(object):
              
     def MiseAJourMessage(self, nom, codMess, messObj):
         for s in self.univers.joueurs:
-            if(self.univers.joueurs[s].id <> nom):
-                self.univers.joueurs[s].message.append((codMess, messObj))
+            if(s <> nom):
+                self.univers.joueurs[s].message.append((nom, codMess, messObj))
                 
     def requeteClient(self, nom):
         print "Dans requeteClient......"
