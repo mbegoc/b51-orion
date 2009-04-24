@@ -9,11 +9,11 @@ from Messageur import Messageur
 class Controlleur(object):
     def __init__(self):
         self.serveur = xmlrpclib.Server('http://localhost:8000')
+        self.univers = pickle.loads(self.serveur.ConnecterJoueur("benoit"))
+        self.player = self.univers.joueurs["benoit"]
+        self.player.ajouterVaisseau(50,50)
         self.chat = Messageur(self)
         self.vue=Vue(self)
-        self.systeme = Systeme.Systeme(50,50)
-        self.player = Joueur.Joueur(self, "01", "yellow", self.systeme)
-        self.player.ajouterVaisseau(50, 50)
         self.selectione = "false" # a mettre dans les entite
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.tDeplacement.start()
@@ -37,6 +37,7 @@ class Controlleur(object):
         # pour entrer danss cette fonction continuellement
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.tDeplacement.start()
+        self.vue.zoneJeu.PrintVaisseau(50,50)
         self.SendNewDeplacement()
         
     def SendNewDeplacement(self):
