@@ -24,6 +24,8 @@ class Controlleur(object):
         self.tDeplacement.start()
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
+        self.mes1 = "allo"
+        self.listeMessage = None
             
     def SelectionneEntite(self,event):
         #Selectionne une entite et dessine un rond autour
@@ -34,9 +36,6 @@ class Controlleur(object):
         if typeDeplacement == "deplacement":     
             self.player.vaisseaux[0].xArrivee = event.x
             self.player.vaisseaux[0].yArrivee = event.y
-            
-            
-            
             
             self.vue.zoneJeu.deleteCroix()
             self.vue.zoneJeu.drawCroix(event)
@@ -52,9 +51,12 @@ class Controlleur(object):
         #print "send un deplacement"
 
         self.player.vaisseaux[0].deplacer()
-
-        self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
-        pass
+        self.serveur.MiseAJourVaisseaux("benoit", pickle.dumps(self.univers.joueurs["benoit"].vaisseaux))
+        self.mes1 = self.serveur.requeteClient("benoit")
+        if self.mes1 == "rien":
+            print "rien de nouveau"
+        else:
+            self.listeMessage = pickle.loads(self.serveur.requeteClient("benoit"))
     
     def TypeAction(self,event):
         #"deplacement" pour test, cette fonction verifiera le type
