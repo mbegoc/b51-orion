@@ -3,11 +3,11 @@ class Vaisseau(object):
         self.x = x
         self.y = y
         self.etat = "rien" # pour s'avoir s'il attaque ou s'il est mort par exemple
-        self.xArrivee = None
-        self.yArrivee = None
-        self.nom = "test"
+        self.xArrivee = x
+        self.yArrivee = y
+        self.nom = "untest"
         
-    def deplacer(self, x, y):
+    def deplacer(self):
         if self.x < self.xArrivee:
             self.x = self.x+5
         elif self.x > self.xArrivee:
@@ -18,13 +18,6 @@ class Vaisseau(object):
         
         elif self.y > self.yArrivee:
             self.y = self.y-5
-            
-        if self.x > self.xArrivee or self.x < self.xArrivee:
-            self.x = self.xArrivee
-            
-        if self.y > self.yArrivee or self.y < self.yArrivee:
-            self.y = self.yArrivee
-            
         
             
         
