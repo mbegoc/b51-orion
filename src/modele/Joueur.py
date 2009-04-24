@@ -13,8 +13,8 @@ class Joueur(object):
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)      
     
-    def ajouterVaisseau(self, posX, posY):
-        self.vaisseaux.append(Vaisseau(posX,posY))
+#    def ajouterVaisseau(self, posX, posY):
+#        self.vaisseaux.append(Vaisseau(posX,posY))
         
   
   
