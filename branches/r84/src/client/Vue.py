@@ -52,7 +52,7 @@ class Vue(object):
         #tests -- a supprimer des que les controlleurs sont fonctionnels
         for i in range(200):
             r = random.Random()
-            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "test")
+            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
         self.zoneJeu.nouveauVaisseauMilitaire(Vaisseau(200, 200))
         self.zoneJeu.nouveauVaisseauMilitaire(Vaisseau(100, 180))
         self.zoneJeu.nouveauVaisseauCivil(Vaisseau(210, 230))
@@ -167,7 +167,10 @@ class MenuCote(Frame):
         self.parent.zoneJeu.deleteJeu()
     
     def moveJeu(self, evt):
-        self.parent.zoneJeu.moveJeu()
+        vaisseau = Vaisseau(500, 500)
+        vaisseau.nom = self.parent.zoneJeu.itemSelectionne
+        self.parent.zoneJeu.deplacerVaisseau(vaisseau) 
+        
         
     def systeme(self, evt):
         r = random.Random()
@@ -233,7 +236,7 @@ class ZoneDeJeu(Canvas):
         y = vaisseau.y
         l = self.baseUnites*2 #largeur des unites
         self.create_rectangle(x, y, x+l, y+l, fill=self.parent.vert, tags=vaisseau.nom)
-        self.tag_bind(vaisseau.nom, "<Button-1>", self.testTagBind)
+        #self.tag_bind(vaisseau.nom, "<Button-1>", self.testTagBind)
         
     def nouvelleSonde(self, x, y):
         l = self.baseUnites #largeur des unites
@@ -262,28 +265,32 @@ class ZoneDeJeu(Canvas):
                 objets.append(objet)
         
         if len(objets) == 1:
-            type = self.type(objets[0])
-            '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
-            A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
-            tag = self.gettags(objets[0])
-            print tag[0]# pour le moment on print le nom de l'objet, apres il va falloir l'envoyer au controlleur client pour qu'il connaisse l'objet selectionne
-            if type == "polygon" or type == "oval" or type == "rectangle":
-                print "forme"
-                self.itemconfigure(objets[0], outline=self.parent.blanc)
-                self.itemSelectionne = objets[0]
-            elif type == "image":
-                position = self.coords(objets[0])
-                self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
+            self.selectionnerObjet(objets[0])
         elif len(objets) > 1:
             self.menu = Menu(self, tearoff=0)
             #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
-            self.menu.add_command(label="Type", command=self.getType)
+            for objet in objets:
+                tag = self.gettags(objet)
+                self.menu.add_command(label=tag[0], command=self.selectionnerObjetHandler(tag[0]))
+            
             self.x,self.y = event.x,event.y
             self.menu.post(event.x_root, event.y_root)
-        
-    def getType(self):
-        self.item=self.find_closest(self.x,self.y,halo=5)
-        print self.type(self.item)
+
+    def selectionnerObjetHandler(self, tag):
+        self.selectionnerObjet(tag)
+
+    def selectionnerObjet(self, objet):
+        type = self.type(objet)
+        '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
+        A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
+        tag = self.gettags(objet)
+        #print tag[0]# pour le moment on print le nom de l'objet, apres il va falloir l'envoyer au controlleur client pour qu'il connaisse l'objet selectionne
+        if type == "polygon" or type == "oval" or type == "rectangle":
+            self.itemconfigure(objet, outline=self.parent.blanc)
+            self.itemSelectionne = objet
+        elif type == "image":
+            position = self.coords(objet)
+            self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
 
     '''ce calcule est necessaire, car l'event contient la position du clic sur la fenetre, pas sur le canvas. 
     Il faut donc convertir cette position en fonction de la valeur de 'scroll' du canvas''' 
