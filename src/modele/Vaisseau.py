@@ -5,6 +5,7 @@ class Vaisseau(object):
         self.etat = "rien" # pour s'avoir s'il attaque ou s'il est mort par exemple
         self.xArrivee = None
         self.yArrivee = None
+        self.nom = "test"
         
     def deplacer(self, x, y):
         if self.x < self.xArrivee:
