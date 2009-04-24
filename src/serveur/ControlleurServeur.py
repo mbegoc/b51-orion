@@ -7,6 +7,10 @@ from modele.Systeme import Systeme
 from modele.Univers import Univers
 from modele.Joueur import Joueur
 
+#seulement pour tester
+from modele.Vaisseau import Vaisseau
+
+
 # Creer un serveur
 server = SimpleXMLRPCServer(("localhost", 8000),
                             requestHandler=SimpleXMLRPCRequestHandler)
@@ -19,8 +23,19 @@ class ControlleurServeur(object):
         self.univers = Univers()
 #        self.systeme=Systeme(0,0)
         self.creerSystemes()
+        
+        #seulement pour tester
 #        self.ConnecterJoueur("Eliana")
 #        self.ConnecterJoueur("Eduardo")
+#        vaisseauTest=Vaisseau(20,20)
+#        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest)
+#        self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
+#        mess1=self.requeteClient("Eduardo")
+#        print "Message a Eduardo: "
+#        print mess1
+#        mess2=self.requeteClient("Eliana")
+#        print "Message a Eliana: "
+#        print mess2
         
     def creerSystemes(self):
         s=0
@@ -54,15 +69,18 @@ class ControlleurServeur(object):
         
     def MiseAJourVaisseaux(self,nom,messVaisseaux):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
-        MisAJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
+        self.MiseAJourMessage(nom,"vai", messVaisseaux)
+        print "Mise a jour des vaisseaux: "
+        print messVaisseaux
         return "ok"
              
-    def MiseAJourMessage(self, nom, codMess, obj):
+    def MiseAJourMessage(self, nom, codMess, messObj):
         for s in self.univers.joueurs:
             if(self.univers.joueurs[s].id <> nom):
-                self.univers.joueurs[s].message.append(nom, codMess, obj)
+                self.univers.joueurs[s].message.append((codMess, messObj))
                 
     def requeteClient(self, nom):
+        print "Dans requeteClient......"
         if(self.univers.joueurs[nom].message):
             return pickle.dumps(self.univers.joueurs[nom].message) 
         else:
