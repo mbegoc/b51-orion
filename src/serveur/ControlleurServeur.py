@@ -83,7 +83,7 @@ class ControlleurServeur(object):
             print self.univers.systemes[i].y
             print "****"        
 
-    def ConnecterJoueur(self, nom):         #Attention: il faut verifier noms differents
+    def ConnecterJoueur(self, nom):         
         print "Ajoutant joueur: ",
         if(nom in self.univers.joueurs):
             tempReponse="Joueur existant"
