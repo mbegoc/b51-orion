@@ -6,8 +6,6 @@ import random
 from modele.Systeme import Systeme
 from modele.Univers import Univers
 from modele.Joueur import Joueur
-
-#seulement pour tester
 from modele.Vaisseau import Vaisseau
 
 
@@ -22,25 +20,44 @@ class ControlleurServeur(object):
     def __init__(self):
         self.univers = Univers()
         self.creerSystemes()
-        
 
-        # seulement commentaires.....
+        #Attention: TESTS A REGARDER POUR AJOUTER QQCH DE SIMILAIRE DANS CONTROLLEUR_CLIENT!!!!!!!
+        #Attention: POUR TESTER ENLEVER SEULEMENT LES COMMENTAIRES QUI SONT 
+        #           AU DEBUT DE LIGNE (PAS DE <<Tabs>>) AVEC: << Source->Toggle comment >>
+         
+        
 #        self.ConnecterJoueur("Eliana")
 #        self.ConnecterJoueur("Eduardo")
-#        vaisseauTest=Vaisseau(20,20)
+#        self.ConnecterJoueur("Eliana")
+
+
+        #Attenttion: ici Eliana cree un vaisseau dans (20,30) et elle l'envoie au serveur
+#        vaisseauTest=Vaisseau(20,30)
 #        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest)
-#        self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
-#     
-#        tempMessage=self.requeteClient("Eduardo")
-#        print tempMessage
-#        self.univers.joueurs["Eduardo"].message=pickle.loads(tempMessage)
-#        message1 = self.univers.joueurs["Eduardo"].message.pop()
-#        print "Message a Eduardo: "
-#        print message1[0]
-#        print message1[1]
-#        print message1[2]         
-#        listeVaiseauxTemp = pickle.loads(message1[2])
-#        print listeVaiseauxTemp        
+#        reponse= self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
+#        print reponse
+
+
+        #Attention: ici Eliana fait une requete mais il y a rien a "charger"
+#        repServeur=self.requeteClient("Eliana")
+#        print "Message a Eliana: ",
+#        if(repServeur=="rien"):
+#            print repServeur
+
+     
+        #Attention: ici Eduardo fait une requete, il doit afficher le vaisseau a Eliana dans (20,30)
+#        repServeur=self.requeteClient("Eduardo")
+#        print "Message a Eduardo: ",
+#        if(repServeur=="rien"):
+#            print repServeur
+#        else:
+#            self.univers.joueurs["Eduardo"].message=pickle.loads(repServeur)
+#            message1 = self.univers.joueurs["Eduardo"].message.pop()
+#            print message1[0],
+#            print message1[1],
+#            tempVaisseaux= message1[2]
+#            print tempVaisseaux[0].x,
+#            print tempVaisseaux[0].y
         
         
     def creerSystemes(self):
@@ -49,7 +66,6 @@ class ControlleurServeur(object):
             x=random.randint(0,50)*10 
             y=random.randint(0,60)*10
             if (s>1 and self.univers.validePositionSysteme(x,y)==1):
-                print s
                 print "systeme existant!!!!"
             else:
                 s=s+1
@@ -68,22 +84,26 @@ class ControlleurServeur(object):
             print "****"        
 
     def ConnecterJoueur(self, nom):         #Attention: il faut verifier noms differents
-#        if(not self.univers.joueurs):
-        print "Ajoutant joueur"
-        self.univers.ajouterJoueur(nom)
-        return pickle.dumps(self.univers)
+        print "Ajoutant joueur: ",
+        if(nom in self.univers.joueurs):
+            tempReponse="Joueur existant"
+            print tempReponse
+        else:
+            self.univers.ajouterJoueur(nom)
+            tempReponse=pickle.dumps(self.univers)
+            print "OK"
+        return tempReponse
         
     def MiseAJourVaisseaux(self,nom,messVaisseaux):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
-        self.MiseAJourMessage(nom,"vai", messVaisseaux)
+        self.MiseAJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
         print "Mise a jour des vaisseaux: "
-        print messVaisseaux
         return "ok"
              
-    def MiseAJourMessage(self, nom, codMess, messObj):
+    def MiseAJourMessage(self, nom, codMess, obj):
         for s in self.univers.joueurs:
             if(s <> nom):
-                self.univers.joueurs[s].message.append((nom, codMess, messObj))
+                self.univers.joueurs[s].message.append((nom, codMess, obj))
                 
     def requeteClient(self, nom):
         print "Dans requeteClient......"
@@ -93,10 +113,23 @@ class ControlleurServeur(object):
             return "rien"
 
 
-
 server.register_instance(ControlleurServeur())
 
 # Demarrer la boucle du serveur
-print "OK, serveur demarrer"
+print "OK, serveur demarre"
+print ""
+print ""
 server.serve_forever()
-print "OK, serveur arreter"
+print "OK, serveur arrete"
+
+
+    #IMPORTANT:
+    #    * Ne pas accepter deux fois le meme nom dans ConnecterJoueur. OK!!!
+    #    * Effacer messages:
+    #            - Quand ils sont lues.
+    #            - Quand ils sont "repetes".
+    
+            
+            
+            
+            
