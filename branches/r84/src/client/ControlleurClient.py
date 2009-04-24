@@ -11,9 +11,12 @@ class Controlleur(object):
         self.serveur = xmlrpclib.Server('http://localhost:8000')
         self.univers = pickle.loads(self.serveur.ConnecterJoueur("benoit"))
         self.player = self.univers.joueurs["benoit"]
+        
         self.player.ajouterVaisseau(50,50)
+
         self.chat = Messageur(self)
         self.vue=Vue(self)
+        self.vue.zoneJeu.nouveauVaisseauCivil(self.player.vaisseaux[0])
         self.selectione = "false" # a mettre dans les entite
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.tDeplacement.start()
@@ -29,7 +32,10 @@ class Controlleur(object):
         if typeDeplacement == "deplacement":     
             self.player.vaisseaux[0].xArrivee = event.x
             self.player.vaisseaux[0].yArrivee = event.y
-            self.player.vaisseaux[0].deplacer
+            
+            
+            
+            
             self.vue.zoneJeu.deleteCroix()
             self.vue.zoneJeu.drawCroix(event)
         
@@ -37,11 +43,15 @@ class Controlleur(object):
         # pour entrer danss cette fonction continuellement
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.tDeplacement.start()
-        self.vue.zoneJeu.PrintVaisseau(50,50)
+        
         self.SendNewDeplacement()
         
     def SendNewDeplacement(self):
         #print "send un deplacement"
+        print self.player.vaisseaux[0].x
+        self.player.vaisseaux[0].deplacer()
+        print self.player.vaisseaux[0].x
+        self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
         pass
     
     def TypeAction(self,event):
