@@ -1,5 +1,5 @@
 import xmlrpclib
-import cPickle as pickle
+import pickle
 from threading import Timer
 
 from modele import *
@@ -14,7 +14,7 @@ class Controlleur(object):
         
         self.player.ajouterVaisseau(50,50)
         self.player.vaisseaux[0].nom = "premier"
-        
+        self.messageADecoder = None
         self.chat = Messageur(self)
         self.vue=Vue(self)
         
@@ -24,8 +24,6 @@ class Controlleur(object):
         self.tDeplacement.start()
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
-        self.mes1 = "allo"
-        self.listeMessage = None
             
     def SelectionneEntite(self,event):
         #Selectionne une entite et dessine un rond autour
@@ -48,22 +46,37 @@ class Controlleur(object):
         self.SendNewDeplacement()
         
     def SendNewDeplacement(self):
-        #print "send un deplacement"
-
         self.player.vaisseaux[0].deplacer()
+        self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
         self.serveur.MiseAJourVaisseaux("benoit", pickle.dumps(self.univers.joueurs["benoit"].vaisseaux))
         self.mes1 = self.serveur.requeteClient("benoit")
         if self.mes1 == "rien":
-            print "rien de nouveau"
+            pass
         else:
-            self.listeMessage = pickle.loads(self.serveur.requeteClient("benoit"))
+            listeMessage = pickle.loads(self.serveur.requeteClient("benoit"))
+            self.DecodeMessage(listeMessage)
+    
+    def RefreshVue(self,NomduJoueur):
+        for i in self.univers.joueurs[NomduJoueur].vaisseaux:
+            unVaisseau = self.vue.zoneJeu.nouveauVaisseauCivil(self.univers.joueurs[NomduJoueur].vaisseaux[0])
+            self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
     def TypeAction(self,event):
         #"deplacement" pour test, cette fonction verifiera le type
         #a passer en parametre a self.action
         self.Action(event,"deplacement")
-
         
+    def DecodeMessage(self,listeDesMessages): #nom type objet
+        if len(listeDesMessages) > 0:           
+            for i in listeDesMessages:
+                messageADecoder = listeDesMessages.pop()
+                if (messageADecoder[1] == "vai"):
+                    self.univers.joueurs[messageADecoder[0]].vaisseaux = messageADecoder[2]
+                    self.RefreshVue(messageADecoder[0])
+            
+        
+        
+            
     #gere les clicks de souris sur le canvas
     def ClickEvent(self,event):
         if event.num == 1:
