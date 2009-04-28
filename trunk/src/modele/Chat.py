@@ -19,7 +19,7 @@ class Chat(object):
         self.messages={}
 
 
-    def addMessage(self, nick, message):
+    def ajouterMessage(self, nick, message):
         self.messages[self.nbrMessage]=[nick, message]
 
         
@@ -32,13 +32,13 @@ class Chat(object):
         self.nbrMessage = self.nbrMessage + 1
 
 
-    def currentMessage(self):
+    def messageActuel(self):
         return self.nbrMessage
 
-    def returnMessage(self, numeroMsg):
+    def renvoieMessage(self, numeroMsg):
         return self.messages[numeroMsg]
         
 
 
-    def terminer(self):
+    def terminerChat(self):
         self.chatlog.close()
