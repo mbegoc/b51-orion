@@ -199,9 +199,7 @@ class Connexion(Frame):
         self.envoi.grid(column=1, row=2)
 
     def connecter(self):
-        print self.nom.get(0)
-        print self.ip.get(0)
-        self.parent.parent.BoiteConnection(self.nom.get(0), self.ip.get(0))
+        self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
     
     
 
