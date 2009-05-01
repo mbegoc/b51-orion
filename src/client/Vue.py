@@ -255,23 +255,23 @@ class ZoneDeJeu(Canvas):
         y = vaisseau.y
         l = self.baseUnites*2 #largeur des unites
         if(vaisseau.classe == "civil"):
-            self.create_polygon(x+self.baseUnites, y, x+l, y+l, x, y+l, fill=self.parent.rouge, tags=vaisseau.nom)
+            self.create_polygon(x+self.baseUnites, y, x+l, y+l, x, y+l, fill=self.parent.rouge, tags=vaisseau.id)
         elif(vaisseau.classe == "militaire"):
-            self.create_rectangle(x, y, x+l, y+l, fill=self.parent.vert, tags=vaisseau.nom)
+            self.create_rectangle(x, y, x+l, y+l, fill=self.parent.vert, tags=vaisseau.id)
         elif(vaisseau.classe == "sonde"):
             l = self.baseUnites #largeur des unites
             self.create_oval(x, y, x+l, y+l, fill=self.parent.bleu)
-        #self.tag_bind(vaisseau.nom, "<Button-1>", self.testTagBind)
+        #self.tag_bind(vaisseau.id, "<Button-1>", self.testTagBind)
         
     def deplacerVaisseau(self, vaisseau):
         x = vaisseau.x
         y = vaisseau.y
         l = self.baseUnites*2 #largeur des unites
         if(vaisseau.classe == "militaire"):
-            self.coords(vaisseau.nom, x, y, x+l, y+l)
+            self.coords(vaisseau.id, x, y, x+l, y+l)
         else:
             l = self.baseUnites #largeur des unites
-            self.coords(vaisseau.nom, x, y, x+l, y+l)
+            self.coords(vaisseau.id, x, y, x+l, y+l)
         
     def gestionClic(self, event):
         xy = self.calculerPositionReelle((event.x,event.y))
