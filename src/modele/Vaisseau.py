@@ -6,18 +6,20 @@ class Vaisseau(object):
         self.xArrivee = x
         self.yArrivee = y
         self.nom = "untest"
+        self.type = "croiseur"
+        self.classe = "militaire"
         
     def deplacer(self):
         if self.x < self.xArrivee:
-            self.x = self.x+5
+            self.x = self.x+1
         elif self.x > self.xArrivee:
-            self.x = self.x-5
+            self.x = self.x-1
             
         if self.y < self.yArrivee:
-            self.y = self.y+5
+            self.y = self.y+1
         
         elif self.y > self.yArrivee:
-            self.y = self.y-5
+            self.y = self.y-1
         
             
         
