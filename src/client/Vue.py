@@ -188,8 +188,8 @@ class Connexion(Frame):
         self.parent = parent
         self.nom=Entry(self, width=50)
         self.ip=Entry(self, width=50)
-        self.lnom = Label(text="Joueur: ")
-        self.lip = Label(text="Serveur: ")
+        self.lnom = Label(self, text="Joueur: ")
+        self.lip = Label(self, text="Serveur: ")
         self.envoi=Button(self,text="Envoi",command=self.connecter)
         
         self.lnom.grid(column=0, row=0)
@@ -199,6 +199,8 @@ class Connexion(Frame):
         self.envoi.grid(column=1, row=2)
 
     def connecter(self):
+        print self.nom.get(0)
+        print self.ip.get(0)
         self.parent.parent.BoiteConnection(self.nom.get(0), self.ip.get(0))
     
     
