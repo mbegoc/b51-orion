@@ -9,6 +9,7 @@ import random
 import glob, os
 from modele.Vaisseau import Vaisseau
 import tkMessageBox as MBox
+from threading import Timer
 
 class Vue(object):
     def __init__(self, parent):
@@ -247,8 +248,9 @@ class ZoneDeJeu(Canvas):
             self.create_line(i, 0, i, self.largeurUnivers, fill=self.parent.grille)
 
         #binds des evenements
-        self.bind("<Button-1>", self.gestionClic) #envoie l'objet event au controlleur
-        self.bind("<Button-3>", self.parent.parent.ClickEvent) #envoie l'objet event au controlleur
+        self.bind("<Button-1>", self.selectionner) #envoie l'objet event au controlleur
+        self.bind("<Button-2>", self.creerVaisseau)
+        self.bind("<Button-3>", self.cibler) #envoie l'objet event au controlleur
 
     #representer l'ensemble des sytemes initiaux
     def initialiserSystemes(self, systemes):
@@ -256,10 +258,6 @@ class ZoneDeJeu(Canvas):
         for systeme in systemes:
             self.dessinerImage("systeme2", systeme.x, systeme.y, i)#systeme.nom)
             i=i+1
-        
-    def detruireSysteme(self, systeme):
-        self.delete("systeme.nom")
-        self.dessinerImage("nebuleuse", systeme.x, systeme.y, systeme.nom)
         
     def nouveauVaisseau(self, vaisseau):
         x = vaisseau.x
@@ -284,10 +282,9 @@ class ZoneDeJeu(Canvas):
             l = self.baseUnites #largeur des unites
             self.coords(vaisseau.id, x, y, x+l, y+l)
         
-    def gestionClic(self, event):
-        xy = self.calculerPositionReelle((event.x,event.y))
-        x = xy[0]
-        y = xy[1]
+    def selectionner(self, event):
+        x = self.canvasx(event.x)
+        y = self.canvasy(event.y)
                 
         #deselection de l'item acutellement selectionne
         if self.itemSelectionne != None:
@@ -315,6 +312,20 @@ class ZoneDeJeu(Canvas):
             
             self.x,self.y = event.x,event.y
             self.menu.post(event.x_root, event.y_root)'''
+            
+    def creerVaisseau(self, event):
+        x = self.canvasx(event.x)
+        y = self.canvasy(event.y)
+        self.parent.parent.creerVaisseau(x, y)
+    
+    def cibler(self, event):
+        self.deleteCroix()
+        x = self.canvasx(event.x)
+        y = self.canvasy(event.y)
+        self.drawCroix(x, y)
+        self.timer = Timer(1, self.deleteCroix)
+        self.timer.start()
+        self.parent.parent.TypeAction(x, y)
 
     def selectionnerObjetHandler(self, tag):
         self.selectionnerObjet(tag)
@@ -324,29 +335,17 @@ class ZoneDeJeu(Canvas):
         '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
         A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
         tag = self.gettags(objet)
-        #print tag[0]# pour le moment on print le nom de l'objet, apres il va falloir l'envoyer au controlleur client pour qu'il connaisse l'objet selectionne
+        self.parent.parent.objetSelectionne = tag[0]
         if type == "polygon" or type == "oval" or type == "rectangle":
             self.itemconfigure(objet, outline=self.parent.blanc)
             self.itemSelectionne = objet
         elif type == "image":
             position = self.coords(objet)
             self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
-
-    '''ce calcule est necessaire, car l'event contient la position du clic sur la fenetre, pas sur le canvas. 
-    Il faut donc convertir cette position en fonction de la valeur de 'scroll' du canvas''' 
-    def calculerPositionReelle(self, xy):
-        x = self.xview()[0]*self.largeurUnivers+xy[0]
-        y = self.yview()[0]*self.hauteurUnivers+xy[1]
-        return (x,y)
-        
-
    
-    def drawCroix(self,event):
-        xy = self.calculerPositionReelle((event.x,event.y))
-        x = xy[0]
-        y = xy[1]
-        self.croix1 = self.create_line(x-10, y, x+10, y, fill="green",width=3)
-        self.croix2 = self.create_line(x, y-10, x, y+10, fill="green",width=3)
+    def drawCroix(self,x, y):
+        self.croix1 = self.create_line(x-7, y, x+7, y, fill="green",width=2)
+        self.croix2 = self.create_line(x, y-7, x, y+7, fill="green",width=2)
         
     def deleteCroix(self):
         self.delete(self.croix1)
@@ -374,6 +373,3 @@ class ZoneDeJeu(Canvas):
     #test de bind evenement sur objet du canvas
     def testTagBind(self, event):
         print "tagBind"
-
-if __name__=="__main__":
-    Vue("")
