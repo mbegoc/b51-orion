@@ -8,6 +8,7 @@ from Tkinter import *
 import random
 import glob, os
 from modele.Vaisseau import Vaisseau
+import tkMessageBox as MBox
 
 class Vue(object):
     def __init__(self, parent):
@@ -27,11 +28,17 @@ class Vue(object):
         self.mauve = "#90f"
         self.grille= "#799990"
         
-        
-        self.zoneJeu = ZoneDeJeu(self)
-        
-        self.connexion = Connexion(self, self.zoneJeu.largeurVue, self.zoneJeu.hauteurVue)
+        self.connexion = Connexion(self)
         self.connexion.grid(column=0, row=0)
+        self.connexion.grid_propagate(0)
+            
+    def demarrerJeu(self):
+        self.connexion.grid_forget()
+
+        self.zoneJeu = ZoneDeJeu(self)
+        self.zoneJeu.grid(column=0, row=0)
+        self.scrollY.grid(row=0, column=1, sticky=N+S)
+        self.scrollX.grid ( row=1, column=0, sticky=E+W )
         
         self.menuCote = MenuCote(self)
         self.menuCote.grid(column=2, row=0)
@@ -53,12 +60,6 @@ class Vue(object):
         for i in range(200):
             r = random.Random()
             self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
-            
-    def demarrerJeu(self):
-        self.connexion.grid_forget()
-        self.zoneJeu.grid(column=0, row=0)
-        self.scrollY.grid(row=0, column=1, sticky=N+S)
-        self.scrollX.grid ( row=1, column=0, sticky=E+W )
         
     
 class MenuBas(Frame):
@@ -180,15 +181,17 @@ class MenuCote(Frame):
 
 
 class Connexion(Frame):
-    def __init__(self, parent, x, y):
+    def __init__(self, parent):
         #appel au constructeur de la super classe
-        Frame.__init__(self, parent.root, width=x, height=y)
+        Frame.__init__(self, parent.root)
 
         #on garde une reference vers la classe parent
         self.parent = parent
         self.nom=Entry(self, width=50)
+        self.nom.insert(0, "Default")
         self.ip=Entry(self, width=50)
-        self.lnom = Label(self, text="Joueur: ")
+        self.ip.insert(0, "localhost")
+        self.lnom = Label(self, text="Joueur: ", )
         self.lip = Label(self, text="Serveur: ")
         self.envoi=Button(self,text="Envoi",command=self.connecter)
         
@@ -199,9 +202,13 @@ class Connexion(Frame):
         self.envoi.grid(column=1, row=2)
 
     def connecter(self):
-        self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
-    
-    
+        if self.nom.get() != "" and self.ip.get() != "":
+            self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
+            
+    def erreurConnexion(self):
+        MBox.showinfo(title="Erreur de connexion", message="Impossible de se connecter au serveur.")
+
+
 
 class ZoneDeJeu(Canvas):
     def __init__(self, parent):
@@ -363,3 +370,6 @@ class ZoneDeJeu(Canvas):
     #test de bind evenement sur objet du canvas
     def testTagBind(self, event):
         print "tagBind"
+
+if __name__=="__main__":
+    Vue("")
