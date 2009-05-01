@@ -1,13 +1,13 @@
 class Vaisseau(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, id="default", classe="civil", type="default"):
         self.x = x
         self.y = y
         self.etat = "rien" # pour s'avoir s'il attaque ou s'il est mort par exemple
         self.xArrivee = x
         self.yArrivee = y
-        self.nom = "untest"
-        self.type = "croiseur"
-        self.classe = "militaire"
+        self.id = id
+        self.type = type
+        self.classe = classe
         
     def deplacer(self):
         if self.x < self.xArrivee:
