@@ -1,7 +1,7 @@
 from modele.Vaisseau import Vaisseau
 
 class Joueur(object):
-    def __init__(self, parent, id, couleur, systInit):
+    def __init__(self, parent, id, couleur, systInit, chatnbrMessage):
         self.parent=parent
         self.couleur = couleur
         self.id = id
@@ -9,6 +9,7 @@ class Joueur(object):
         self.systemes = []
         self.ajouterSysteme(systInit)
         self.message = []
+        self.chatnbrMessage = chatnbrMessage
         
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)      
