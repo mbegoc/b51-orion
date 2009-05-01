@@ -29,7 +29,9 @@ class Vue(object):
         
         
         self.zoneJeu = ZoneDeJeu(self)
-        self.zoneJeu.grid(column=0, row=0)
+        
+        self.connexion = Connexion(self, self.zoneJeu.largeurVue, self.zoneJeu.hauteurVue)
+        self.connexion.grid(column=0, row=0)
         
         self.menuCote = MenuCote(self)
         self.menuCote.grid(column=2, row=0)
@@ -41,10 +43,8 @@ class Vue(object):
         self.menuBas.grid(column=0, row=3)
     
         self.scrollY = Scrollbar(self.root, orient=VERTICAL, command=self.zoneJeu.yview)
-        self.scrollY.grid(row=0, column=1, sticky=N+S)
     
         self.scrollX = Scrollbar(self.root, orient=HORIZONTAL, command=self.zoneJeu.xview)
-        self.scrollX.grid ( row=1, column=0, sticky=E+W )
     
         self.zoneJeu["xscrollcommand"] = self.scrollX.set
         self.zoneJeu["yscrollcommand"] = self.scrollY.set
@@ -53,11 +53,12 @@ class Vue(object):
         for i in range(200):
             r = random.Random()
             self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
-        self.zoneJeu.nouveauVaisseauMilitaire(Vaisseau(200, 200))
-        self.zoneJeu.nouveauVaisseauMilitaire(Vaisseau(100, 180))
-        self.zoneJeu.nouveauVaisseauCivil(Vaisseau(210, 230))
-        self.zoneJeu.nouveauVaisseauCivil(Vaisseau(80, 120))
-        self.zoneJeu.nouvelleSonde(600, 500)
+            
+    def demarrerJeu(self):
+        self.connexion.grid_forget()
+        self.zoneJeu.grid(column=0, row=0)
+        self.scrollY.grid(row=0, column=1, sticky=N+S)
+        self.scrollX.grid ( row=1, column=0, sticky=E+W )
         
     
 class MenuBas(Frame):
@@ -178,20 +179,44 @@ class MenuCote(Frame):
 
 
 
+class Connexion(Frame):
+    def __init__(self, parent, x, y):
+        #appel au constructeur de la super classe
+        Frame.__init__(self, parent.root, width=x, height=y)
+
+        #on garde une reference vers la classe parent
+        self.parent = parent
+        self.nom=Entry(self, width=50)
+        self.ip=Entry(self, width=50)
+        self.lnom = Label(text="Joueur: ")
+        self.lip = Label(text="Serveur: ")
+        self.envoi=Button(self,text="Envoi",command=self.connecter)
+        
+        self.lnom.grid(column=0, row=0)
+        self.nom.grid(column=1, row=0)
+        self.lip.grid(column=0, row=1)
+        self.ip.grid(column=1, row=1)
+        self.envoi.grid(column=1, row=2)
+
+    def connecter(self):
+        self.parent.parent.BoiteConnection(self.nom.get(0), self.ip.get(0))
+    
+    
+
 class ZoneDeJeu(Canvas):
     def __init__(self, parent):
         '''definition des differents parametres de l'affichage 
         definitions faites avant l'appel au constructeur car le constructeur a besoin de certaines de ces valeurs'''
         self.largeurVue = 1000
         self.hauteurVue = 600
-        self.largeurMonde = 2000
-        self.hauteurMonde = 2000
+        self.largeurUnivers = 2000
+        self.hauteurUnivers = 2000
         self.largeurGrille = 200
         self.baseUnites = 5
         self.itemSelectionne = None
 
         #appel au constructeur de la super classe
-        Canvas.__init__(self, parent.root, width=self.largeurVue, height=self.hauteurVue, background="#000000", scrollregion=(0, 0, self.largeurMonde, self.hauteurMonde))
+        Canvas.__init__(self, parent.root, width=self.largeurVue, height=self.hauteurVue, background="#000000", scrollregion=(0, 0, self.largeurUnivers, self.hauteurUnivers))
         
         #on garde une reference vers la classe parent
         self.parent = parent
@@ -207,10 +232,10 @@ class ZoneDeJeu(Canvas):
         ZoneDeJeu.__genererImages__(self)
 
         #tracage du cadrillage style "tactique"
-        for i in range(0, self.largeurMonde, self.largeurGrille):
-            self.create_line(0, i, self.largeurMonde, i, fill=self.parent.grille)
-        for i in range(0, self.hauteurMonde, self.largeurGrille):
-            self.create_line(i, 0, i, self.largeurMonde, fill=self.parent.grille)
+        for i in range(0, self.largeurUnivers, self.largeurGrille):
+            self.create_line(0, i, self.largeurUnivers, i, fill=self.parent.grille)
+        for i in range(0, self.hauteurUnivers, self.largeurGrille):
+            self.create_line(i, 0, i, self.largeurUnivers, fill=self.parent.grille)
 
         #binds des evenements
         self.bind("<Button-1>", self.gestionClic) #envoie l'objet event au controlleur
@@ -225,25 +250,28 @@ class ZoneDeJeu(Canvas):
         self.delete("systeme.nom")
         self.dessinerImage("nebuleuse", systeme.x, systeme.y, systeme.nom)
         
-    def nouveauVaisseauMilitaire(self, vaisseau):
+    def nouveauVaisseau(self, vaisseau):
         x = vaisseau.x
         y = vaisseau.y
         l = self.baseUnites*2 #largeur des unites
-        self.create_polygon(x+self.baseUnites, y, x+l, y+l, x, y+l, fill=self.parent.rouge, tags=vaisseau.nom)
-        
-    def nouveauVaisseauCivil(self, vaisseau):
-        x = vaisseau.x
-        y = vaisseau.y
-        l = self.baseUnites*2 #largeur des unites
-        self.create_rectangle(x, y, x+l, y+l, fill=self.parent.vert, tags=vaisseau.nom)
+        if(vaisseau.classe == "civil"):
+            self.create_polygon(x+self.baseUnites, y, x+l, y+l, x, y+l, fill=self.parent.rouge, tags=vaisseau.nom)
+        elif(vaisseau.classe == "militaire"):
+            self.create_rectangle(x, y, x+l, y+l, fill=self.parent.vert, tags=vaisseau.nom)
+        elif(vaisseau.classe == "sonde"):
+            l = self.baseUnites #largeur des unites
+            self.create_oval(x, y, x+l, y+l, fill=self.parent.bleu)
         #self.tag_bind(vaisseau.nom, "<Button-1>", self.testTagBind)
         
-    def nouvelleSonde(self, x, y):
-        l = self.baseUnites #largeur des unites
-        self.create_oval(x, y, x+l, y+l, fill=self.parent.bleu)
-        
     def deplacerVaisseau(self, vaisseau):
-        self.coords(vaisseau.nom, vaisseau.x-self.baseUnites, vaisseau.y-self.baseUnites, vaisseau.x+self.baseUnites, vaisseau.y+self.baseUnites)
+        x = vaisseau.x
+        y = vaisseau.y
+        l = self.baseUnites*2 #largeur des unites
+        if(vaisseau.classe == "militaire"):
+            self.coords(vaisseau.nom, x, y, x+l, y+l)
+        else:
+            l = self.baseUnites #largeur des unites
+            self.coords(vaisseau.nom, x, y, x+l, y+l)
         
     def gestionClic(self, event):
         xy = self.calculerPositionReelle((event.x,event.y))
@@ -267,14 +295,15 @@ class ZoneDeJeu(Canvas):
         if len(objets) == 1:
             self.selectionnerObjet(objets[0])
         elif len(objets) > 1:
-            self.menu = Menu(self, tearoff=0)
+            print "Objets supperposes pas encore supprotees"
+            '''self.menu = Menu(self, tearoff=0)
             #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
             for objet in objets:
                 tag = self.gettags(objet)
                 self.menu.add_command(label=tag[0], command=self.selectionnerObjetHandler(tag[0]))
             
             self.x,self.y = event.x,event.y
-            self.menu.post(event.x_root, event.y_root)
+            self.menu.post(event.x_root, event.y_root)'''
 
     def selectionnerObjetHandler(self, tag):
         self.selectionnerObjet(tag)
@@ -295,8 +324,8 @@ class ZoneDeJeu(Canvas):
     '''ce calcule est necessaire, car l'event contient la position du clic sur la fenetre, pas sur le canvas. 
     Il faut donc convertir cette position en fonction de la valeur de 'scroll' du canvas''' 
     def calculerPositionReelle(self, xy):
-        x = self.xview()[0]*self.largeurMonde+xy[0]
-        y = self.yview()[0]*self.hauteurMonde+xy[1]
+        x = self.xview()[0]*self.largeurUnivers+xy[0]
+        y = self.yview()[0]*self.hauteurUnivers+xy[1]
         return (x,y)
         
 
