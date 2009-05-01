@@ -8,23 +8,33 @@ from Messageur import Messageur
 
 class Controlleur(object):
     def __init__(self):
-        self.serveur = xmlrpclib.Server('http://localhost:8000')
-        self.univers = pickle.loads(self.serveur.ConnecterJoueur("benoit"))
-        self.player = self.univers.joueurs["benoit"]
-        
-        self.player.ajouterVaisseau(50,50)
-        self.player.vaisseaux[0].nom = "premier"
-        self.messageADecoder = None
-        self.chat = Messageur(self)
         self.vue=Vue(self)
-        
-        self.vue.zoneJeu.nouveauVaisseauCivil(self.player.vaisseaux[0])
-        self.selectione = "false" # a mettre dans les entite
-        self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
-        self.tDeplacement.start()
+        self.nom = None
+        self.couleur = None
+        self.ip = None
+        self.serveur = None
+        self.univers = None
+        self.player = None
+        print self.nom
+        if self.nom != None:
+            self.ConnecterAuServeur()
+            self.player.ajouterVaisseau(50,50)
+            self.player.vaisseaux[0].nom = "premier"
+            self.vue.zoneJeu.nouveauVaisseau(self.player.vaisseaux[0])
+            self.messageADecoder = None
+            self.chat = Messageur(self)
+            self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
+            self.selectione = "false" # a mettre dans les entite
+            self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
+            self.tDeplacement.start()
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
             
+    def ConnecterAuServeur(self):
+        self.serveur = xmlrpclib.Server('http://localhost:8000')
+        self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
+        self.player = self.univers.joueurs[self.nom]
+        
     def SelectionneEntite(self,event):
         #Selectionne une entite et dessine un rond autour
         #print "entite selectione"
@@ -45,20 +55,22 @@ class Controlleur(object):
         
         self.SendNewDeplacement()
         
+        
     def SendNewDeplacement(self):
         self.player.vaisseaux[0].deplacer()
         self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
-        self.serveur.MiseAJourVaisseaux("benoit", pickle.dumps(self.univers.joueurs["benoit"].vaisseaux))
-        self.mes1 = self.serveur.requeteClient("benoit")
+        #print self.univers.joueurs
+        self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
+        self.mes1 = self.serveur.requeteClient(self.nom)
         if self.mes1 == "rien":
             pass
         else:
-            listeMessage = pickle.loads(self.serveur.requeteClient("benoit"))
+            listeMessage = pickle.loads(self.serveur.requeteClient(self.nom))
             self.DecodeMessage(listeMessage)
     
     def RefreshVue(self,NomduJoueur):
         for i in self.univers.joueurs[NomduJoueur].vaisseaux:
-            unVaisseau = self.vue.zoneJeu.nouveauVaisseauCivil(self.univers.joueurs[NomduJoueur].vaisseaux[0])
+            unVaisseau = self.vue.zoneJeu.nouveauVaisseau(self.univers.joueurs[NomduJoueur].vaisseaux[0])
             self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
     def TypeAction(self,event):
@@ -94,7 +106,17 @@ class Controlleur(object):
         elif event.num == 3:
             #pour savoir si il faut deplacer,attaquer,conquerir...
             self.TypeAction(event)
+        elif event.num == 2:
+            self.player.ajouterVaisseau(event.x,event.y)
+            
 
+        
+    def BoiteConnection(self,nomJoueur,ip,couleur=""):
+        print "entre"
+        self.nom = nomJoueur
+        self.ip = ip
+        self.couleur = "vert"
+        self.vue.demarrerJeu()
         
         
 
