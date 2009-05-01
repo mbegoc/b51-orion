@@ -29,16 +29,13 @@ class Vue(object):
         self.grille= "#799990"
         
         self.connexion = Connexion(self)
-        self.connexion.grid(column=0, row=0)
-        self.connexion.grid_propagate(0)
+        self.connexion.pack()
             
     def demarrerJeu(self):
-        self.connexion.grid_forget()
+        self.connexion.pack_forget()
 
         self.zoneJeu = ZoneDeJeu(self)
         self.zoneJeu.grid(column=0, row=0)
-        self.scrollY.grid(row=0, column=1, sticky=N+S)
-        self.scrollX.grid ( row=1, column=0, sticky=E+W )
         
         self.menuCote = MenuCote(self)
         self.menuCote.grid(column=2, row=0)
@@ -50,8 +47,10 @@ class Vue(object):
         self.menuBas.grid(column=0, row=3)
     
         self.scrollY = Scrollbar(self.root, orient=VERTICAL, command=self.zoneJeu.yview)
+        self.scrollY.grid(row=0, column=1, sticky=N+S)
     
         self.scrollX = Scrollbar(self.root, orient=HORIZONTAL, command=self.zoneJeu.xview)
+        self.scrollX.grid ( row=1, column=0, sticky=E+W )
     
         self.zoneJeu["xscrollcommand"] = self.scrollX.set
         self.zoneJeu["yscrollcommand"] = self.scrollY.set
@@ -203,7 +202,10 @@ class Connexion(Frame):
 
     def connecter(self):
         if self.nom.get() != "" and self.ip.get() != "":
-            self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
+            #self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
+            self.parent.demarrerJeu()
+        else:
+            MBox.showinfo(title="Saisie erronee", message="Toutes les informations demandees sont necessaires.")
             
     def erreurConnexion(self):
         MBox.showinfo(title="Erreur de connexion", message="Impossible de se connecter au serveur.")
@@ -250,8 +252,10 @@ class ZoneDeJeu(Canvas):
 
     #representer l'ensemble des sytemes initiaux
     def initialiserSystemes(self, systemes):
+        i = 0
         for systeme in systemes:
-            self.dessinerImage("systeme2", systeme.x, systeme.y, systeme.nom)
+            self.dessinerImage("systeme2", systeme.x, systeme.y, i)#systeme.nom)
+            i=i+1
         
     def detruireSysteme(self, systeme):
         self.delete("systeme.nom")
