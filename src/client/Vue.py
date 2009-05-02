@@ -57,9 +57,9 @@ class Vue(object):
         self.zoneJeu["yscrollcommand"] = self.scrollY.set
         
         #tests -- a supprimer des que les controlleurs sont fonctionnels
-        for i in range(200):
-            r = random.Random()
-            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
+#        for i in range(200):
+#            r = random.Random()
+#            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
         
     
 class MenuBas(Frame):
@@ -203,8 +203,7 @@ class Connexion(Frame):
 
     def connecter(self):
         if self.nom.get() != "" and self.ip.get() != "":
-            #self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
-            self.parent.demarrerJeu()
+            self.parent.parent.BoiteConnection(self.nom.get(), self.ip.get())
         else:
             MBox.showinfo(title="Saisie erronee", message="Toutes les informations demandees sont necessaires.")
             
@@ -256,31 +255,36 @@ class ZoneDeJeu(Canvas):
     def initialiserSystemes(self, systemes):
         i = 0
         for systeme in systemes:
-            self.dessinerImage("systeme2", systeme.x, systeme.y, i)#systeme.nom)
+            self.dessinerImage("systeme3", systeme.x, systeme.y, i)#systeme.nom)
             i=i+1
         
     def nouveauVaisseau(self, vaisseau):
+        print "creation vaisseau", vaisseau.classe
         x = vaisseau.x
         y = vaisseau.y
-        l = self.baseUnites*2 #largeur des unites
+        l = self.baseUnites #largeur des unites
         if(vaisseau.classe == "civil"):
-            self.create_polygon(x+self.baseUnites, y, x+l, y+l, x, y+l, fill=self.parent.rouge, tags=vaisseau.id)
+            self.create_rectangle(x-l, y-l, x+l, y+l, fill=self.parent.vert, tags=vaisseau.id)
         elif(vaisseau.classe == "militaire"):
-            self.create_rectangle(x, y, x+l, y+l, fill=self.parent.vert, tags=vaisseau.id)
+            self.create_polygon(x, y-l, x+l, y+l, x-l, y+l, fill=self.parent.rouge, tags=vaisseau.id)
         elif(vaisseau.classe == "sonde"):
             l = self.baseUnites #largeur des unites
-            self.create_oval(x, y, x+l, y+l, fill=self.parent.bleu)
+            self.create_oval(x-l, y-l, x+l, y+l, fill=self.parent.bleu)
         #self.tag_bind(vaisseau.id, "<Button-1>", self.testTagBind)
         
     def deplacerVaisseau(self, vaisseau):
         x = vaisseau.x
         y = vaisseau.y
-        l = self.baseUnites*2 #largeur des unites
+        l = self.baseUnites #largeur des unites
         if(vaisseau.classe == "militaire"):
-            self.coords(vaisseau.id, x, y, x+l, y+l)
+            self.coords(vaisseau.id, x, y-l, x+l, y+l, x-l, y+l)
         else:
             l = self.baseUnites #largeur des unites
-            self.coords(vaisseau.id, x, y, x+l, y+l)
+            self.coords(vaisseau.id, x-l, y-l, x+l, y+l)
+            
+    def existe(self, objet):
+        objets = self.find_withtag(objet)
+        return len(objets)
         
     def selectionner(self, event):
         x = self.canvasx(event.x)
@@ -312,6 +316,8 @@ class ZoneDeJeu(Canvas):
             
             self.x,self.y = event.x,event.y
             self.menu.post(event.x_root, event.y_root)'''
+        elif len(objets) == 0:
+            self.parent.parent.objetSelectionne = None           
             
     def creerVaisseau(self, event):
         x = self.canvasx(event.x)
