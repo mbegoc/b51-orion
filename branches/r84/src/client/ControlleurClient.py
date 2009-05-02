@@ -15,18 +15,7 @@ class Controlleur(object):
         self.serveur = None
         self.univers = None
         self.player = None
-        print self.nom
-        if self.nom != None:
-            self.ConnecterAuServeur()
-            self.player.ajouterVaisseau(50,50)
-            self.player.vaisseaux[0].nom = "premier"
-            self.vue.zoneJeu.nouveauVaisseau(self.player.vaisseaux[0])
-            self.messageADecoder = None
-            self.chat = Messageur(self)
-            self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
-            self.selectione = "false" # a mettre dans les entite
-            self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
-            self.tDeplacement.start()
+        self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
             
@@ -35,31 +24,38 @@ class Controlleur(object):
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
         
+        self.player.ajouterVaisseau(50,50)
+        self.player.vaisseaux[0].nom = "premier"
+        self.vue.zoneJeu.nouveauVaisseau(self.player.vaisseaux[0])
+        
+        self.messageADecoder = None
+        
+        self.chat = Messageur(self)
+        self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
+        self.selectione = "false" # a mettre dans les entite
+        self.tDeplacement.start()
+        
     def SelectionneEntite(self,event):
         #Selectionne une entite et dessine un rond autour
         #print "entite selectione"
         pass
     
-    def Action(self,event,typeDeplacement):
+    def Action(self, x, y):
+        typeDeplacement = "deplacement"
         if typeDeplacement == "deplacement":     
-            self.player.vaisseaux[0].xArrivee = event.x
-            self.player.vaisseaux[0].yArrivee = event.y
-            
-            self.vue.zoneJeu.deleteCroix()
-            self.vue.zoneJeu.drawCroix(event)
+            self.player.vaisseaux[0].xArrivee = x
+            self.player.vaisseaux[0].yArrivee = y
         
     def RefreshDeplacement(self):
         # pour entrer danss cette fonction continuellement
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.tDeplacement.start()
-        
         self.SendNewDeplacement()
         
         
     def SendNewDeplacement(self):
         self.player.vaisseaux[0].deplacer()
         self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
-        #print self.univers.joueurs
         self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
         self.mes1 = self.serveur.requeteClient(self.nom)
         if self.mes1 == "rien":
@@ -117,6 +113,7 @@ class Controlleur(object):
         self.ip = ip
         self.couleur = "vert"
         self.vue.demarrerJeu()
+        self.ConnecterAuServeur()
         
         
 
