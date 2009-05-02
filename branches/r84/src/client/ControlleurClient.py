@@ -69,10 +69,10 @@ class Controlleur(object):
             unVaisseau = self.vue.zoneJeu.nouveauVaisseau(self.univers.joueurs[NomduJoueur].vaisseaux[0])
             self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
-    def TypeAction(self,event):
+    def TypeAction(self,x,y):
         #"deplacement" pour test, cette fonction verifiera le type
         #a passer en parametre a self.action
-        self.Action(event,"deplacement")
+        self.Action(x,y)
         
     def DecodeMessage(self,listeDesMessages): #nom type objet
         if len(listeDesMessages) > 0:           
