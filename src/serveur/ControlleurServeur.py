@@ -7,7 +7,7 @@ from modele.Systeme import Systeme
 from modele.Univers import Univers
 from modele.Joueur import Joueur
 from modele.Vaisseau import Vaisseau
-
+from modele.Chat import Chat
 
 # Creer un serveur
 server = SimpleXMLRPCServer(("localhost", 8000),
@@ -20,6 +20,8 @@ class ControlleurServeur(object):
     def __init__(self):
         self.univers = Univers()
         self.creerSystemes()
+
+        self.chat=Chat()
 
         #Attention: TESTS A REGARDER POUR AJOUTER QQCH DE SIMILAIRE DANS CONTROLLEUR_CLIENT!!!!!!!
         #Attention: POUR TESTER ENLEVER SEULEMENT LES COMMENTAIRES QUI SONT 
@@ -134,15 +136,48 @@ class ControlleurServeur(object):
         else:
             return "rien"
 
+##################################
+#chat
+
+#debut du fichier
+
+
+    def distributionMessageChat(self, nick, message):
+        self.chat.distributionMessageChat(nick, message)
+        return 0
+
+    def receptionMessageChat(self, nick):
+        if self.chat.nbrMessage > self.univers.joueurs[nick].chatnbrMessage:
+            self.reponse = self.chat.receptionMessageChat(self.univers.joueurs[nick].chatnbrMessage)#stocke reponse
+            self.univers.joueurs[nick].chatnbrMessage = self.univers.joueurs[nick].chatnbrMessage + 1#incremente message joueur
+            return self.reponse
+        else:
+            return ["nobody","said nothing"]
+
+
+
+#fin chat
+#################################
+#fermer serveur
+
+    def shutdown(self):
+        leChat.terminer()
+
+#fin fermer serveur
+################################
+
 
 server.register_instance(ControlleurServeur())
 
 # Demarrer la boucle du serveur
-print "OK, serveur demarre"
-print ""
-print ""
-server.serve_forever()
-print "OK, serveur arrete"
+try:
+    print "serveur demarre"
+    print 'Tapez Control-C pour sortir'
+    server.serve_forever()
+except KeyboardInterrupt:
+    #server.shutdown()
+    print 'Termine!'
+
 
 
     #IMPORTANT:

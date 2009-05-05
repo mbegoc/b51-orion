@@ -7,9 +7,9 @@ from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
 #from client import *
 from modele import *
-from serveur import ControlleurServeur_chat
+from serveur import ControlleurServeur
 
-serveur=ControleurServeur.Serveur()
+serveur=ControlleurServeur()
 
 
 
