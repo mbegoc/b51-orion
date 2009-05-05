@@ -15,6 +15,7 @@ class Controlleur(object):
         self.serveur = None
         self.univers = None
         self.player = None
+        self.ObjetSelectionne = None
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
@@ -51,8 +52,20 @@ class Controlleur(object):
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.tDeplacement.start()
         self.SendNewDeplacement()
+        #self.UpdateDictionnaireJoueurs()
         
         
+    
+    def UpdateDictionnaireJoueurs(self):
+
+        listeNouveauJoueurs = pickle.loads(self.serveur.checkNouveauxJoueurs(self.univers.joueurs.keys()))
+        print "test liste"
+        print listeNouveauJoueurs
+#        if len(listeNouveauJoueurs) > 0:
+#            for i in len(listeNouveauJoueurs):
+#                nom = listeNouveauJoueurs[i].id
+#                self.univers.joueurs[nom] = listeNouveauJouers[i]
+      
     def SendNewDeplacement(self):
         self.player.vaisseaux[0].deplacer()
         self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
@@ -79,6 +92,7 @@ class Controlleur(object):
             for i in listeDesMessages:
                 messageADecoder = listeDesMessages.pop()
                 if (messageADecoder[1] == "vai"):
+                    # a checker ERROR
                     self.univers.joueurs[messageADecoder[0]].vaisseaux = messageADecoder[2]
                     self.RefreshVue(messageADecoder[0])
             
@@ -104,6 +118,8 @@ class Controlleur(object):
             self.TypeAction(event)
         elif event.num == 2:
             self.player.ajouterVaisseau(event.x,event.y)
+            self.player.vaisseaux[0].nom = "premier"
+            self.vue.zoneJeu.nouveauVaisseau(self.player.vaisseaux[0])
             
 
         
