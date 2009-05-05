@@ -102,7 +102,7 @@ class ControlleurServeur(object):
             tempReponse="Joueur existant"
             print tempReponse
         else:
-            self.univers.ajouterJoueur(nom)
+            self.univers.ajouterJoueur(nom, self.chat.nbrMessage)
             tempReponse=pickle.dumps(self.univers)
             print "OK"
         return tempReponse
