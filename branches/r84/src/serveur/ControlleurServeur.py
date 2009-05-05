@@ -22,6 +22,7 @@ class ControlleurServeur(object):
         self.creerSystemes()
 
         self.chat=Chat()
+        self.listeJoueurs=[]
 
         #Attention: TESTS A REGARDER POUR AJOUTER QQCH DE SIMILAIRE DANS CONTROLLEUR_CLIENT!!!!!!!
         #Attention: POUR TESTER ENLEVER SEULEMENT LES COMMENTAIRES QUI SONT 
@@ -30,16 +31,17 @@ class ControlleurServeur(object):
 #        self.ConnecterJoueur("Eliana")
 #        self.ConnecterJoueur("Eduardo")
 #        self.ConnecterJoueur("Eliana")
-
-        #Attenttion: ici Eliana cree un vaisseau dans (20,30) et elle l'envoie au serveur
+#        self.ConnecterJoueur("Carlos")
+#
+#        #Attenttion: ici Eliana cree un vaisseau dans (20,30) et elle l'envoie au serveur
 #        vaisseauTest1=Vaisseau(20,30)
 #        vaisseauTest2=Vaisseau(5,7)
 #        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest1)
 #        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest2)
 #        reponse= self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
 #        print reponse
-        
-        #Attention: ici Eliana modifie la position des vaisseaux        
+#        
+#        #Attention: ici Eliana modifie la position des vaisseaux        
 #        print self.univers.joueurs["Eliana"].vaisseaux
 #        for tempVaisseau in self.univers.joueurs["Eliana"].vaisseaux:
 #            tempVaisseau.x = tempVaisseau.x + 1
@@ -48,14 +50,14 @@ class ControlleurServeur(object):
 #            print tempVaisseau.y          
 #        reponse= self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
 #        print reponse
-
-        #Attention: ici Eliana fait une requete mais il y a rien a "charger"
+#
+#        #Attention: ici Eliana fait une requete mais il y a rien a "charger"
 #        repServeur=self.requeteClient("Eliana")
 #        print "Message a Eliana: ",
 #        if(repServeur=="rien"):
 #            print repServeur
-     
-        #Attention: ici Eduardo fait 3 requetes, il doit afficher les vaisseau a Eliana deplaces
+#     
+#        #Attention: ici Eduardo fait 3 requetes, il doit afficher les vaisseau a Eliana deplaces
 #        for i in range(0,3):
 #            repServeur=self.requeteClient("Eduardo")
 #            print i,
@@ -72,6 +74,11 @@ class ControlleurServeur(object):
 #                    for tempVai in listeVaisseaux:
 #                        print tempVai.x,
 #                        print tempVai.y
+#                    
+#        # Test checkNouveauxJoueurs
+#        nouvelleListe=pickle.loads(self.checkNouveauxJoueurs(["Eliana"]))
+#        for s in nouvelleListe:
+#            print s
                     
         
     def creerSystemes(self):
@@ -102,7 +109,7 @@ class ControlleurServeur(object):
             tempReponse="Joueur existant"
             print tempReponse
         else:
-            self.univers.ajouterJoueur(nom, self.chat.nbrMessage)
+            self.univers.ajouterJoueur(nom,0)
             tempReponse=pickle.dumps(self.univers)
             print "OK"
         return tempReponse
@@ -114,7 +121,7 @@ class ControlleurServeur(object):
         print "Mise a jour des vaisseaux: "
         print messVaisseaux
         return "ok"
-             
+
     def chercheMessagesAEffacer(self, nom, codMess):
         for s in self.univers.joueurs:
             if(s <> nom):
@@ -129,6 +136,17 @@ class ControlleurServeur(object):
             if(s <> nom):
                 self.univers.joueurs[s].message.append([nom, codMess, obj])
                 
+    def checkNouveauxJoueurs(self, listeNomsJoueurs):
+        print "Dans checkNouveauxJoueurs"
+        #self.listeJoueurs=listeJoueurs
+        for s in self.listeJoueurs:
+            self.listeJoueurs.remove(s)
+        for s in self.univers.joueurs:
+            if (s not in listeNomsJoueurs):
+                self.listeJoueurs.append(self.univers.joueurs[s])
+        return pickle.dumps(self.listeJoueurs)
+
+                    
     def requeteClient(self, nom):
         print "Dans requeteClient......"
         if(self.univers.joueurs[nom].message):
