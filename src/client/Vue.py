@@ -341,11 +341,12 @@ class ZoneDeJeu(Canvas):
         '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
         A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
         tag = self.gettags(objet)
-        self.parent.parent.objetSelectionne = tag[0]
         if type == "polygon" or type == "oval" or type == "rectangle":
+            self.parent.parent.objetSelectionne = ("vaisseau", tag[0])
             self.itemconfigure(objet, outline=self.parent.blanc)
             self.itemSelectionne = objet
         elif type == "image":
+            self.parent.parent.objetSelectionne = ("systeme", tag[0])
             position = self.coords(objet)
             self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
    
