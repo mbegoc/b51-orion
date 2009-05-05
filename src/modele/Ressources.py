@@ -22,6 +22,14 @@ class Ressources(object):
         self.metaux = self.metaux + ressources.metaux
         self.energie = self.energie + ressources.energie 
         self.credit = self.credit + ressources.credit
+
+    def consommer(self, ressources):
+        self.nourriture = self.nourriture - ressources.nourriture
+        self.connaissance = self.connaissance - ressources.connaissance 
+        self.gaz = self.gaz - ressources.gaz
+        self.metaux = self.metaux - ressources.metaux
+        self.energie = self.energie - ressources.energie 
+        self.credit = self.credit - ressources.credit
         
     def toList(self):
         liste = []

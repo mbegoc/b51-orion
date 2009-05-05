@@ -8,19 +8,24 @@ class Systeme(object):
         self.x = x
         self.y = y
         
+        #ressources potentiellement produites dans un systeme
         self.ressourcesPotentielles = Ressources(1)
+        #les ressources locales au systeme
+        self.ressources = Ressources(0)
         
         self.infrastructures = []
         
     def ajouterInfrastructure(self, infrastructure):
         self.infrastructures.append(infrastructure)
         
+    '''IL MANQUE ENCORE LA DIFFERENCIATION ENTRE LES RESSOURCES LOCALES ET GLOBALES'''
     def exploiterRessources(self):
         ressourcesProduites = self.ressourcesPotentielles.copier()
         for infrastucture in self.infrastructures:
             ressourcesProduites.multiplier(infrastructure.modificateurRessources)
         return ressourcesProduites
     
+    '''IL MANQUE ENCORE LA DIFFERENCIATION ENTRE LES RESSOURCES LOCALES ET GLOBALES'''
     def calculerRessourcesConsommees(self):
         ressourcesConsommees = Ressources()
         for infrastucture in self.infrastructures:
