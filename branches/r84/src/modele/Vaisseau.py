@@ -8,6 +8,8 @@ class Vaisseau(object):
         self.id = id
         self.type = type
         self.classe = classe
+        self.ressourcesEntretien = Ressources(0)
+        self.ressourcesEntretien.gaz = 1
         
     def deplacer(self):
         if self.x < self.xArrivee:
