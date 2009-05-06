@@ -15,6 +15,8 @@ class Systeme(object):
         
         self.infrastructures = []
         
+        self.ecouteurs = []
+        
     def ajouterInfrastructure(self, infrastructure):
         self.infrastructures.append(infrastructure)
         
@@ -26,28 +28,25 @@ class Systeme(object):
         ressourcesProduitesGlobalement = self.ressourcesPotentielles.copier().getRessourcesGlobales()
         
         for infrastructure in self.infrastructures:
-            ressourcesProduitesLocalement.multiplier(infrastructure.modificateurRessources)
-            ressourcesProduitesGlobalement.multiplier(infrastructure.modificateurRessources)
+            if infrastructure.actif:
+                ressourcesProduitesLocalement.multiplier(infrastructure.modificateurRessources)
+                ressourcesProduitesGlobalement.multiplier(infrastructure.modificateurRessources)
             
         self.ressources.additionner(ressourcesProduitesLocalement)
         return ressourcesProduitesGlobalement
     
-    def calculerRessourcesConsommees(self):
-        ressourcesConsommeesLocalement = Ressources()
-        ressourcesConsommeesGlobalement = Ressources()
-        
+    def calculerRessourcesConsommees(self, ressourcesGlobales):
         for infrastructure in self.infrastructures:
-            ressourcesConsommeesLocalement.additionner(infrastructure.ressourcesEntretien.getRessourcesLocales())
-            ressourcesConsommeesGlobalement.additionner(infrastructure.ressourcesEntretien.getRessourcesGlobales())
-        
-        self.ressources.consommer(ressourcesConsommeesLocalement)
-        return ressourcesConsommeesGlobalement
+                if not self.ressources.consommer(infrastructure.ressourcesEntretien.getRessourcesLocales()) or not ressourcesGlobales.consommer(infrastructure.ressourcesEntretien.getRessourcesGlobales()):
+                    infrastructure.actif = 0
+                    self.ressources.additionner(infrastructure.ressourcesEntretien.getRessourcesLocales())
+                    ressourcesGlobales.additionner(infrastructure.ressourcesEntretien.getRessourcesGlobales())
+                else:
+                    infrastructure.actif = 1
+        return ressourcesGlobales
 
         '''ca pourait etre une alternative interessante que la consommation des ressources
         renvoie les ressource REELLEMENT consommees (cas ou les ressources manquent) puis renvoie cette valeur
         ressourcesConssommees = self.ressources.consommer(ressourcesConssommees)
         return ressourcesConsommees
         '''
-
-
-    

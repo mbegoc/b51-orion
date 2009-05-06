@@ -3,6 +3,7 @@ from modele.Ressources import Ressources
 class Infrastructure(object):
     def __init__(self, type):
         self.type = type
+        self.actif = 1
         
         ''' les modificateurs de ressources pourront multiplier un potentiel 
         de production de ressources. Par exemple, une centrale electrique pourrait 
