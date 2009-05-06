@@ -1,5 +1,6 @@
 class Ressources(object):
     def __init__(self, default = 0):
+        #les 6 ressources de base
         self.nourriture = default
         self.connaissance = default
         self.gaz = default
@@ -23,6 +24,7 @@ class Ressources(object):
         self.energie = self.energie + ressources.energie 
         self.credit = self.credit + ressources.credit
 
+    #retrancher des ressources consommees
     def consommer(self, ressources):
         self.nourriture = self.nourriture - ressources.nourriture
         self.connaissance = self.connaissance - ressources.connaissance 
@@ -31,16 +33,18 @@ class Ressources(object):
         self.energie = self.energie - ressources.energie 
         self.credit = self.credit - ressources.credit
         
+    #cette fonction renvoie un dictionnaire de donnees. Pas d'importance fonctionnelle, facilite juste l'affichage pour le debuggage
     def toList(self):
-        liste = []
-        liste.append(self.nourriture)
-        liste.append(self.connaissance)
-        liste.append(self.gaz)
-        liste.append(self.metaux)
-        liste.append(self.energie)
-        liste.append(self.credit)
+        liste = {}
+        liste["nourriture"] = (self.nourriture)
+        liste["connaissance"] = (self.connaissance)
+        liste["gaz"] = (self.gaz)
+        liste["metaux"] = (self.metaux)
+        liste["energie"] = (self.energie)
+        liste["credit"] = (self.credit)
         return liste
     
+    #duplique l'objet, si on a besoin de faire des calculs sur une ressources sans la modifier
     def copier(self):
         copie = Ressources()
         copie.nourriture = self.nourriture
@@ -50,3 +54,19 @@ class Ressources(object):
         copie.energie = self.energie 
         copie.credit = self.credit
         return copie
+    
+    #renvoie seulement les ressources globales - pour simplifier le code des calculs de consommation et d'exploitation
+    def getRessourcesGlobales(self):
+        ressourcesGlobales = Ressources()
+        ressourcesGlobales.connaissance = self.connaissance
+        ressourcesGlobales.credit = self.credit
+        return ressourcesGlobales
+    
+    #renvoie seulement les ressources locales - pour simplifier le code des calculs de consommation et d'exploitation
+    def getRessourcesLocales(self):
+        ressourcesLocales = Ressources()
+        ressourcesLocales.metaux = self.metaux
+        ressourcesLocales.nourriture = self.nourriture
+        ressourcesLocales.energie = self.energie
+        ressourcesLocales.gaz = self.gaz
+        return ressourcesLocales
