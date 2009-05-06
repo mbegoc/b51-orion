@@ -15,6 +15,11 @@ class Ressources(object):
         self.metaux = self.metaux * ressources.metaux
         self.energie = self.energie * ressources.energie 
         self.credit = self.credit * ressources.credit
+        
+        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0:
+            return 0
+        else:
+            return 1
 
     def additionner(self, ressources):
         self.nourriture = self.nourriture + ressources.nourriture
@@ -23,6 +28,11 @@ class Ressources(object):
         self.metaux = self.metaux + ressources.metaux
         self.energie = self.energie + ressources.energie 
         self.credit = self.credit + ressources.credit
+        
+        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0:
+            return 0
+        else:
+            return 1
 
     #retrancher des ressources consommees
     def consommer(self, ressources):
@@ -32,6 +42,10 @@ class Ressources(object):
         self.metaux = self.metaux - ressources.metaux
         self.energie = self.energie - ressources.energie 
         self.credit = self.credit - ressources.credit
+        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0:
+            return 0
+        else:
+            return 1
         
     #cette fonction renvoie un dictionnaire de donnees. Pas d'importance fonctionnelle, facilite juste l'affichage pour le debuggage
     def toList(self):

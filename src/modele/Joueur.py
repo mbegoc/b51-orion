@@ -17,8 +17,8 @@ class Joueur(object):
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)      
     
-    def ajouterVaisseau(self, posX, posY):
-        self.vaisseaux.append(Vaisseau(posX,posY))
+    def ajouterVaisseau(self, posX, posY, id):
+        self.vaisseaux.append(Vaisseau(posX,posY, id))
              
     '''calcul de la production des ressources
     CES RESSOURCES SONT UNIQUEMENT LES RESSOURCES GLOBALES'''
@@ -31,7 +31,7 @@ class Joueur(object):
     C'EST RESSOURCES SONT UNIQUEMENT LES RESSOURCES GLOBALES'''
     def calculerRessourcesConsommees(self):
         for systeme in self.systemes:
-            self.ressources.consommer(systeme.calculerRessourcesConsommees())
+            self.ressources = (systeme.calculerRessourcesConsommees(self.ressources))
         ''' je m'etais dit qu'on calculerait ici la consommation des vaisseaux, mais ca pose des problemes logiques
         il vaut mieux que les vaisseaux emporte avec eux les ressources dont ils ont besoin pour fonctionner'''
         #for vaisseau in self.vaisseaux:
@@ -59,22 +59,25 @@ if __name__ == "__main__":
     '''creation d'un second systeme plutot riche en metaux'''
     systeme2 = Systeme(50, 50)
     systeme2.ressourcesPotentielles.metaux = 3
+    systeme2.ressourcesPotentielles.energie = 1
+    systeme2.ressourcesPotentielles.gaz = 0
     infrastructure = Infrastructure("extracteur")
     infrastructure.ressourcesEntretien.energie = 2
-    infrastructure.modificateurRessources.metaux = 2
+    infrastructure.modificateurRessources.metaux = 10
     systeme2.ajouterInfrastructure(infrastructure)
     
     joueur = Joueur("", "", "", systeme1, 0)
     joueur.ajouterSysteme(systeme2)
-    joueur.ajouterVaisseau(50, 50)
+    joueur.ajouterVaisseau(50, 50, "id")
 
     #une 
-    for i in range(1,10):
+    for i in range(1,20):
         joueur.exploiterRessources()
         print "ressources globales apres exploitation: ",joueur.ressources.toList()
         joueur.calculerRessourcesConsommees()
-        print "ressources globales apres consommation: ",joueur.ressources.toList()
         for systeme in joueur.systemes:
             print "ressources systemes: ",systeme.ressources.toList()
+            for infra in systeme.infrastructures:
+                print infra.type, ": ", infra.actif
         print ""
 
