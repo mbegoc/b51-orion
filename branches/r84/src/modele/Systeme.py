@@ -11,33 +11,43 @@ class Systeme(object):
         #ressources potentiellement produites dans un systeme
         self.ressourcesPotentielles = Ressources(1)
         #les ressources locales au systeme
-        self.ressources = Ressources(0)
+        self.ressources = Ressources(10).getRessourcesLocales()
         
         self.infrastructures = []
         
     def ajouterInfrastructure(self, infrastructure):
         self.infrastructures.append(infrastructure)
         
-    '''IL MANQUE ENCORE LA DIFFERENCIATION ENTRE LES RESSOURCES LOCALES ET GLOBALES'''
+    '''calcul de l'exploitation et de la consommation des ressources pour ce systeme
+    on differencie les ressources globales des ressources locales: 
+    La fonction ne retourne que la partie globale qui servira au calcul des ressources pour le joueur'''
     def exploiterRessources(self):
-        ressourcesProduites = self.ressourcesPotentielles.copier()
-        for infrastucture in self.infrastructures:
-            ressourcesProduites.multiplier(infrastructure.modificateurRessources)
-        return ressourcesProduites
+        ressourcesProduitesLocalement = self.ressourcesPotentielles.copier().getRessourcesLocales()
+        ressourcesProduitesGlobalement = self.ressourcesPotentielles.copier().getRessourcesGlobales()
+        
+        for infrastructure in self.infrastructures:
+            ressourcesProduitesLocalement.multiplier(infrastructure.modificateurRessources)
+            ressourcesProduitesGlobalement.multiplier(infrastructure.modificateurRessources)
+            
+        self.ressources.additionner(ressourcesProduitesLocalement)
+        return ressourcesProduitesGlobalement
     
-    '''IL MANQUE ENCORE LA DIFFERENCIATION ENTRE LES RESSOURCES LOCALES ET GLOBALES'''
     def calculerRessourcesConsommees(self):
-        ressourcesConsommees = Ressources()
-        for infrastucture in self.infrastructures:
-            ressourcesConsommees.additionner(infrastructure.ressourcesEntretien)
-        return ressourcesConsommees
+        ressourcesConsommeesLocalement = Ressources()
+        ressourcesConsommeesGlobalement = Ressources()
+        
+        for infrastructure in self.infrastructures:
+            ressourcesConsommeesLocalement.additionner(infrastructure.ressourcesEntretien.getRessourcesLocales())
+            ressourcesConsommeesGlobalement.additionner(infrastructure.ressourcesEntretien.getRessourcesGlobales())
+        
+        self.ressources.consommer(ressourcesConsommeesLocalement)
+        return ressourcesConsommeesGlobalement
 
-if __name__ == "__main__":
-    systeme = Systeme(0, 0)
-    infrastructure = Infrastructure("extracteur")
-    infrastructure.ressourcesEntretien.energie = 10
-    infrastructure.modificateurRessources.metaux = 20
-    systeme.ajouterInfrastructure(infrastructure)
-    print systeme.exploiterRessources().toList()
-    print systeme.calculerRessourcesConsommees().toList()
+        '''ca pourait etre une alternative interessante que la consommation des ressources
+        renvoie les ressource REELLEMENT consommees (cas ou les ressources manquent) puis renvoie cette valeur
+        ressourcesConssommees = self.ressources.consommer(ressourcesConssommees)
+        return ressourcesConsommees
+        '''
+
+
     
