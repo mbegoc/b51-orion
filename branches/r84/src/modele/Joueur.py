@@ -6,7 +6,7 @@ class Joueur(object):
         self.parent=parent
         self.couleur = couleur
         self.id = id
-        self.vaisseaux = []
+        self.vaisseaux = {}
         self.systemes = []
         self.ajouterSysteme(systInit)
         self.message = []
@@ -18,7 +18,11 @@ class Joueur(object):
         self.systemes.append(systeme)      
     
     def ajouterVaisseau(self, posX, posY, id):
-        self.vaisseaux.append(Vaisseau(posX,posY, id))
+        self.vaisseaux[id] = Vaisseau(posX,posY, id)
+        
+    def getVaisseau(self,id):
+        key = "v" + self.id + str(id)
+        return self.vaisseaux[key]
              
     '''calcul de la production des ressources
     CES RESSOURCES SONT UNIQUEMENT LES RESSOURCES GLOBALES'''
