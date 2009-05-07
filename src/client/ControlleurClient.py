@@ -79,7 +79,8 @@ class Controlleur(object):
     def RefreshVue(self,NomduJoueur):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
             unVaisseau = self.univers.joueurs[NomduJoueur].getVaisseau(i+1)
-            self.vue.zoneJeu.nouveauVaisseau(unVaisseau)
+            if self.vue.zoneJeu.existe(unVaisseau.id) <= 0:
+                self.vue.zoneJeu.nouveauVaisseau(unVaisseau)
             self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
     def TypeAction(self,x,y):
