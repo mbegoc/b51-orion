@@ -16,6 +16,7 @@ class Controlleur(object):
         self.univers = None
         self.player = None
         self.ObjetSelectionne = None
+        self.messageADecoder = None
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
@@ -25,15 +26,11 @@ class Controlleur(object):
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
         
-        self.player.ajouterVaisseau(50,50)
-        self.player.vaisseaux[0].nom = "premier"
-        self.vue.zoneJeu.nouveauVaisseau(self.player.vaisseaux[0])
-        
-        self.messageADecoder = None
-        
+        self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1))
         self.chat = Messageur(self)
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
-        self.selectione = "false" # a mettre dans les entite
+        self.selectione = "false"
         self.tDeplacement.start()
         
     def SelectionneEntite(self,event):
@@ -44,8 +41,8 @@ class Controlleur(object):
     def Action(self, x, y):
         typeDeplacement = "deplacement"
         if typeDeplacement == "deplacement":     
-            self.player.vaisseaux[0].xArrivee = x
-            self.player.vaisseaux[0].yArrivee = y
+            self.player.vaisseaux["vbenoit1"].xArrivee = x
+            self.player.vaisseaux["vbenoit1"].yArrivee = y
         
     def RefreshDeplacement(self):
         # pour entrer danss cette fonction continuellement
@@ -57,29 +54,31 @@ class Controlleur(object):
         
     
     def UpdateDictionnaireJoueurs(self):
-
         listeNouveauJoueurs = pickle.loads(self.serveur.checkNouveauxJoueurs(self.univers.joueurs.keys()))
         print "test liste"
         print listeNouveauJoueurs
-#        if len(listeNouveauJoueurs) > 0:
-#            for i in len(listeNouveauJoueurs):
-#                nom = listeNouveauJoueurs[i].id
-#                self.univers.joueurs[nom] = listeNouveauJouers[i]
+        if len(listeNouveauJoueurs) > 0:
+            for i in len(listeNouveauJoueurs):
+                nom = listeNouveauJoueurs[i].id
+                self.univers.joueurs[nom] = listeNouveauJouers[i]
       
     def SendNewDeplacement(self):
-        self.player.vaisseaux[0].deplacer()
-        self.vue.zoneJeu.deplacerVaisseau(self.player.vaisseaux[0])
-        self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
-        self.mes1 = self.serveur.requeteClient(self.nom)
-        if self.mes1 == "rien":
-            pass
-        else:
-            listeMessage = pickle.loads(self.serveur.requeteClient(self.nom))
-            self.DecodeMessage(listeMessage)
+        print "nouv dep"
+        for i in range(len(self.player.vaisseaux)):
+            self.player.getVaisseau(i+1).deplacer()
+            self.vue.zoneJeu.deplacerVaisseau(self.player.getVaisseau(i+1))
+            self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
+            self.mes1 = self.serveur.requeteClient(self.nom)
+            if self.mes1 == "rien":
+                pass
+            else:
+                listeMessage = pickle.loads(self.serveur.requeteClient(self.nom))
+                self.DecodeMessage(listeMessage)
     
     def RefreshVue(self,NomduJoueur):
-        for i in self.univers.joueurs[NomduJoueur].vaisseaux:
-            unVaisseau = self.vue.zoneJeu.nouveauVaisseau(self.univers.joueurs[NomduJoueur].vaisseaux[0])
+        for Vaisseau in self.univers.joueurs[NomduJoueur].vaisseaux:
+            ###########################
+            unVaisseau = self.vue.zoneJeu.nouveauVaisseau(self.univers.joueurs[NomduJoueur].vaisseaux["vbenoit1"])
             self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
     def TypeAction(self,x,y):
@@ -87,7 +86,7 @@ class Controlleur(object):
         #a passer en parametre a self.action
         self.Action(x,y)
         
-    def DecodeMessage(self,listeDesMessages): #nom type objet
+    def DecodeMessage(self,listeDesMessages):
         if len(listeDesMessages) > 0:           
             for i in listeDesMessages:
                 messageADecoder = listeDesMessages.pop()
@@ -96,8 +95,10 @@ class Controlleur(object):
                     self.univers.joueurs[messageADecoder[0]].vaisseaux = messageADecoder[2]
                     self.RefreshVue(messageADecoder[0])
             
-        
-        
+    #nomme un vaisseau, premiere lettre v pour vaisseau + nom du jouer + un id   
+    def BatemeVaisseau(self):
+        numero = len(self.player.vaisseaux)+1
+        return "v" + self.player.id+str(numero)
             
     #gere les clicks de souris sur le canvas
     def ClickEvent(self,event):
@@ -116,15 +117,10 @@ class Controlleur(object):
         elif event.num == 3:
             #pour savoir si il faut deplacer,attaquer,conquerir...
             self.TypeAction(event)
-        elif event.num == 2:
-            self.player.ajouterVaisseau(event.x,event.y)
-            self.player.vaisseaux[0].nom = "premier"
-            self.vue.zoneJeu.nouveauVaisseau(self.player.vaisseaux[0])
             
 
         
     def BoiteConnection(self,nomJoueur,ip,couleur=""):
-        print "entre"
         self.nom = nomJoueur
         self.ip = ip
         self.couleur = "vert"
