@@ -50,6 +50,16 @@ class Controlleur(object):
         self.tDeplacement.start()
         self.UpdateDictionnaireJoueurs()
         self.SendNewDeplacement()
+        self.GetMessage()
+        
+    def GetMessage(self):
+        print self.nom
+         
+        self.mes1 = self.serveur.requeteClient(self.nom)
+        if self.mes1 == "rien":
+            pass
+        else:
+            self.DecodeMessage(pickle.loads(self.mes1))
         
         
     def UpdateDictionnaireJoueurs(self):
@@ -64,12 +74,7 @@ class Controlleur(object):
             self.player.getVaisseau(i+1).deplacer()
             self.vue.zoneJeu.deplacerVaisseau(self.player.getVaisseau(i+1))
             self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
-            self.mes1 = self.serveur.requeteClient(self.nom)
-            if self.mes1 == "rien":
-                pass
-            else:
-                listeMessage = pickle.loads(self.serveur.requeteClient(self.nom))
-                self.DecodeMessage(listeMessage)
+
     
     def RefreshVue(self,NomduJoueur):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
