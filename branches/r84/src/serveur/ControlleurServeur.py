@@ -109,7 +109,7 @@ class ControlleurServeur(object):
             tempReponse="Joueur existant"
             print tempReponse
         else:
-            self.univers.ajouterJoueur(nom,0)
+            self.univers.ajouterJoueur(nom)
             tempReponse=pickle.dumps(self.univers)
             print "OK"
         return tempReponse
@@ -164,16 +164,15 @@ class ControlleurServeur(object):
         self.chat.distributionMessageChat(nick, message)
         return 0
 
-    def receptionMessageChat(self, nick):
-        if self.chat.nbrMessage > self.univers.joueurs[nick].chatnbrMessage:
-            self.reponse = self.chat.receptionMessageChat(self.univers.joueurs[nick].chatnbrMessage)#stocke reponse
-            self.univers.joueurs[nick].chatnbrMessage = self.univers.joueurs[nick].chatnbrMessage + 1#incremente message joueur
+    def receptionMessageChat(self, msgNbr):
+        if msgNbr == -1: #demande no dernier message envoye
+            self.reponse = self.Chat.nbrMessage
+        else: #demande un message precis
+            self.reponse = self.chat.receptionMessageChat(msgNbr)
+            
             return self.reponse
-        else:
-            return ["nobody","said nothing"]
 
-
-
+ 
 #fin chat
 #################################
 #fermer serveur

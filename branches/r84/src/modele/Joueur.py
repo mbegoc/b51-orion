@@ -2,7 +2,7 @@ from modele.Vaisseau import Vaisseau
 from modele.Ressources import Ressources
 
 class Joueur(object):
-    def __init__(self, parent, id, couleur, systInit, chatnbrMessage=0):
+    def __init__(self, parent, id, couleur, systInit):
         self.parent=parent
         self.couleur = couleur
         self.id = id
@@ -10,7 +10,6 @@ class Joueur(object):
         self.systemes = []
         self.ajouterSysteme(systInit)
         self.message = []
-        self.chatnbrMessage = chatnbrMessage
         
         self.ressources = Ressources(10).getRessourcesGlobales()
         
