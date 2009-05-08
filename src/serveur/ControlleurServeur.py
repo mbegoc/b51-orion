@@ -76,9 +76,10 @@ class ControlleurServeur(object):
 #                        print tempVai.y
 #                    
 #        # Test checkNouveauxJoueurs
-#        nouvelleListe=pickle.loads(self.checkNouveauxJoueurs(["Eliana"]))
+#        nouvelleListe=pickle.loads(self.checkNouveauxJoueurs(["Eliana","Eduardo"]))
 #        for s in nouvelleListe:
 #            print s
+#            print s.id
                     
         
     def creerSystemes(self):
