@@ -96,7 +96,7 @@ class Chat(Frame):
         #test = self.parent.zoneJeu["width"]
         
         self.affichage=Text(self, width=138, height=5, wrap=WORD, state=DISABLED)
-        self.envoi=Button(self,text="Envoi",command=self.sendMessage)# test du chat
+        self.envoi=Button(self,text="Envoi",command=self.distributionMessageChat)# test du chat
         self.affichage.tag_configure("brun", foreground=self.parent.brun)
         self.affichage.tag_configure("jaune", foreground=self.parent.jaune)
         self.affichage.tag_configure("rouge", foreground=self.parent.rouge)
@@ -108,7 +108,7 @@ class Chat(Frame):
         self.affichage.tag_configure("vert", foreground=self.parent.vert)
         self.affichage.tag_configure("mauve", foreground=self.parent.mauve)
         
-        self.message.bind("<KeyRelease-Return>", self.sendMessage)
+        self.message.bind("<KeyRelease-Return>", self.distributionMessageChat)
         
         self.scrollY = Scrollbar(self, orient=VERTICAL, command=self.affichage.yview)
         self.affichage["yscrollcommand"] = self.scrollY.set
@@ -118,8 +118,8 @@ class Chat(Frame):
         self.message.grid(column=0, row=1, columnspan=2)# test du chat
         self.envoi.grid(column=2,row=1, columnspan=2)# test du chat
         
-    def sendMessage(self, event=None):
-        self.parent.parent.chat.sendMessage(self.message.get())
+    def distributionMessageChat(self, event=None):
+        self.parent.parent.distributionMessageChat(self.message.get())
         self.message.delete(0, END)
         
     def affiche(self, message, couleur=None):

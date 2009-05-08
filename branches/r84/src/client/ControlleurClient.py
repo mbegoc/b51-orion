@@ -28,10 +28,12 @@ class Controlleur(object):
         
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1))
-        self.chat = Messageur(self)
+        #self.chat = Messageur(self) #je ne pense pas que ce fichier soit necessaire a present
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
         self.selectione = "false"
         self.tDeplacement.start()
+        self.chatMsgNbr=self.serveur.receptionMessageChat(-1) #initialise le chat
+
         
     def SelectionneEntite(self,event):
         #Selectionne une entite et dessine un rond autour
@@ -74,7 +76,7 @@ class Controlleur(object):
             self.player.getVaisseau(i+1).deplacer()
             self.vue.zoneJeu.deplacerVaisseau(self.player.getVaisseau(i+1))
             self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
-
+            self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
     
     def RefreshVue(self,NomduJoueur):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
@@ -119,6 +121,27 @@ class Controlleur(object):
             #pour savoir si il faut deplacer,attaquer,conquerir...
             self.TypeAction(event)
             
+    #####################################################
+    #debut methodes chat
+
+    def distributionMessageChat(self, message):
+        self.serveur.distributionMessageChat(self.nom, message)
+
+    def receptionMessageChat(self):
+        #-1 est un nombre magique qui signifie que je demande le numero du dernier message envoye.
+        #si le chiffre est different de -1, c'est le numero du message que l'on demande.
+        self.chatMsgActuel = self.serveur.receptionMessageChat(-1)
+        if self.chatMsgActuel > self.chatMsgNbr:
+            for a in range (self.chatMsgNbr, self.chatMsgActuel):#demande les nouveaux message 1 par 1
+                self.messageChat = self.serveur.receptionMessageChat(self.chatMsgNbr)
+                self.messageFormate = self.messageChat[0] + ": " + self.messageChat[1]
+                self.vue.chat.affiche(self.messageFormate, "mauve")
+        self.chatMsgNbr = self.chatMsgActuel #incremente message recu au dernier.
+
+    #fin methodes chat
+    ###################################################
+
+
 
         
     def BoiteConnection(self,nomJoueur,ip,couleur=""):
