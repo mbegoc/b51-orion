@@ -133,11 +133,16 @@ class Controlleur(object):
         #si le chiffre est different de -1, c'est le numero du message que l'on demande.
         self.chatMsgActuel = self.serveur.receptionMessageChat(-1)
         if self.chatMsgActuel > self.chatMsgNbr:
-            for a in range (self.chatMsgNbr, self.chatMsgActuel):#demande les nouveaux message 1 par 1
+            '''
+            le rafraichissement de cette methode est tellement rapide que j'ai des problemes car la fonction est rappelee avant que la methode soit terminee. je vais donc changer la valeur de self.chatMsgNbr avant d'entrer dans la boucle pour eviter de demander plusieurs fois le meme message.
+            '''
+            self.chatLoop = self.chatMsgActuel
+            self.chatMsgNbr = self.chatMsgActuel #incremente message recu en dernier.
+            for a in range (self.chatLoop, self.chatMsgActuel):#demande les nouveaux message 1 par 1
                 self.messageChat = self.serveur.receptionMessageChat(a)
                 self.messageFormate = self.messageChat[0] + ": " + self.messageChat[1]
                 self.vue.chat.affiche(self.messageFormate, "mauve")
-            self.chatMsgNbr = self.chatMsgActuel #incremente message recu au dernier.
+
 
     #fin methodes chat
     ###################################################
