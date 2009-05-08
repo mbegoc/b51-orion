@@ -53,6 +53,7 @@ class Controlleur(object):
         self.UpdateDictionnaireJoueurs()
         self.SendNewDeplacement()
         self.GetMessage()
+        self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
         
     def GetMessage(self):
         print self.nom
@@ -76,7 +77,7 @@ class Controlleur(object):
             self.player.getVaisseau(i+1).deplacer()
             self.vue.zoneJeu.deplacerVaisseau(self.player.getVaisseau(i+1))
             self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
-            self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
+
     
     def RefreshVue(self,NomduJoueur):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
@@ -133,10 +134,10 @@ class Controlleur(object):
         self.chatMsgActuel = self.serveur.receptionMessageChat(-1)
         if self.chatMsgActuel > self.chatMsgNbr:
             for a in range (self.chatMsgNbr, self.chatMsgActuel):#demande les nouveaux message 1 par 1
-                self.messageChat = self.serveur.receptionMessageChat(self.chatMsgNbr)
+                self.messageChat = self.serveur.receptionMessageChat(a)
                 self.messageFormate = self.messageChat[0] + ": " + self.messageChat[1]
                 self.vue.chat.affiche(self.messageFormate, "mauve")
-        self.chatMsgNbr = self.chatMsgActuel #incremente message recu au dernier.
+            self.chatMsgNbr = self.chatMsgActuel #incremente message recu au dernier.
 
     #fin methodes chat
     ###################################################
