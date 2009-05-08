@@ -167,11 +167,11 @@ class ControlleurServeur(object):
 
     def receptionMessageChat(self, msgNbr):
         if msgNbr == -1: #demande no dernier message envoye
-            self.reponse = self.Chat.nbrMessage
+            self.reponse = self.chat.nbrMessage
         else: #demande un message precis
             self.reponse = self.chat.receptionMessageChat(msgNbr)
             
-            return self.reponse
+        return self.reponse
 
  
 #fin chat
