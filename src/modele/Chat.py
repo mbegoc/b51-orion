@@ -21,7 +21,6 @@ class Chat(object):
 
     def distributionMessageChat(self, nick, message):
         self.messages[self.nbrMessage]=[nick, message]
-
         
         #ecrit le chat dans le log
         self.chatlog.write(time.strftime("%H:%M:%S", time.localtime()) + " <" + self.messages[self.nbrMessage][self.nick] + "> " + self.messages[self.nbrMessage][self.msg] + "\n")
