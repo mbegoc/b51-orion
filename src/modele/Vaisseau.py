@@ -25,7 +25,7 @@ class Vaisseau(object):
         self.ressourcesPropulsion.gaz = 20
         
         self.ecouteurs = []
-    def valideArriveSysteme(self): # valide que le vaisseau arribe à un systeme
+    def valideArriveSysteme(self): 
         if self.x==self.xArrivee and self.y==self.yArrivee and Univers.systemes[self.idDestination]:
             return true
         else:
