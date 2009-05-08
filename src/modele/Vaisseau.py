@@ -1,15 +1,19 @@
 from modele.Ressources import Ressources
 from modele.Evenements import *
+
 import math
 
+
 class Vaisseau(object):
-    def __init__(self, x, y, id="default", classe="civil", type="default"):
+    def __init__(self,parent, x, y, id="default", classe="civil", type="default"):
+        self.parent=parent
         self.x = x
         self.y = y
         self.etat = "rien" # pour s'avoir s'il attaque ou s'il est mort par exemple
         self.xArrivee = x
         self.yArrivee = y
         self.vitesse = 5
+        self.idDestination=0 # pour met id dictionaire du systeme s'il n'y pas de systeme valeur=0
         
         self.id = id
         self.type = type
@@ -21,6 +25,11 @@ class Vaisseau(object):
         self.ressourcesPropulsion.gaz = 20
         
         self.ecouteurs = []
+    def valideArriveSysteme(self): # valide que le vaisseau arribe à un systeme
+        if self.x==self.xArrivee and self.y==self.yArrivee and Univers.systemes[self.idDestination]:
+            return true
+        else:
+            return false 
         
     def deplacer(self):
         self.ressourcesPropulsion.consommer(self.ressourcesEntretien)
@@ -65,6 +74,7 @@ class Vaisseau(object):
                     elif (self.yArrivee - yActuel)/math.fabs(self.yArrivee - yActuel) == -1:
                         if self.y < self.yArrivee:
                             self.y = self.yArrivee
+
             else:
                 #on genere un evenement car le vaisseau n'a plus suffisamment de ressources pour se deplacer
                 self.genererEvent("Panne", "Ressources insuffisantes pour se deplacer")
