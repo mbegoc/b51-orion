@@ -4,7 +4,7 @@ from threading import Timer
 
 from modele import *
 from Vue import Vue
-from Messageur import Messageur
+
 
 class Controlleur(object):
     def __init__(self):
@@ -28,7 +28,7 @@ class Controlleur(object):
         
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1))
-        #self.chat = Messageur(self) #je ne pense pas que ce fichier soit necessaire a present
+
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
         self.selectione = "false"
         self.tDeplacement.start()
