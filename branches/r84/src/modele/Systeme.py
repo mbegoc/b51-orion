@@ -1,13 +1,16 @@
 from modele.Ressources import Ressources
 from modele.Infrastructure import Infrastructure
+
 # un systeme stellaire
 # un systeme stellaire a une position fixe 
 # dans l'espace est ne fait pas grand chose a part ca
 class Systeme(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y,z,id):
         self.x = x
         self.y = y
-        
+        self.z = z
+        self.id = id
+        self.owner = ""
         #ressources potentiellement produites dans un systeme
         self.ressourcesPotentielles = Ressources(1)
         #les ressources locales au systeme
@@ -50,3 +53,10 @@ class Systeme(object):
         ressourcesConssommees = self.ressources.consommer(ressourcesConssommees)
         return ressourcesConsommees
         '''
+    def ajouterOwnerSysteme(self, vaisseau):
+        if vaisseau.valideArriveSysteme() :
+            self.owner=vaisseau.id[1:]
+            Joueur.ajouterSysteme(vaisseau.idDestination)
+            return "ok"
+        else:
+            return "rien"
