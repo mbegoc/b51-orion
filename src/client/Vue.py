@@ -295,29 +295,7 @@ class ZoneDeJeu(Canvas):
             self.itemconfigure(self.itemSelectionne, outline="")
         self.itemSelectionne = None
         
-        #selection d'un ou plusieurs objets
-        objetsCliques = self.find_overlapping(x-self.baseUnites, y-self.baseUnites, x+self.baseUnites, y+self.baseUnites)
-        
-        #on commence par creer une liste avec seulement les objets qui nous interessent
-        objets = []
-        for objet in objetsCliques:
-            if self.type(objet) != "line":
-                objets.append(objet)
-        
-        if len(objets) == 1:
-            self.selectionnerObjet(objets[0])
-        elif len(objets) > 1:
-            print "Objets supperposes pas encore supprotees"
-            '''self.menu = Menu(self, tearoff=0)
-            #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
-            for objet in objets:
-                tag = self.gettags(objet)
-                self.menu.add_command(label=tag[0], command=self.selectionnerObjetHandler(tag[0]))
-            
-            self.x,self.y = event.x,event.y
-            self.menu.post(event.x_root, event.y_root)'''
-        elif len(objets) == 0:
-            self.parent.parent.objetSelectionne = None           
+        self.parent.parent.objetSelectionne = selectionnerObjet(x, y)
             
     def creerVaisseau(self, event):
         x = self.canvasx(event.x)
@@ -332,6 +310,32 @@ class ZoneDeJeu(Canvas):
         self.timer = Timer(1, self.deleteCroix)
         self.timer.start()
         self.parent.parent.TypeAction(x, y)
+        self.parent.parent.objetCible = selectionnerObjet(x, y)
+
+    def selectionnerObjet(self, x, y):
+        #selection d'un ou plusieurs objets
+        objetsCliques = self.find_overlapping(x-self.baseUnites, y-self.baseUnites, x+self.baseUnites, y+self.baseUnites)
+        
+        #on commence par creer une liste avec seulement les objets qui nous interessent
+        objets = []
+        for objet in objetsCliques:
+            if self.type(objet) != "line":
+                objets.append(objet)
+        
+        if len(objets) == 1:
+            return objets[0]
+        elif len(objets) > 1:
+            print "Objets supperposes pas encore supprotees"
+            '''self.menu = Menu(self, tearoff=0)
+            #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
+            for objet in objets:
+                tag = self.gettags(objet)
+                self.menu.add_command(label=tag[0], command=self.selectionnerObjetHandler(tag[0]))
+            
+            self.x,self.y = event.x,event.y
+            self.menu.post(event.x_root, event.y_root)'''
+        elif len(objets) == 0:
+            return None      
 
     def selectionnerObjetHandler(self, tag):
         self.selectionnerObjet(tag)
