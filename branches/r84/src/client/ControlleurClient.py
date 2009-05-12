@@ -15,7 +15,7 @@ class Controlleur(object):
         self.serveur = None
         self.univers = None
         self.player = None
-        self.ObjetSelectionne = None
+        self.objetSelectionne = None
         self.messageADecoder = None
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.vue.root.mainloop()
@@ -36,15 +36,15 @@ class Controlleur(object):
 
         
     def SelectionneEntite(self,event):
-        #Selectionne une entite et dessine un rond autour
-        #print "entite selectione"
-        pass
+        print "click gauche", self.objetSelectionne
     
     def Action(self, x, y):
+        print "click droit", self.objetSelectionne
         typeDeplacement = "deplacement"
-        if typeDeplacement == "deplacement":     
-            self.player.getVaisseau(1).xArrivee = x
-            self.player.getVaisseau(1).yArrivee = y
+        if typeDeplacement == "deplacement":  
+            print self.objetSelectionne   
+            #self.player.vaisseaux[self.objetSelectionne[1]].xArrivee = x
+            #self.player.vaisseaux[self.objetSelectionne[1]].yArrivee = y
         
     def RefreshDeplacement(self):
         # pour entrer danss cette fonction continuellement
