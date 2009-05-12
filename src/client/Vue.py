@@ -223,6 +223,7 @@ class ZoneDeJeu(Canvas):
         self.largeurGrille = 200
         self.baseUnites = 5
         self.itemSelectionne = None
+        self.itemCible = None
 
         #appel au constructeur de la super classe
         Canvas.__init__(self, parent.root, width=self.largeurVue, height=self.hauteurVue, background="#000000", scrollregion=(0, 0, self.largeurUnivers, self.hauteurUnivers))
@@ -295,7 +296,7 @@ class ZoneDeJeu(Canvas):
             self.itemconfigure(self.itemSelectionne, outline="")
         self.itemSelectionne = None
         
-        self.parent.parent.objetSelectionne = selectionnerObjet(x, y)
+        self.parent.parent.objetSelectionne = self.getTagObjet(x, y)
             
     def creerVaisseau(self, event):
         x = self.canvasx(event.x)
@@ -310,22 +311,23 @@ class ZoneDeJeu(Canvas):
         self.timer = Timer(1, self.deleteCroix)
         self.timer.start()
         self.parent.parent.TypeAction(x, y)
-        self.parent.parent.objetCible = selectionnerObjet(x, y)
+        self.parent.parent.objetCible = self.getTagObjet(x, y)
 
-    def selectionnerObjet(self, x, y):
+    def getTagObjet(self, x, y):
         #selection d'un ou plusieurs objets
         objetsCliques = self.find_overlapping(x-self.baseUnites, y-self.baseUnites, x+self.baseUnites, y+self.baseUnites)
         
         #on commence par creer une liste avec seulement les objets qui nous interessent
         objets = []
         for objet in objetsCliques:
-            if self.type(objet) != "line":
+            if self.type(objet) != "line":#il faut ajouter ici le cas echeant les objets qui ne font pas parti des objets selectionnables
                 objets.append(objet)
         
         if len(objets) == 1:
+            self.selectionnerObjet(objets[0])
             return objets[0]
         elif len(objets) > 1:
-            print "Objets supperposes pas encore supprotees"
+            print "Objets supperposes pas encore supportees"
             '''self.menu = Menu(self, tearoff=0)
             #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
             for objet in objets:
@@ -335,7 +337,7 @@ class ZoneDeJeu(Canvas):
             self.x,self.y = event.x,event.y
             self.menu.post(event.x_root, event.y_root)'''
         elif len(objets) == 0:
-            return None      
+            return None    
 
     def selectionnerObjetHandler(self, tag):
         self.selectionnerObjet(tag)
