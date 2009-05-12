@@ -86,17 +86,18 @@ class ControlleurServeur(object):
     def creerSystemes(self):
         s=0
         while s<10:  
-            x=random.randint(0,50)*10 
-            y=random.randint(0,60)*10
+            x=random.randint(0,198)*10+10
+            y=random.randint(0,198)*10+10
+            z=random.randint(0,198)*10+10
             if (s>1 and self.univers.validePositionSysteme(x,y)==1):
                 print "systeme existant!!!!"
             else:
                 s=s+1
                 print "nouveau systeme"
-                systeme=Systeme(x,y)
+                systeme=Systeme(x,y,z,"s"+str(s))
                 self.univers.ajouterSysteme(systeme)
-        print "systCrees!!!"
-        for i in range(len(self.univers.systemes)):
+                print "systCrees!!!"
+        for i in self.univers.systemes:
             print i,
             print "..[i].x=",
             print self.univers.systemes[i].x
