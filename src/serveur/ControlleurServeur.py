@@ -34,22 +34,22 @@ class ControlleurServeur(object):
 #        self.ConnecterJoueur("Carlos")
 #
 #        #Attenttion: ici Eliana cree un vaisseau dans (20,30) et elle l'envoie au serveur
-#        vaisseauTest1=Vaisseau(20,30)
-#        vaisseauTest2=Vaisseau(5,7)
-#        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest1)
-#        self.univers.joueurs["Eliana"].vaisseaux.append(vaisseauTest2)
+#        #vaisseauTest1=Vaisseau(20,30,"vEliana1")
+#        #vaisseauTest2=Vaisseau(5,7,"vEliana2")
+#        self.univers.joueurs["Eliana"].ajouterVaisseau(20,30,"vEliana1")
+#        self.univers.joueurs["Eliana"].ajouterVaisseau(5,7,"vEliana2")
 #        reponse= self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
 #        print reponse
 #        
 #        #Attention: ici Eliana modifie la position des vaisseaux        
-#        print self.univers.joueurs["Eliana"].vaisseaux
-#        for tempVaisseau in self.univers.joueurs["Eliana"].vaisseaux:
-#            tempVaisseau.x = tempVaisseau.x + 1
-#            tempVaisseau.y = tempVaisseau.y + 2
-#            print tempVaisseau.x,
-#            print tempVaisseau.y          
+#        self.player=self.univers.joueurs["Eliana"]
+#        for i in range(len(self.player.vaisseaux)):
+#            self.player.getVaisseau(i+1).x=self.player.getVaisseau(i+1).x +1
+#            self.player.getVaisseau(i+1).y=self.player.getVaisseau(i+1).y +1        
+#            print self.player.getVaisseau(i+1).x,
+#            print self.player.getVaisseau(i+1).y         
 #        reponse= self.MiseAJourVaisseaux("Eliana", pickle.dumps(self.univers.joueurs["Eliana"].vaisseaux))
-#        print reponse
+#        #print reponse
 #
 #        #Attention: ici Eliana fait une requete mais il y a rien a "charger"
 #        repServeur=self.requeteClient("Eliana")
@@ -71,9 +71,10 @@ class ControlleurServeur(object):
 #                    print message1
 ##                    listeVaisseaux=pickle.loads(message1[2])
 #                    listeVaisseaux=message1[2]                    
-#                    for tempVai in listeVaisseaux:
-#                        print tempVai.x,
-#                        print tempVai.y
+#                    for tempNomVai in listeVaisseaux:
+#                        #print tempNomVai
+#                        print listeVaisseaux[tempNomVai].x,
+#                        print listeVaisseaux[tempNomVai].y
 #                    
 #        # Test checkNouveauxJoueurs
 #        nouvelleListe=pickle.loads(self.checkNouveauxJoueurs(["Eliana","Eduardo"]))
@@ -120,7 +121,7 @@ class ControlleurServeur(object):
         self.chercheMessagesAEffacer(nom,"vai")
         self.MiseAJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
         print "Mise a jour des vaisseaux: "
-        print messVaisseaux
+        #print messVaisseaux
         return "ok"
 
     def chercheMessagesAEffacer(self, nom, codMess):
