@@ -12,7 +12,7 @@ class Univers(object):
         
         self.couleursJoueurs=["blue","green","purple","orange","yellow","red"]    # Une couleur pour chaque joueur
 
-        self.systemes=[]
+        self.systemes={}
         
 #        self.nbrSystemes = 100 #nombre de systemes dans l'univers existant
 #        self.systemes = range(self.nbrSystemes)#les systemes seront places dans cette variable
@@ -28,11 +28,11 @@ class Univers(object):
         self.joueurs[id]=Joueur(self,id,couleur,system)
         
     def ajouterSysteme(self, systeme):
-        self.systemes.append(systeme)
+        self.systemes[systeme.id]=systeme
         
     def validePositionSysteme(self,testX,testY):
         valRet=0
-        for i in range(len(self.systemes)):
+        for i in self.systemes:
             if(testX==self.systemes[i].x and testY==self.systemes[i].y):
                 valRet=1
         return valRet        
