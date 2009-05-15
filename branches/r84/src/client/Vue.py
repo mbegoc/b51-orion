@@ -233,6 +233,8 @@ class ZoneDeJeu(Canvas):
         
         # rond autour de l'entite selectionne
         self.rondSelection = None 
+        self.timer = 0
+        
         # x qui represente le cible de deplacement ou d'attaque besoin de 2 lignes
         self.croix1 = None 
         self.croix2 = None
@@ -256,11 +258,11 @@ class ZoneDeJeu(Canvas):
     def initialiserSystemes(self, systemes):
         i = 0
         for systeme in systemes:
-            self.dessinerImage("systeme3", systeme.x, systeme.y, i)#systeme.nom)
-            i=i+1
+            self.dessinerImage("systeme3", systeme.x, systeme.y,i) #, systeme.id)
+            i = i+1
         
-    def nouveauVaisseau(self, vaisseau):
-        print "creation vaisseau", vaisseau.classe
+    def nouveauVaisseau(self, vaisseau, joueur = ""):
+        #print "creation vaisseau", vaisseau.classe
         x = vaisseau.x
         y = vaisseau.y
         l = self.baseUnites #largeur des unites
@@ -272,6 +274,11 @@ class ZoneDeJeu(Canvas):
             l = self.baseUnites #largeur des unites
             self.create_oval(x-l, y-l, x+l, y+l, fill=self.parent.bleu)
         #self.tag_bind(vaisseau.id, "<Button-1>", self.testTagBind)
+
+    def creerVaisseau(self, event):
+        x = self.canvasx(event.x)
+        y = self.canvasy(event.y)
+        self.parent.parent.creerVaisseau(x, y)
         
     def deplacerVaisseau(self, vaisseau):
         x = vaisseau.x
@@ -282,11 +289,11 @@ class ZoneDeJeu(Canvas):
         else:
             l = self.baseUnites #largeur des unites
             self.coords(vaisseau.id, x-l, y-l, x+l, y+l)
-            
+
     def existe(self, objet):
         objets = self.find_withtag(objet)
         return len(objets)
-        
+
     def selectionner(self, event):
         x = self.canvasx(event.x)
         y = self.canvasy(event.y)
@@ -296,26 +303,26 @@ class ZoneDeJeu(Canvas):
             self.itemconfigure(self.itemSelectionne, outline="")
         self.itemSelectionne = None
         
-        self.parent.parent.objetSelectionne = self.getTagObjet(x, y)
+        self.parent.parent.objetSelectionne = self.selectionnerObjet(x, y)
+        self.parent.root.title(str(self.parent.parent.objetCible) + str(self.parent.parent.objetSelectionne))
             
-    def creerVaisseau(self, event):
-        x = self.canvasx(event.x)
-        y = self.canvasy(event.y)
-        self.parent.parent.creerVaisseau(x, y)
-    
     def cibler(self, event):
-        self.deleteCroix()
         x = self.canvasx(event.x)
         y = self.canvasy(event.y)
+        if self.timer:
+            self.parent.root.after_cancel(self.timer)
+        self.timer = self.parent.root.after(1000, self.deleteCroix)
+        self.deleteCroix()
         self.drawCroix(x, y)
-        self.timer = Timer(1, self.deleteCroix)
-        self.timer.start()
-        self.parent.parent.TypeAction(x, y)
-        self.parent.parent.objetCible = self.getTagObjet(x, y)
 
-    def getTagObjet(self, x, y):
+        self.parent.parent.TypeAction(x, y)
+        
+        self.parent.parent.objetCible = self.selectionnerObjet(x, y)
+        self.parent.root.title(str(self.parent.parent.objetCible) + str(self.parent.parent.objetSelectionne))
+
+    def selectionnerObjet(self, x, y):
         #selection d'un ou plusieurs objets
-        objetsCliques = self.find_overlapping(x-self.baseUnites, y-self.baseUnites, x+self.baseUnites, y+self.baseUnites)
+        objetsCliques = self.find_closest(x, y)
         
         #on commence par creer une liste avec seulement les objets qui nous interessent
         objets = []
@@ -323,38 +330,29 @@ class ZoneDeJeu(Canvas):
             if self.type(objet) != "line":#il faut ajouter ici le cas echeant les objets qui ne font pas parti des objets selectionnables
                 objets.append(objet)
         
-        if len(objets) == 1:
-            self.selectionnerObjet(objets[0])
-            return objets[0]
-        elif len(objets) > 1:
-            print "Objets supperposes pas encore supportees"
-            '''self.menu = Menu(self, tearoff=0)
-            #ici il faut recuperer la liste des tags objets et demander la liste des objets au controlleur
-            for objet in objets:
-                tag = self.gettags(objet)
-                self.menu.add_command(label=tag[0], command=self.selectionnerObjetHandler(tag[0]))
-            
-            self.x,self.y = event.x,event.y
-            self.menu.post(event.x_root, event.y_root)'''
-        elif len(objets) == 0:
-            return None    
-
-    def selectionnerObjetHandler(self, tag):
-        self.selectionnerObjet(tag)
-
-    def selectionnerObjet(self, objet):
-        type = self.type(objet)
-        '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
-        A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
-        tag = self.gettags(objet)
-        if type == "polygon" or type == "oval" or type == "rectangle":
-            self.parent.parent.objetSelectionne = ("vaisseau", tag[0])
-            self.itemconfigure(objet, outline=self.parent.blanc)
-            self.itemSelectionne = objet
-        elif type == "image":
-            self.parent.parent.objetSelectionne = ("systeme", tag[0])
-            position = self.coords(objet)
-            self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
+        if len(objets) != 0:
+            #if len(objets) > 1 :
+            #    pass
+                #objet = self.find_above(objets[0])
+            #else:
+            objet = objets[0]
+            type = self.type(objet)
+            '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
+            A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
+            tags = self.gettags(objet)
+            name = None
+            for tag in tags:
+                if tag[0:1] == "s" or tag[0:1] == "v":
+                    name = tag
+            if type == "polygon" or type == "oval" or type == "rectangle":
+                self.itemconfigure(objet, outline=self.parent.blanc)
+                self.itemSelectionne = objet
+            elif type == "image":
+                position = self.coords(objet)
+                self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
+            return name
+        else:
+            return None
    
     def drawCroix(self,x, y):
         self.croix1 = self.create_line(x-7, y, x+7, y, fill="green",width=2)
@@ -363,6 +361,7 @@ class ZoneDeJeu(Canvas):
     def deleteCroix(self):
         self.delete(self.croix1)
         self.delete(self.croix2)
+        self.timer = 0
 
         
     '''ATTENTION: cette fonction doit imperativement etre appelee a travers la classe de l'objet, par par l'objet lui meme (ZoneDeJeu.__genererImages__(objet) )
@@ -385,4 +384,5 @@ class ZoneDeJeu(Canvas):
     
     #test de bind evenement sur objet du canvas
     def testTagBind(self, event):
-        print "tagBind"
+        ##print "tagBind"
+        pass
