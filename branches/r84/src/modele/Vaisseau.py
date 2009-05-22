@@ -25,6 +25,24 @@ class Vaisseau(object):
         self.ressourcesPropulsion.gaz = 20
         
         self.ecouteurs = []
+
+        ####################################
+        #variables combat
+        self.dommage = 0
+
+        #pour l'instant, ne contient que la variable defaut, mais eventuellement
+        #avec une augmentation de la complexite on peut ajouter des blindages
+        #qui different selon le dommage subit.
+        self.blindage = {}
+        self.blindage['defaut'] = 1 #le blindage defaut DOIT exister
+    
+        #les armes sont dans un dictionnaire qui contient des tuples
+        #[dommage, type]
+        self.armes = {}
+        self.armes[0] = [3, 'laser']
+        
+        ###################################
+
     def valideArriveSysteme(self): 
         if self.x==self.xArrivee and self.y==self.yArrivee and Univers.systemes[self.idDestination]:
             return true
