@@ -8,7 +8,7 @@ class Systeme(object):
     def __init__(self, x, y,z=0,id=""):
         #code temporaire en attendant que le controlleur appelle cette classe avec les bons parametres
         if id == "":
-            self.id="s"+str(x)+str(y)
+            id="s"+str(x)+str(y)
         self.x = x
         self.y = y
         self.z = z
