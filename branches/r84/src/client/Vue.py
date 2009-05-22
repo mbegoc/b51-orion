@@ -60,8 +60,8 @@ class Vue(object):
 #        for i in range(200):
 #            r = random.Random()
 #            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
-        
-    
+
+
 class MenuBas(Frame):
     def __init__(self, parent):
         #appel au constructeur de la super classe
@@ -224,6 +224,9 @@ class ZoneDeJeu(Canvas):
         self.baseUnites = 5
         self.itemSelectionne = None
         self.itemCible = None
+        
+        self.debug = 1#mettre a zero pour desactiver les messages de debugage
+        self.debugText = 0
 
         #appel au constructeur de la super classe
         Canvas.__init__(self, parent.root, width=self.largeurVue, height=self.hauteurVue, background="#000000", scrollregion=(0, 0, self.largeurUnivers, self.hauteurUnivers))
@@ -256,10 +259,8 @@ class ZoneDeJeu(Canvas):
 
     #representer l'ensemble des sytemes initiaux
     def initialiserSystemes(self, systemes):
-        i = 0
         for systeme in systemes:
-            self.dessinerImage("systeme3", systeme.x, systeme.y,i) #, systeme.id)
-            i = i+1
+            self.dessinerImage("systeme3", systeme.x, systeme.y, systeme.id)
         
     def nouveauVaisseau(self, vaisseau, joueur = ""):
         #print "creation vaisseau", vaisseau.classe
@@ -267,13 +268,14 @@ class ZoneDeJeu(Canvas):
         y = vaisseau.y
         l = self.baseUnites #largeur des unites
         if(vaisseau.classe == "civil"):
-            self.create_rectangle(x-l, y-l, x+l, y+l, fill=self.parent.vert, tags=vaisseau.id)
+            vaisseau = self.create_rectangle(x-l, y-l, x+l, y+l, fill=self.parent.vert, tags=vaisseau.id)
         elif(vaisseau.classe == "militaire"):
-            self.create_polygon(x, y-l, x+l, y+l, x-l, y+l, fill=self.parent.rouge, tags=vaisseau.id)
+            vaisseau = self.create_polygon(x, y-l, x+l, y+l, x-l, y+l, fill=self.parent.rouge, tags=vaisseau.id)
         elif(vaisseau.classe == "sonde"):
             l = self.baseUnites #largeur des unites
-            self.create_oval(x-l, y-l, x+l, y+l, fill=self.parent.bleu)
-        #self.tag_bind(vaisseau.id, "<Button-1>", self.testTagBind)
+            vaisseau = self.create_oval(x-l, y-l, x+l, y+l, fill=self.parent.bleu)
+        
+        #self.tag_raise(vaisseau, self.systemeReference)
 
     def creerVaisseau(self, event):
         x = self.canvasx(event.x)
@@ -304,7 +306,7 @@ class ZoneDeJeu(Canvas):
         self.itemSelectionne = None
         
         self.parent.parent.objetSelectionne = self.selectionnerObjet(x, y)
-        self.parent.root.title(str(self.parent.parent.objetCible) + str(self.parent.parent.objetSelectionne))
+        #self.debugMessage("objetCible: " + str(self.parent.parent.objetCible) + "; objetSelecitonne: " + str(self.parent.parent.objetSelectionne))
             
     def cibler(self, event):
         x = self.canvasx(event.x)
@@ -318,31 +320,30 @@ class ZoneDeJeu(Canvas):
         self.parent.parent.TypeAction(x, y)
         
         self.parent.parent.objetCible = self.selectionnerObjet(x, y)
-        self.parent.root.title(str(self.parent.parent.objetCible) + str(self.parent.parent.objetSelectionne))
+        #self.debugMessage("objetCible: " + str(self.parent.parent.objetCible) + "; objetSelecitonne: " + str(self.parent.parent.objetSelectionne))
+        
 
     def selectionnerObjet(self, x, y):
         #selection d'un ou plusieurs objets
         objetsCliques = self.find_closest(x, y)
-        
-        #on commence par creer une liste avec seulement les objets qui nous interessent
-        objets = []
-        for objet in objetsCliques:
-            if self.type(objet) != "line":#il faut ajouter ici le cas echeant les objets qui ne font pas parti des objets selectionnables
-                objets.append(objet)
-        
-        if len(objets) != 0:
-            #if len(objets) > 1 :
-            #    pass
-                #objet = self.find_above(objets[0])
-            #else:
-            objet = objets[0]
+        objet = 0
+        if len(objetsCliques) > 1:
+            for tag in self.gettags(objetsCliques[0]):
+                if tag[0,1] == "v" or tag[0,1] == "s":
+                    objet = self.find_above(tag)
+        elif len(objetsCliques) == 1:
+            debug = str(len(objetsCliques))+str(objetsCliques[0])+"\n"
+            objet = objetsCliques[0]
+        if objet:
+            debug = debug + str(objet) + "\n"
+
             type = self.type(objet)
             '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
             A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
             tags = self.gettags(objet)
             name = None
             for tag in tags:
-                if tag[0:1] == "s" or tag[0:1] == "v":
+                if tag[0] == "s" or tag[0] == "v":
                     name = tag
             if type == "polygon" or type == "oval" or type == "rectangle":
                 self.itemconfigure(objet, outline=self.parent.blanc)
@@ -350,8 +351,12 @@ class ZoneDeJeu(Canvas):
             elif type == "image":
                 position = self.coords(objet)
                 self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
+            debug = debug + str(name)
+            self.debugMessage(debug)
+            self.debugMessage(self.gettags(self.find_withtag("current")))
             return name
         else:
+            self.debugMessage(debug)
             return None
    
     def drawCroix(self,x, y):
@@ -386,3 +391,10 @@ class ZoneDeJeu(Canvas):
     def testTagBind(self, event):
         ##print "tagBind"
         pass
+    
+        
+    def debugMessage(self, message):
+        if self.debugText:
+            self.delete(self.debugText)
+        if self.debug:
+            self.debugText = self.create_text(10, 10, text=message, fill="white", anchor=NW)
