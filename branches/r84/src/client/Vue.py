@@ -222,8 +222,12 @@ class ZoneDeJeu(Canvas):
         self.hauteurUnivers = 2000
         self.largeurGrille = 200
         self.baseUnites = 5
-        self.itemSelectionne = None
-        self.itemCible = None
+        
+        self.itemSelectionne = ""
+        self.itemSelectionneType = "" #necessaire pour savoir comment enlever la marque de selection (delete ou enlever le contour
+        
+        self.itemCible = ""
+        self.itemCibleType = ""
         
         self.debug = 1#mettre a zero pour desactiver les messages de debugage
         self.debugText = 0
@@ -263,7 +267,6 @@ class ZoneDeJeu(Canvas):
             self.dessinerImage("systeme3", systeme.x, systeme.y, systeme.id)
         
     def nouveauVaisseau(self, vaisseau, joueur = ""):
-        #print "creation vaisseau", vaisseau.classe
         x = vaisseau.x
         y = vaisseau.y
         l = self.baseUnites #largeur des unites
@@ -302,62 +305,72 @@ class ZoneDeJeu(Canvas):
                 
         #deselection de l'item acutellement selectionne
         if self.itemSelectionne != None:
-            self.itemconfigure(self.itemSelectionne, outline="")
+            if self.itemSelectionneType == "image":
+                self.delete(self.itemSelectionne)
+            else:
+                self.itemconfigure(self.itemSelectionne, outline="")
+                
         self.itemSelectionne = None
         
-        self.parent.parent.objetSelectionne = self.selectionnerObjet(x, y)
-        #self.debugMessage("objetCible: " + str(self.parent.parent.objetCible) + "; objetSelecitonne: " + str(self.parent.parent.objetSelectionne))
+        self.parent.parent.objetSelectionne = self.getObjet(x, y)
+        self.selectionnerItem(self.find_withtag(self.parent.parent.objetSelectionne))
+
             
     def cibler(self, event):
         x = self.canvasx(event.x)
         y = self.canvasy(event.y)
+        self.deleteCroix()
+        self.drawCroix(x, y)
+        self.deciblerItem()
+
         if self.timer:
             self.parent.root.after_cancel(self.timer)
         self.timer = self.parent.root.after(1000, self.deleteCroix)
-        self.deleteCroix()
-        self.drawCroix(x, y)
 
         self.parent.parent.TypeAction(x, y)
         
-        self.parent.parent.objetCible = self.selectionnerObjet(x, y)
-        #self.debugMessage("objetCible: " + str(self.parent.parent.objetCible) + "; objetSelecitonne: " + str(self.parent.parent.objetSelectionne))
-        
+        self.parent.parent.objetCible = self.getObjet(x, y)
+        self.ciblerItem(self.find_withtag(self.parent.parent.objetCible))
+        self.parent.root.after(1000, self.deciblerItem)
 
-    def selectionnerObjet(self, x, y):
+    def getObjet(self, x, y):
         #selection d'un ou plusieurs objets
-        objetsCliques = self.find_closest(x, y)
-        objet = 0
-        if len(objetsCliques) > 1:
-            for tag in self.gettags(objetsCliques[0]):
-                if tag[0,1] == "v" or tag[0,1] == "s":
-                    objet = self.find_above(tag)
-        elif len(objetsCliques) == 1:
-            debug = str(len(objetsCliques))+str(objetsCliques[0])+"\n"
-            objet = objetsCliques[0]
+        objet = self.find_withtag("current")
+        
         if objet:
-            debug = debug + str(objet) + "\n"
+            for tag in self.gettags(objet):
+                if tag != "current":
+                    return tag
+        return ""
+        
+    def selectionnerItem(self, objet):
+        type = self.type(objet)
+        if type == "polygon" or type == "oval" or type == "rectangle":
+            self.itemconfigure(objet, outline=self.parent.blanc)
+            self.itemSelectionneType = "forme"
+            self.itemSelectionne = objet
+        elif type == "image":
+            position = self.coords(objet)
+            self.itemSelectionneType = "image"
+            self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
 
-            type = self.type(objet)
-            '''on recupere le premier tag sur l'objet - normalement il doit y en avoir qu'un. Si il y en a plusieurs, il va y avoir des bugs ici
-            A priori, la seule solution qu'il y aurait ce serait de connaitre tous les autres tags que celui qui identifie l'objet et de les tester'''
-            tags = self.gettags(objet)
-            name = None
-            for tag in tags:
-                if tag[0] == "s" or tag[0] == "v":
-                    name = tag
-            if type == "polygon" or type == "oval" or type == "rectangle":
-                self.itemconfigure(objet, outline=self.parent.blanc)
-                self.itemSelectionne = objet
-            elif type == "image":
-                position = self.coords(objet)
-                self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
-            debug = debug + str(name)
-            self.debugMessage(debug)
-            self.debugMessage(self.gettags(self.find_withtag("current")))
-            return name
-        else:
-            self.debugMessage(debug)
-            return None
+    def ciblerItem(self, objet):
+        type = self.type(objet)
+        if type == "polygon" or type == "oval" or type == "rectangle":
+            self.itemconfigure(objet, outline=couleur)
+            self.itemCibleType = "forme"
+            self.itemCible = objet
+        elif type == "image":
+            position = self.coords(objet)
+            self.itemCibleType = "image"
+            self.itemCible = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
+    
+    def deciblerItem(self):
+        if self.itemCible != None:
+            if self.itemCibleType == "image":
+                self.delete(self.itemCible)
+            else:
+                self.itemconfigure(self.itemCible, outline="")
    
     def drawCroix(self,x, y):
         self.croix1 = self.create_line(x-7, y, x+7, y, fill="green",width=2)
