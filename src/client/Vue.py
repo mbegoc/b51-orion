@@ -263,8 +263,13 @@ class ZoneDeJeu(Canvas):
 
     #representer l'ensemble des sytemes initiaux
     def initialiserSystemes(self, systemes):
-        for systeme in systemes:
-            self.dessinerImage("systeme3", systeme.x, systeme.y, systeme.id)
+        
+        for i in systemes:
+            '''test pour verifier attributs change systeme par i''' 
+            print "valeur x: "
+            print systemes[i].x
+            self.dessinerImage("systeme3", systemes[i].x, systemes[i].y, systemes[i].id)
+
         
     def nouveauVaisseau(self, vaisseau, joueur = ""):
         x = vaisseau.x
