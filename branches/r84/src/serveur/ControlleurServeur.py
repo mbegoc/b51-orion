@@ -94,7 +94,7 @@ class ControlleurServeur(object):
             else:
                 s=s+1
                 print "nouveau systeme"
-                systeme=Systeme(x,y,z,"s"+str(s))
+                systeme=Systeme(self.univers,x,y,z,"s"+str(s))
                 self.univers.ajouterSysteme(systeme)
                 print "systCrees!!!"
         for i in self.univers.systemes:
@@ -112,9 +112,11 @@ class ControlleurServeur(object):
             tempReponse="Joueur existant"
             print tempReponse
         else:
+            print "OK1"
             self.univers.ajouterJoueur(nom)
+            print "OK2"
             tempReponse=pickle.dumps(self.univers)
-            print "OK"
+            print "OK3"
         return tempReponse
         
     def MiseAJourVaisseaux(self,nom,messVaisseaux):

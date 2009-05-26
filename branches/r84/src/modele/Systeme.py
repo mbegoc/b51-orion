@@ -5,15 +5,14 @@ from modele.Infrastructure import Infrastructure
 # un systeme stellaire a une position fixe 
 # dans l'espace est ne fait pas grand chose a part ca
 class Systeme(object):
-    def __init__(self, x, y,z=0,id=""):
-        #code temporaire en attendant que le controlleur appelle cette classe avec les bons parametres
-        if id == "":
-            id="s"+str(x)+str(y)
+    def __init__(self, parent, x, y,z,id):
+        self.parent=parent
         self.x = x
         self.y = y
         self.z = z
         self.id = id
         self.owner = ""
+
         #ressources potentiellement produites dans un systeme
         self.ressourcesPotentielles = Ressources(1)
         #les ressources locales au systeme
@@ -56,10 +55,14 @@ class Systeme(object):
         ressourcesConssommees = self.ressources.consommer(ressourcesConssommees)
         return ressourcesConsommees
         '''
-    def ajouterOwnerSysteme(self, vaisseau):
+            
+
+    def ajouterOwnerSysteme(self, vaisseau,joueur):
         if vaisseau.valideArriveSysteme() :
-            self.owner=vaisseau.id[1:]
-            Joueur.ajouterSysteme(vaisseau.idDestination)
+            self.owner=joueur.id
+            joueur.ajouterSysteme(vaisseau.idDestination)
+            print "Le systeme a ete ajoute"
             return "ok"
         else:
+            print "Le systeme n'a pas ete ajoute"
             return "rien"

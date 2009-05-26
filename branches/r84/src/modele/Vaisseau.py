@@ -1,6 +1,7 @@
 from modele.Ressources import Ressources
 from modele.Evenements import *
 
+
 import math
 
 
@@ -13,7 +14,7 @@ class Vaisseau(object):
         self.xArrivee = x
         self.yArrivee = y
         self.vitesse = 5
-        self.idDestination=0 # pour met id dictionaire du systeme s'il n'y pas de systeme valeur=0
+        self.idDestination="" # pour met id dictionaire du systeme s'il n'y pas de systeme valeur=""
         
         self.id = id
         self.type = type
@@ -25,26 +26,8 @@ class Vaisseau(object):
         self.ressourcesPropulsion.gaz = 20
         
         self.ecouteurs = []
-
-        ####################################
-        #variables combat
-        self.dommage = 0
-
-        #pour l'instant, ne contient que la variable defaut, mais eventuellement
-        #avec une augmentation de la complexite on peut ajouter des blindages
-        #qui different selon le dommage subit.
-        self.blindage = {}
-        self.blindage['defaut'] = 1 #le blindage defaut DOIT exister
-    
-        #les armes sont dans un dictionnaire qui contient des tuples
-        #[dommage, type]
-        self.armes = {}
-        self.armes[0] = [3, 'laser']
-        
-        ###################################
-
     def valideArriveSysteme(self): 
-        if self.x==self.xArrivee and self.y==self.yArrivee and Univers.systemes[self.idDestination]:
+        if self.x==self.xArrivee and self.y==self.yArrivee and self.parent.parent.systeme[self.idDestination]:
             return true
         else:
             return false 
@@ -96,7 +79,8 @@ class Vaisseau(object):
             else:
                 #on genere un evenement car le vaisseau n'a plus suffisamment de ressources pour se deplacer
                 self.genererEvent("Panne", "Ressources insuffisantes pour se deplacer")
-
+    '''    else:
+            self.parent.parent.systeme.ajouterOwnerSysteme(self,self.parent)'''
     ''' GESTION DES EVENEMENTS '''
     #ajout des ecouteurs sur l'objet
     def addVaisseauListener(self, ecouteur):
