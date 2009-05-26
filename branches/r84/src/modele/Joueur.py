@@ -17,7 +17,7 @@ class Joueur(object):
         self.systemes.append(systeme)      
     
     def ajouterVaisseau(self, posX, posY, id):
-        self.vaisseaux[id] = Vaisseau(posX,posY, id)
+        self.vaisseaux[id] = Vaisseau(self,posX,posY, id)
         
     def getVaisseau(self,id):
         key = "v" + self.id + str(id)
