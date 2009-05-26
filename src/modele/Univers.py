@@ -23,9 +23,17 @@ class Univers(object):
 #              self.systemes[x]=Systeme(random.randint(0,50)*10,random.randint(0,50)*10) 
         
     def ajouterJoueur(self,id):
+        print "here2"
         couleur=self.couleursJoueurs.pop()
-        system=self.systemes.pop()
+        d=self.systemes
+        ld=d.keys()
+        print "herepopo"
+        a=ld.pop()
+        print self.systemes[a]
+        print "outpopo"
+        system=self.systemes[a]
         self.joueurs[id]=Joueur(self,id,couleur,system)
+        print "here_3"
         
     def ajouterSysteme(self, systeme):
         self.systemes[systeme.id]=systeme
