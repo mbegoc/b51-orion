@@ -157,7 +157,11 @@ class Controlleur(object):
     #fin methodes chat
     ###################################################
 
-
+    def VerifierTech(self,nomTech):
+       if nomTech in self.player.arbre:
+            if self.player.ressources.connaissance >= int(self.player.arbre[nomTech].prix):
+                if self.player.arbre[nomTech].requis[0] == '' or self.player.arbre[nomTech].requis in self.player.techAquise:
+                    return 1  
 
         
     def BoiteConnection(self,nomJoueur,ip,couleur=""):

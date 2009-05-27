@@ -2,7 +2,7 @@ from modele.Vaisseau import Vaisseau
 from modele.Ressources import Ressources
 
 class Joueur(object):
-    def __init__(self, parent, id, couleur, systInit):
+    def __init__(self, parent, id, couleur, systInit,arbre):
         self.parent=parent
         self.couleur = couleur
         self.id = id
@@ -10,12 +10,28 @@ class Joueur(object):
         self.systemes = []
         self.ajouterSysteme(systInit)
         self.message = []
-        
+        self.arbre = arbre
         self.ressources = Ressources(10).getRessourcesGlobales()
         
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)      
     
+    
+    def VerifierTech(self,nomTech):
+       if nomTech in self.arbre:
+            if self.ressources.connaissance >= int(self.arbre[nomTech].prix):
+                if self.arbre[nomTech].requis[0] == '' or self.arbre[nomTech].requis in self.techAquise:
+                    return 1  
+        
+        
+    def AcheterTechnologie(self,nomTech):
+        if nomTech in self.arbre:
+            if self.ressources.connaissance >= int(self.arbre[nomTech].prix):
+                if self.arbre[nomTech].requis[0] == '' or self.arbre[nomTech].requis in self.techAquise:
+                    self.ressources.connaissance = self.ressources.connaissance - int(self.arbre[nomTech].prix)
+                    self.techAquise.append(self.arbre[nomTech].nom)
+                    print nomTech + " achete!"
+                    
     def ajouterVaisseau(self, posX, posY, id):
         self.vaisseaux[id] = Vaisseau(self,posX,posY, id)
         
