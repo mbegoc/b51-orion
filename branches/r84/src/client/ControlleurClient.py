@@ -1,7 +1,7 @@
 import xmlrpclib
 import pickle
 from threading import Timer
-
+import re
 from modele import *
 from Vue import Vue
 
@@ -65,6 +65,14 @@ class Controlleur(object):
             pass
         else:
             self.DecodeMessage(pickle.loads(self.mes1))
+            
+    def getVaisseau(self, idVaisseau):
+        for joueur in self.univers.joueurs:
+            if re.search(joueur.id, idVaisseau):
+                return joueur.vaisseaux[idVaisseau]
+            
+    def getSysteme(self, idSysteme):
+        return self.univers.systemes[idSysteme]
         
         
     def UpdateDictionnaireJoueurs(self):
