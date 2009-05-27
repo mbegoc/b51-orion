@@ -1,0 +1,10 @@
+economie,economie basique,0,modif economie,1.2;
+economie,systeme banquaire centralise,1000,modif economie,1.8;economie basique
+economie,peuple escroc,3000,modif_economie,2;systeme banquaire centralise
+production,production rapide,500,modif production,1.2;
+production,abus travailleurs,1000,modif production,1.8;production rapide
+production,esclavage heureux,3000,modif production,2;abus travailleurs
+recherche,peuple genie,500,modif recherche,1.2;
+recherche,scientifiques dope,1000,modif recherche,1.8;peuple genie
+recherche,scientifiques cyborg,3000,modif recherche,2;scientifiques dope
+population,dopage,1300,modif population,0.8;peuple genie
