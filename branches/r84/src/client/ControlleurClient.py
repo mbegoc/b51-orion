@@ -45,9 +45,8 @@ class Controlleur(object):
         print "click droit", self.objetSelectionne
         typeDeplacement = "deplacement"
         if typeDeplacement == "deplacement":  
-            print self.objetSelectionne   
-            #self.player.vaisseaux[self.objetSelectionne[1]].xArrivee = x
-            #self.player.vaisseaux[self.objetSelectionne[1]].yArrivee = y
+            self.player.vaisseaux[self.objetSelectionne].xArrivee = x
+            self.player.vaisseaux[self.objetSelectionne].yArrivee = y
         
     def RefreshDeplacement(self):
         # pour entrer danss cette fonction continuellement
