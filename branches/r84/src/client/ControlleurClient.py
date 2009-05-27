@@ -28,10 +28,11 @@ class Controlleur(object):
         print "here2"
         self.player = self.univers.joueurs[self.nom]
         
+        self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
+
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1))
 
-        self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
         self.selectione = "false"
         self.objetCible = "star1"
         self.tDeplacement.start()
