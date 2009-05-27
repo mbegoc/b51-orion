@@ -36,22 +36,25 @@ class Vue(object):
         self.connexion.pack_forget()
 
         self.zoneJeu = ZoneDeJeu(self)
-        self.zoneJeu.grid(column=0, row=0)
+        self.zoneJeu.grid(column=0, row=0, rowspan=2)
+        
+        self.rapportSelection = RapportSelection(self)
+        self.rapportSelection.grid(column=2, row = 0)
         
         self.menuCote = MenuCote(self)
-        self.menuCote.grid(column=2, row=0)
+        self.menuCote.grid(column=2, row=1)
         
         self.chat = Chat(self)
-        self.chat.grid(column=0, row=2)
+        self.chat.grid(column=0, row=3)
 
         self.menuBas = MenuBas(self)
-        self.menuBas.grid(column=0, row=3)
+        self.menuBas.grid(column=0, row=4)
     
         self.scrollY = Scrollbar(self.root, orient=VERTICAL, command=self.zoneJeu.yview)
-        self.scrollY.grid(row=0, column=1, sticky=N+S)
+        self.scrollY.grid(row=0, column=1, rowspan=2, sticky=N+S)
     
         self.scrollX = Scrollbar(self.root, orient=HORIZONTAL, command=self.zoneJeu.xview)
-        self.scrollX.grid ( row=1, column=0, sticky=E+W )
+        self.scrollX.grid ( row=2, column=0, sticky=E+W )
     
         self.zoneJeu["xscrollcommand"] = self.scrollX.set
         self.zoneJeu["yscrollcommand"] = self.scrollY.set
@@ -67,6 +70,7 @@ class Vue(object):
         
     def KillMenuTech(self):
         self.fenetreActive.grid_forget() 
+
 
 class MenuBas(Frame):
     def __init__(self, parent):
@@ -185,6 +189,27 @@ class MenuCote(Frame):
         self.parent.zoneJeu.dessinerImage("systeme2", r.randint(0, 2000), r.randint(0, 2000), "test")
 
 
+class RapportSelection(Frame):
+    def __init__(self, parent):
+        #appel au constructeur de la super classe
+        Frame.__init__(self, parent.root)
+        #on garde une reference vers la classe parent
+        self.parent = parent
+
+        self.nom = Label(self, text="Objet")
+        self.idObjet = Label(self)
+        self.nom.pack()
+        self.idObjet.pack()
+
+    def genererRapport(self, idObjet):
+        self.parent.zoneJeu.debugMessage(idObjet)
+        if idObjet[0] == "s":
+            systeme = self.parent.parent.getSysteme(idObjet)
+            self.idObjet.configure(text=systeme.id)
+        elif idObjet[0] == "v":
+            vaisseau = self.parent.parent.getVaisseau(idObjet)
+            self.idObjet.configure(text=vaisseau.id)
+
 
 class Connexion(Frame):
     def __init__(self, parent):
@@ -269,13 +294,8 @@ class ZoneDeJeu(Canvas):
 
     #representer l'ensemble des sytemes initiaux
     def initialiserSystemes(self, systemes):
-        
         for i in systemes:
-            '''test pour verifier attributs change systeme par i''' 
-            print "valeur x: "
-            print systemes[i].x
             self.dessinerImage("systeme3", systemes[i].x, systemes[i].y, systemes[i].id)
-
         
     def nouveauVaisseau(self, vaisseau, joueur = ""):
         x = vaisseau.x
@@ -325,7 +345,8 @@ class ZoneDeJeu(Canvas):
         
         self.parent.parent.objetSelectionne = self.getObjet(x, y)
         self.selectionnerItem(self.find_withtag(self.parent.parent.objetSelectionne))
-
+        if(self.parent.parent.objetSelectionne != None and self.parent.parent.objetSelectionne):
+            self.parent.rapportSelection.genererRapport(self.parent.parent.objetSelectionne)
             
     def cibler(self, event):
         x = self.canvasx(event.x)
