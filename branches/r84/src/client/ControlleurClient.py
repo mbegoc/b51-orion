@@ -68,12 +68,12 @@ class Controlleur(object):
             
     def getVaisseau(self, idVaisseau):
         for joueur in self.univers.joueurs:
-            if re.search(joueur.id, idVaisseau):
-                return joueur.vaisseaux[idVaisseau]
+            if re.search(self.univers.joueurs[joueur].id, idVaisseau):
+                print self.univers.joueurs[joueur].vaisseaux
+                return self.univers.joueurs[joueur].vaisseaux[idVaisseau]
             
     def getSysteme(self, idSysteme):
         return self.univers.systemes[idSysteme]
-        
         
     def UpdateDictionnaireJoueurs(self):
         listeNouveauJoueurs = pickle.loads(self.serveur.checkNouveauxJoueurs(self.univers.joueurs.keys()))
