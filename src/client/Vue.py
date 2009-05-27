@@ -60,7 +60,13 @@ class Vue(object):
 #        for i in range(200):
 #            r = random.Random()
 #            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
-
+    def AfficheTech(self):
+        self.fenetreActive = FenetreTech(self)
+        self.fenetreActive.grid ( row=0, column=0)
+        
+        
+    def KillMenuTech(self):
+        self.fenetreActive.grid_forget() 
 
 class MenuBas(Frame):
     def __init__(self, parent):
@@ -70,8 +76,8 @@ class MenuBas(Frame):
         self.parent = parent
 
         self.nom = Label(self, text="Menu du bas")
-        self.bouton1 = Button(self, text="Bouton 1")
-        self.bouton2 = Button(self, text="Bouton 2")
+        self.bouton1 = Button(self, text="Bouton 1", command = self.parent.AfficheTech)
+        self.bouton2 = Button(self, text="Bouton 2", command = self.parent.KillMenuTech)
         self.bouton3 = Button(self, text="Bouton 3")
         self.nom.pack(side=LEFT)# test du chat
         self.bouton1.pack(side=LEFT)
@@ -416,3 +422,37 @@ class ZoneDeJeu(Canvas):
             self.delete(self.debugText)
         if self.debug:
             self.debugText = self.create_text(10, 10, text=message, fill="white", anchor=NW)
+            
+            
+class FenetreTech(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self, parent.root,width=200, height=200,background=parent.gris)
+        self.parent = parent
+        self.bouton1 = Button(self, text="Acheter", command = self.Acheter)
+        self.bouton1.pack()
+        self.listeLabel = {}
+        self.techSelectionne = None
+        
+        for cle in self.parent.parent.player.arbre.keys():
+            self.cle = Label(self, text=cle,bg=self.parent.gris)
+            self.cle.bind("<Button-1>", self.SelectionneTech)
+            self.cle.pack()
+            self.listeLabel[cle] = self.cle
+            #print self.listeLabel[cle].cget("text")
+                                 
+    def SelectionneTech(self,event):
+        if self.techSelectionne != None:
+            self.listeLabel[self.techSelectionne].config(bg = self.parent.gris)
+        self.listeLabel[event.widget.cget("text")].config(bg = self.parent.jaune)
+        self.techSelectionne = event.widget.cget("text")
+        
+        print self.parent.parent.VerifierTech(self.techSelectionne)
+        
+        if self.parent.parent.VerifierTech(self.techSelectionne) ==1:
+            self.bouton1.config(state = NORMAL)
+        else:
+            self.bouton1.config(state = DISABLED)
+    
+    
+    def Acheter(self):
+        self.parent.parent.player.AcheterTechnologie(self.techSelectionne)

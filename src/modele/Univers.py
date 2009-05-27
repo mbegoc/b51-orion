@@ -22,7 +22,7 @@ class Univers(object):
 #        for x in range(self.nbrSystemes):#je vais changer ca pour un shuffle plus tard pour eviter les collisions             
 #              self.systemes[x]=Systeme(random.randint(0,50)*10,random.randint(0,50)*10) 
         
-    def ajouterJoueur(self,id):
+    def ajouterJoueur(self,id,arbre):
         print "here2"
         couleur=self.couleursJoueurs.pop()
         d=self.systemes
@@ -32,7 +32,7 @@ class Univers(object):
         print self.systemes[a]
         print "outpopo"
         system=self.systemes[a]
-        self.joueurs[id]=Joueur(self,id,couleur,system)
+        self.joueurs[id]=Joueur(self,id,couleur,system,arbre)
         print "here_3"
         
     def ajouterSysteme(self, systeme):

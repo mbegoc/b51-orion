@@ -8,6 +8,7 @@ from modele.Univers import Univers
 from modele.Joueur import Joueur
 from modele.Vaisseau import Vaisseau
 from modele.Chat import Chat
+from modele.Technologie import Technologie
 
 # Creer un serveur
 server = SimpleXMLRPCServer(("localhost", 8000),
@@ -20,7 +21,7 @@ class ControlleurServeur(object):
     def __init__(self):
         self.univers = Univers()
         self.creerSystemes()
-
+        self.arbre = self.creerArbreTechnologique()
         self.chat=Chat()
         self.listeJoueurs=[]
 
@@ -82,7 +83,28 @@ class ControlleurServeur(object):
 #            print s
 #            print s.id
                     
-        
+    def creerArbreTechnologique(self):
+        arbre = {}
+        file = open("..\modele\ListeTech.txt")  
+        while 1:
+            lines = file.readlines(100000)
+            if not lines:
+                break
+            for line in lines:
+                #separe les tech du reste des parametres
+                listsplit = line.split(';')
+                listsplit[1] = listsplit[1].rstrip('\n')
+                listParam = listsplit[0]
+                listTech = listsplit[1]
+                #separe les tech et parametres en liste
+                listTech = listTech.split(',')
+                listParam = listParam.split(',')
+                # creer une instance de technologie et creer l'arbre technologique
+                arbre[listParam[1]] = Technologie(listParam[0],listParam[1],
+                                                  listParam[2],listParam[3],
+                                                  listParam[4],listTech)
+        return arbre
+
     def creerSystemes(self):
         s=0
         while s<10:  
@@ -113,7 +135,7 @@ class ControlleurServeur(object):
             print tempReponse
         else:
             print "OK1"
-            self.univers.ajouterJoueur(nom)
+            self.univers.ajouterJoueur(nom,self.arbre)
             print "OK2"
             tempReponse=pickle.dumps(self.univers)
             print "OK3"
