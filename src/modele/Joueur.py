@@ -10,6 +10,7 @@ class Joueur(object):
         self.systemes = []
         self.ajouterSysteme(systInit)
         self.message = []
+        self.techAquise = []
         self.arbre = arbre
         self.ressources = Ressources(10).getRessourcesGlobales()
         
