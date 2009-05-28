@@ -65,7 +65,7 @@ class Vue(object):
 #            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
     def AfficheTech(self):
         self.fenetreActive = FenetreTech(self)
-        self.fenetreActive.grid ( row=0, column=0)
+        self.fenetreActive.grid ( row=0, column=0, rowspan=2)
         
         
     def KillMenuTech(self):
@@ -203,36 +203,37 @@ class RapportSelection(Frame):
 
     def genererRapport(self, idObjet):
         rapport = ""
-        if idObjet[0] == "s":
-            systeme = self.parent.parent.getSysteme(idObjet)
-            rapport = "Systeme\n"
-            if systeme.owner:
-                rapport += "Proprietaire: "+systeme.owner+"\n"
-            else:
-                rapport += "Inoccupe\n"
-            rapport += "Position\n"
-            rapport += "x: "+str(systeme.x)+"\n"
-            rapport += "y: "+str(systeme.y)+"\n"
-            rapport += "z: "+str(systeme.z)+"\n"
-            rapport += "Potentiel ressources locales\n"
-            rapport += "Nourriture: "+str(systeme.ressourcesPotentielles.nourriture)+"\n"
-            rapport += "Gaz: "+str(systeme.ressourcesPotentielles.gaz)+"\n"
-            rapport += "Metaux: "+str(systeme.ressourcesPotentielles.metaux)+"\n"
-            rapport += "Energie: "+str(systeme.ressourcesPotentielles.energie)+"\n"
-            rapport += "Production: "+str(systeme.ressourcesPotentielles.production)+"\n"
-            rapport += "potentiel ressources globales\n"
-            rapport += "Connaissance: "+str(systeme.ressourcesPotentielles.connaissance)+"\n"
-            rapport += "Credit: "+str(systeme.ressourcesPotentielles.credit)+"\n"
-        elif idObjet[0] == "v":
-            vaisseau = self.parent.parent.getVaisseau(idObjet)
-            rapport = "Vaisseau\n"
-            rapport += "Classe: "+vaisseau.classe+"\n"
-            rapport += "Type: "+vaisseau.type+"\n"
-            rapport += "Proprietaire: "+vaisseau.parent.id+"\n"
-            rapport += "Position\n"
-            rapport += "x: "+str(vaisseau.x)+"\n"
-            rapport += "y: "+str(vaisseau.y)+"\n"
-            #rapport += "z: "+str(vaisseau.z)+"\n"
+        if idObjet:
+            if idObjet[0] == "s":
+                systeme = self.parent.parent.getSysteme(idObjet)
+                rapport = "Systeme\n"
+                if systeme.owner:
+                    rapport += "Proprietaire: "+systeme.owner+"\n"
+                else:
+                    rapport += "Inoccupe\n"
+                rapport += "Position\n"
+                rapport += "x: "+str(systeme.x)+"\n"
+                rapport += "y: "+str(systeme.y)+"\n"
+                rapport += "z: "+str(systeme.z)+"\n"
+                rapport += "Potentiel ressources locales\n"
+                rapport += "Nourriture: "+str(systeme.ressourcesPotentielles.nourriture)+"\n"
+                rapport += "Gaz: "+str(systeme.ressourcesPotentielles.gaz)+"\n"
+                rapport += "Metaux: "+str(systeme.ressourcesPotentielles.metaux)+"\n"
+                rapport += "Energie: "+str(systeme.ressourcesPotentielles.energie)+"\n"
+                rapport += "Production: "+str(systeme.ressourcesPotentielles.production)+"\n"
+                rapport += "potentiel ressources globales\n"
+                rapport += "Connaissance: "+str(systeme.ressourcesPotentielles.connaissance)+"\n"
+                rapport += "Credit: "+str(systeme.ressourcesPotentielles.credit)+"\n"
+            elif idObjet[0] == "v":
+                vaisseau = self.parent.parent.getVaisseau(idObjet)
+                rapport = "Vaisseau\n"
+                rapport += "Classe: "+vaisseau.classe+"\n"
+                rapport += "Type: "+vaisseau.type+"\n"
+                rapport += "Proprietaire: "+vaisseau.parent.id+"\n"
+                rapport += "Position\n"
+                rapport += "x: "+str(vaisseau.x)+"\n"
+                rapport += "y: "+str(vaisseau.y)+"\n"
+                #rapport += "z: "+str(vaisseau.z)+"\n"
             
         self.lRapport.configure(text=rapport)
 
@@ -368,8 +369,6 @@ class ZoneDeJeu(Canvas):
         
         self.parent.parent.objetSelectionne = self.getObjet(x, y)
         self.selectionnerItem(self.find_withtag(self.parent.parent.objetSelectionne))
-        if(self.parent.parent.objetSelectionne != None and self.parent.parent.objetSelectionne):
-            self.parent.rapportSelection.genererRapport(self.parent.parent.objetSelectionne)
             
     def cibler(self, event):
         x = self.canvasx(event.x)
