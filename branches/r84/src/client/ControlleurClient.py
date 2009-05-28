@@ -23,27 +23,33 @@ class Controlleur(object):
             
     def ConnecterAuServeur(self):
         self.serveur = xmlrpclib.Server('http://localhost:8000')
-        print "here1"
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
-        print "here2"
         self.player = self.univers.joueurs[self.nom]
         
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
 
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1))
+        self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
+        self.player.getVaisseau(2).classe="militaire"
+        self.player.getVaisseau(2).vitesse = 10
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(2))
+        self.player.ajouterVaisseau(150,150,self.BatemeVaisseau())
+        self.player.getVaisseau(3).classe="drone"
+        self.player.getVaisseau(3).vitesse = 20
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(3))
 
-        self.selectione = "false"
-        self.objetCible = "star1"
+        self.selectionne = ""
+        self.objetCible = ""
         self.tDeplacement.start()
         self.chatMsgNbr=self.serveur.receptionMessageChat(-1) #initialise le chat
 
         
     def SelectionneEntite(self,event):
-        print "click gauche", self.objetSelectionne
+        pass #print "click gauche", self.objetSelectionne
     
     def Action(self, x, y):
-        print "click droit", self.objetSelectionne
+        pass #print "click droit", self.objetSelectionne
         typeDeplacement = "deplacement"
         if typeDeplacement == "deplacement":  
             self.player.vaisseaux[self.objetSelectionne].xArrivee = x
@@ -59,7 +65,7 @@ class Controlleur(object):
         self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
         
     def GetMessage(self):
-        print self.nom
+        pass #print self.nom
          
         self.mes1 = self.serveur.requeteClient(self.nom)
         if self.mes1 == "rien":
@@ -70,7 +76,7 @@ class Controlleur(object):
     def getVaisseau(self, idVaisseau):
         for joueur in self.univers.joueurs:
             if re.search(self.univers.joueurs[joueur].id, idVaisseau):
-                print self.univers.joueurs[joueur].vaisseaux
+                pass #print self.univers.joueurs[joueur].vaisseaux
                 return self.univers.joueurs[joueur].vaisseaux[idVaisseau]
             
     def getSysteme(self, idSysteme):
