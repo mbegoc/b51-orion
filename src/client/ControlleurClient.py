@@ -15,14 +15,15 @@ class Controlleur(object):
         self.serveur = None
         self.univers = None
         self.player = None
-        self.objetSelectionne = None
+        self.objetSelectionne = ""
+        self.objetCible = ""
         self.messageADecoder = None
         self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.vue.root.mainloop()
         self.tDeplacement.cancel()
             
     def ConnecterAuServeur(self):
-        self.serveur = xmlrpclib.Server('http://localhost:8000')
+        self.serveur = xmlrpclib.Server('http://127.0.0.1:8000')
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
         
@@ -39,8 +40,6 @@ class Controlleur(object):
         self.player.getVaisseau(3).vitesse = 20
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(3))
 
-        self.selectionne = ""
-        self.objetCible = ""
         self.tDeplacement.start()
         self.chatMsgNbr=self.serveur.receptionMessageChat(-1) #initialise le chat
 
@@ -63,6 +62,7 @@ class Controlleur(object):
         self.SendNewDeplacement()
         self.GetMessage()
         self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
+        self.vue.rapportSelection.genererRapport(self.objetSelectionne)
         
     def GetMessage(self):
         pass #print self.nom
@@ -76,7 +76,6 @@ class Controlleur(object):
     def getVaisseau(self, idVaisseau):
         for joueur in self.univers.joueurs:
             if re.search(self.univers.joueurs[joueur].id, idVaisseau):
-                pass #print self.univers.joueurs[joueur].vaisseaux
                 return self.univers.joueurs[joueur].vaisseaux[idVaisseau]
             
     def getSysteme(self, idSysteme):
