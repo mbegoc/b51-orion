@@ -28,7 +28,7 @@ class Vue(object):
         self.gris = "#778"
         self.mauve = "#90f"
         self.grille= "#799990"
-        
+        self.fenetreActive = None
         self.connexion = Connexion(self)
         self.connexion.pack()
             
@@ -63,13 +63,22 @@ class Vue(object):
 #        for i in range(200):
 #            r = random.Random()
 #            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
-    def AfficheTech(self):
-        self.fenetreActive = FenetreTech(self)
-        self.fenetreActive.grid ( row=0, column=0, rowspan=2)
+    def MenuTech(self):
+        if self.fenetreActive == None:
+            self.fenetreActive = FenetreTech(self)
+            self.fenetreActive.grid ( row=0, column=0, rowspan=2)
+        else:
+            self.fenetreActive.grid_forget() 
+            self.fenetreActive = None
+            
+    def MenuSysteme(self):
+        if self.fenetreActive == None:
+            self.fenetreActive = FenetreSysteme(self)
+            self.fenetreActive.grid ( row=0, column=0, rowspan=2)
+        else:
+            self.fenetreActive.grid_forget() 
+            self.fenetreActive = None
         
-        
-    def KillMenuTech(self):
-        self.fenetreActive.grid_forget() 
 
 
 class MenuBas(Frame):
@@ -80,8 +89,8 @@ class MenuBas(Frame):
         self.parent = parent
 
         self.nom = Label(self, text="Menu du bas")
-        self.bouton1 = Button(self, text="Bouton 1", command = self.parent.AfficheTech)
-        self.bouton2 = Button(self, text="Bouton 2", command = self.parent.KillMenuTech)
+        self.bouton1 = Button(self, text="Tech", command = self.parent.MenuTech)
+        self.bouton2 = Button(self, text="Bouton 2", command = self.parent.MenuSysteme)
         self.bouton3 = Button(self, text="Bouton 3")
         self.nom.pack(side=LEFT)# test du chat
         self.bouton1.pack(side=LEFT)
@@ -481,15 +490,21 @@ class FenetreTech(Frame):
             self.cle.bind("<Button-1>", self.SelectionneTech)
             self.cle.pack()
             self.listeLabel[cle] = self.cle
-            #print self.listeLabel[cle].cget("text")
+            
+        for cle in self.parent.parent.player.techAquise:
+            self.cle = Label(self, text=cle,bg=self.parent.vert)
+            self.cle.bind("<Button-1>", self.SelectionneTech)
+            self.cle.pack()
+            self.listeLabel[cle] = self.cle
+
                                  
     def SelectionneTech(self,event):
-        if self.techSelectionne != None:
+        if self.techSelectionne in self.parent.parent.player.techAquise:
+            self.listeLabel[self.techSelectionne].config(bg = self.parent.vert)
+        elif self.techSelectionne != None:
             self.listeLabel[self.techSelectionne].config(bg = self.parent.gris)
         self.listeLabel[event.widget.cget("text")].config(bg = self.parent.jaune)
         self.techSelectionne = event.widget.cget("text")
-        
-        print self.parent.parent.VerifierTech(self.techSelectionne)
         
         if self.parent.parent.VerifierTech(self.techSelectionne) ==1:
             self.bouton1.config(state = NORMAL)
@@ -499,3 +514,14 @@ class FenetreTech(Frame):
     
     def Acheter(self):
         self.parent.parent.player.AcheterTechnologie(self.techSelectionne)
+        self.bouton1.config(state = DISABLED)
+        self.listeLabel[self.techSelectionne].config(bg = self.parent.vert)
+        
+        
+class FenetreSysteme(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self, parent.root,width=500, height=400,background=parent.gris)
+        self.parent = parent
+        
+        
+        

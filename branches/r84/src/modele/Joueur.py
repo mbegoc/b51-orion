@@ -26,12 +26,10 @@ class Joueur(object):
         
         
     def AcheterTechnologie(self,nomTech):
-        if nomTech in self.arbre:
-            if self.ressources.connaissance >= int(self.arbre[nomTech].prix):
-                if self.arbre[nomTech].requis[0] == '' or self.arbre[nomTech].requis in self.techAquise:
-                    self.ressources.connaissance = self.ressources.connaissance - int(self.arbre[nomTech].prix)
-                    self.techAquise.append(self.arbre[nomTech].nom)
-                    print nomTech + " achete!"
+        self.ressources.connaissance = self.ressources.connaissance - int(self.arbre[nomTech].prix)
+        self.techAquise.append(self.arbre[nomTech].nom)
+        del self.arbre[nomTech]
+        print nomTech + " achete!"
                     
     def ajouterVaisseau(self, posX, posY, id):
         self.vaisseaux[id] = Vaisseau(self,posX,posY, id)
