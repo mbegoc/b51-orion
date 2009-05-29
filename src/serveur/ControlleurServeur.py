@@ -9,6 +9,8 @@ from modele.Joueur import Joueur
 from modele.Vaisseau import Vaisseau
 from modele.Chat import Chat
 from modele.Technologie import Technologie
+from threading import Timer
+
 
 # Creer un serveur
 server = SimpleXMLRPCServer(("localhost", 8000),
@@ -23,7 +25,11 @@ class ControlleurServeur(object):
         self.creerSystemes()
         self.arbre = self.creerArbreTechnologique()
         self.chat=Chat()
+
         self.listeJoueurs=[]
+        self.listeJoueursEliminer=[]
+        self.localTimer=Timer(10,self.compteurTimer)
+        self.localTimer.start()              
 
         #Attention: TESTS A REGARDER POUR AJOUTER QQCH DE SIMILAIRE DANS CONTROLLEUR_CLIENT!!!!!!!
         #Attention: POUR TESTER ENLEVER SEULEMENT LES COMMENTAIRES QUI SONT 
@@ -140,6 +146,20 @@ class ControlleurServeur(object):
             tempReponse=pickle.dumps(self.univers)
             print "OK3"
         return tempReponse
+    
+    def compteurTimer(self):
+        self.localTimer=Timer(10,self.compteurTimer)
+        self.localTimer.start()   
+        for s in self.listeJoueursEliminer:
+            self.listeJoueursEliminer.remove(s)
+        for s in self.univers.joueurs:
+            self.univers.joueurs[s].timeout=self.univers.joueurs[s].timeout+1
+            if self.univers.joueurs[s].timeout>3: # 30 secondes!!
+                self.listeJoueursEliminer.append(s)
+                print "JOUEUR A DECONNECTER: ",
+                print s
+        for s in self.listeJoueursEliminer:                
+            self.deconnecterJoueur(s)    
         
     def MiseAJourVaisseaux(self,nom,messVaisseaux):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
@@ -173,6 +193,14 @@ class ControlleurServeur(object):
                 self.listeJoueurs.append(self.univers.joueurs[s])
         return pickle.dumps(self.listeJoueurs)
 
+    def checkJoueursElimines(self, listeNomsJoueurs):
+        #print "Dans checkJoueursElimines: ",
+        for s in self.listeJoueurs:
+            self.listeJoueurs.remove(s)
+        for s in listeNomsJoueurs:
+            if (s not in self.univers.joueurs):
+                self.listeJoueurs.append(s)
+        return pickle.dumps(self.listeJoueurs)
                     
     def requeteClient(self, nom):
         print "Dans requeteClient......"
@@ -180,6 +208,11 @@ class ControlleurServeur(object):
             return pickle.dumps(self.univers.joueurs[nom].message)
         else:
             return "rien"
+        
+    def deconnecterJoueur(self,nom):
+        print "JOUEUR DECONNECTE: ",
+        print nom
+        del self.univers.joueurs[nom]        
 
 ##################################
 #chat
