@@ -45,10 +45,9 @@ class Controlleur(object):
 
         
     def SelectionneEntite(self,event):
-        pass #print "click gauche", self.objetSelectionne
+        pass
     
     def Action(self, x, y):
-        pass #print "click droit", self.objetSelectionne
         typeDeplacement = "deplacement"
         if typeDeplacement == "deplacement":  
             self.player.vaisseaux[self.objetSelectionne].xArrivee = x
@@ -65,7 +64,7 @@ class Controlleur(object):
         self.vue.rapportSelection.genererRapport(self.objetSelectionne)
         
     def GetMessage(self):
-        pass #print self.nom
+        pass
          
         self.mes1 = self.serveur.requeteClient(self.nom)
         if self.mes1 == "rien":
