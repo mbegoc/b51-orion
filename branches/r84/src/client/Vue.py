@@ -63,21 +63,28 @@ class Vue(object):
 #        for i in range(200):
 #            r = random.Random()
 #            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
-    def MenuTech(self):
-        if self.fenetreActive == None:
-            self.fenetreActive = FenetreTech(self)
-            self.fenetreActive.grid ( row=0, column=0, rowspan=2)
-        else:
-            self.fenetreActive.grid_forget() 
-            self.fenetreActive = None
+    def MenuAction(self,event):
+        if event.widget.cget("text") == "Tech":
+            nomClasse = "Vue.FenetreTech"
+            leFrame = FenetreTech(self)
             
-    def MenuSysteme(self):
-        if self.fenetreActive == None:
-            self.fenetreActive = FenetreSysteme(self)
+        elif event.widget.cget("text") == "Systeme":
+            nomClasse = "Vue.FenetreSysteme"
+            leFrame = FenetreSysteme(self)
+
+        if str(self.fenetreActive.__class__) == nomClasse:
+            self.fenetreActive.grid_forget() 
+            self.fenetreActive = None
+        
+        elif self.fenetreActive == None:
+            self.fenetreActive = leFrame
             self.fenetreActive.grid ( row=0, column=0, rowspan=2)
+
         else:
             self.fenetreActive.grid_forget() 
             self.fenetreActive = None
+            self.fenetreActive = leFrame
+            self.fenetreActive.grid ( row=0, column=0, rowspan=2)
         
 
 
@@ -89,8 +96,13 @@ class MenuBas(Frame):
         self.parent = parent
 
         self.nom = Label(self, text="Menu du bas")
-        self.bouton1 = Button(self, text="Tech", command = self.parent.MenuTech)
-        self.bouton2 = Button(self, text="Bouton 2", command = self.parent.MenuSysteme)
+        
+        self.bouton1 = Button(self, text="Tech")
+        self.bouton1.bind("<Button-1>", self.parent.MenuAction)
+        
+        self.bouton2 = Button(self, text="Systeme")
+        self.bouton2.bind("<Button-1>", self.parent.MenuAction)
+        
         self.bouton3 = Button(self, text="Bouton 3")
         self.nom.pack(side=LEFT)# test du chat
         self.bouton1.pack(side=LEFT)
@@ -482,6 +494,7 @@ class FenetreTech(Frame):
         self.parent = parent
         self.bouton1 = Button(self, text="Acheter", command = self.Acheter)
         self.bouton1.pack()
+        self.bouton1.config(state = DISABLED)
         self.listeLabel = {}
         self.techSelectionne = None
         
