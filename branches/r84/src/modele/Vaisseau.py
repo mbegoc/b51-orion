@@ -96,7 +96,12 @@ class Vaisseau(object):
         ve = VaisseauEvent(self, type, message, code)
         for ecouteur in self.ecouteurs:
             ecouteur.vaisseauEvent(ve)
+            
+    def securiser(self):
+        self.parent = self.parent.id
 
+    def desecuriser(self, parent):
+        self.parent = parent
 
 
 '''    TEST    '''
