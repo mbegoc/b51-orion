@@ -13,6 +13,7 @@ class Joueur(object):
         self.techAquise = []
         self.arbre = arbre
         self.ressources = Ressources(10).getRessourcesGlobales()
+        self.timeout = 0 # Compteur pour timer!!
         
     def ajouterSysteme(self, systeme):
         self.systemes.append(systeme)      
