@@ -404,7 +404,7 @@ class ZoneDeJeu(Canvas):
 
         self.parent.parent.TypeAction(x, y)
         
-        self.parent.parent.objetCible = self.getObjet(x, y)
+        self.parent.parent.ciblerObjet(self.getObjet(x, y))
         self.ciblerItem(self.find_withtag(self.parent.parent.objetCible))
         self.parent.root.after(1000, self.deciblerItem)
 
