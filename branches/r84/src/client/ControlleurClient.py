@@ -19,9 +19,9 @@ class Controlleur(object):
         self.objetSelectionne = ""
         self.objetCible = ""
         self.messageADecoder = None
-        self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
+        #self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
         self.vue.root.mainloop()
-        self.tDeplacement.cancel()
+        #self.tDeplacement.cancel()
             
     def ConnecterAuServeur(self):
         self.serveur = xmlrpclib.Server('http://127.0.0.1:8000')
@@ -41,7 +41,8 @@ class Controlleur(object):
         self.player.getVaisseau(3).vitesse = 20
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(3))
 
-        self.tDeplacement.start()
+        #self.tDeplacement.start()
+        self.vue.root.after(100, self.RefreshDeplacement)
         self.chatMsgNbr=self.serveur.receptionMessageChat(-1) #initialise le chat
 
         
@@ -55,26 +56,50 @@ class Controlleur(object):
             self.player.vaisseaux[self.objetSelectionne].yArrivee = y
         
     def RefreshDeplacement(self):
-        debut = time.time()
+        debug = ""
+        debut= time.time()
         self.UpdateDictionnaireJoueurs()
+        debug += "UpdateDictionnaireJoueurs: "+str(time.time() - debut)+"\n"
+        top = time.time()
         self.SendNewDeplacement()
+        debug += "SendNewDeplacement: "+str(time.time() - top)+"\n"
+        top = time.time()
         self.GetMessage()
+        debug += "GetMessage: "+str(time.time() - top)+"\n"
+        top = time.time()
         self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
+        debug += "receptionMessageChat: "+str(time.time() - top)+"\n"
+        top = time.time()
         self.vue.rapportSelection.genererRapport(self.objetSelectionne)
-        temps = time.time() - debut
-        self.vue.zoneJeu.debugMessage(str(temps))
+        debug += "rapportSelection: "+str(time.time() - top)+"\n"
+        debug += "Total: "+str(time.time() - debut) 
+        self.vue.zoneJeu.debugMessage(debug)
         #timer de rappel
-        self.tDeplacement = Timer(0.1, self.RefreshDeplacement)
-        self.tDeplacement.start()
+        self.vue.root.after(100, self.RefreshDeplacement)
+        #self.tDeplacement = Timer(0.1, self.RefreshDeplacement)
+        #self.tDeplacement.start()
         
     def GetMessage(self):
-        pass
-         
+        debug = ""
+        debut= time.time()
+
+        
         self.mes1 = self.serveur.requeteClient(self.nom)
+        
+        debug += "requeteClient: "+str(time.time() - debut)+"\n"
+        top = time.time()
+        
         if self.mes1 == "rien":
             pass
         else:
             self.DecodeMessage(pickle.loads(self.mes1))
+
+        self.vue.rapportSelection.genererRapport(self.objetSelectionne)
+        debug += "depickle: "+str(time.time() - top)+"\n"
+        print self.mes1
+
+        debug += "Total: "+str(time.time() - debut) 
+        #self.vue.zoneJeu.debugMessage(debug)
             
     def getVaisseau(self, idVaisseau):
         for joueur in self.univers.joueurs:
@@ -102,8 +127,12 @@ class Controlleur(object):
         for i in range(len(self.player.vaisseaux)):
             self.player.getVaisseau(i+1).deplacer()
             self.vue.zoneJeu.deplacerVaisseau(self.player.getVaisseau(i+1))
-            self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
+            self.player.getVaisseau(i+1).securiser()
+        
+        self.serveur.MiseAJourVaisseaux(self.nom, pickle.dumps(self.univers.joueurs[self.nom].vaisseaux))
 
+        for i in range(len(self.player.vaisseaux)):
+            self.player.getVaisseau(i+1).desecuriser(self.player)
     
     def RefreshVue(self,NomduJoueur):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
