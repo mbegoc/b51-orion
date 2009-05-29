@@ -4,6 +4,7 @@ from threading import Timer
 import re
 from modele import *
 from Vue import Vue
+import time
 
 
 class Controlleur(object):
@@ -54,14 +55,17 @@ class Controlleur(object):
             self.player.vaisseaux[self.objetSelectionne].yArrivee = y
         
     def RefreshDeplacement(self):
-        # pour entrer danss cette fonction continuellement
-        self.tDeplacement = Timer(0.5, self.RefreshDeplacement)
-        self.tDeplacement.start()
+        debut = time.time()
         self.UpdateDictionnaireJoueurs()
         self.SendNewDeplacement()
         self.GetMessage()
         self.receptionMessageChat() #ligne qui sert au chat, placee ici en attendant
         self.vue.rapportSelection.genererRapport(self.objetSelectionne)
+        temps = time.time() - debut
+        self.vue.zoneJeu.debugMessage(str(temps))
+        #timer de rappel
+        self.tDeplacement = Timer(0.1, self.RefreshDeplacement)
+        self.tDeplacement.start()
         
     def GetMessage(self):
         pass
@@ -76,9 +80,16 @@ class Controlleur(object):
         for joueur in self.univers.joueurs:
             if re.search(self.univers.joueurs[joueur].id, idVaisseau):
                 return self.univers.joueurs[joueur].vaisseaux[idVaisseau]
+        return ""
             
     def getSysteme(self, idSysteme):
         return self.univers.systemes[idSysteme]
+    
+    def ciblerObjet(self, objetCible):
+        self.objetCible = objetCible
+        vaisseau = self.getVaisseau(self.objetSelectionne)
+        if vaisseau:
+            vaisseau.idDestination = objetCible
         
     def UpdateDictionnaireJoueurs(self):
         listeNouveauJoueurs = pickle.loads(self.serveur.checkNouveauxJoueurs(self.univers.joueurs.keys()))
