@@ -1,6 +1,6 @@
 class Ressources(object):
     def __init__(self, default = 0):
-        #les 6 ressources de base
+        #les 6 ressources de base + la population
         self.nourriture = default
         self.gaz = default
         self.metaux = default
@@ -8,46 +8,51 @@ class Ressources(object):
         self.credit = default
         self.connaissance = default
         self.production = default
+        self.population = default
         
         
     def multiplier(self, ressources):
-        self.nourriture = self.nourriture * ressources.nourriture
-        self.gaz = self.gaz * ressources.gaz
-        self.metaux = self.metaux * ressources.metaux
-        self.energie = self.energie * ressources.energie 
-        self.credit = self.credit * ressources.credit
-        self.connaissance = self.connaissance * ressources.connaissance 
-        self.production = self.production * ressources.production
+        self.nourriture *= ressources.nourriture
+        self.gaz *= ressources.gaz
+        self.metaux *= ressources.metaux
+        self.energie *= ressources.energie 
+        self.credit *= ressources.credit
+        self.connaissance *= ressources.connaissance 
+        self.production *= ressources.production
+        self.population *= ressources.population
         
-        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0:
+        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0 or self.population<0:
             return 0
         else:
             return 1
 
     def additionner(self, ressources):
-        self.nourriture = self.nourriture + ressources.nourriture
-        self.gaz = self.gaz + ressources.gaz
-        self.metaux = self.metaux + ressources.metaux
-        self.energie = self.energie + ressources.energie 
-        self.credit = self.credit + ressources.credit
-        self.connaissance = self.connaissance + ressources.connaissance 
-        self.production = self.production + ressources.production 
+        self.nourriture += ressources.nourriture
+        self.gaz += ressources.gaz
+        self.metaux += ressources.metaux
+        self.energie += ressources.energie 
+        self.credit += ressources.credit
+        self.connaissance += ressources.connaissance 
+        self.production += ressources.production 
+        self.population += ressources.population 
         
-        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0 or self.production<0:
+        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0 or self.production<0 or self.population<0:
             return 0
         else:
             return 1
 
     #retrancher des ressources consommees
     def consommer(self, ressources):
-        self.nourriture = self.nourriture - ressources.nourriture
-        self.gaz = self.gaz - ressources.gaz
-        self.metaux = self.metaux - ressources.metaux
-        self.energie = self.energie - ressources.energie 
-        self.credit = self.credit - ressources.credit
-        self.connaissance = self.connaissance - ressources.connaissance 
-        self.production = self.production - ressources.production 
-        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0 or self.production<0:
+        self.nourriture -= ressources.nourriture
+        self.gaz -= ressources.gaz
+        self.metaux -= essources.metaux
+        self.energie -= ressources.energie 
+        self.credit -= ressources.credit
+        self.connaissance -= ressources.connaissance 
+        self.production -= ressources.production 
+        self.population -= ressources.population 
+
+        if self.nourriture<0 or self.connaissance<0 or self.gaz<0 or self.energie<0 or self.credit<0 or self.metaux<0 or self.production<0 or self.population<0:
             return 0
         else:
             return 1
@@ -62,6 +67,7 @@ class Ressources(object):
         liste["credit"] = (self.credit)
         liste["connaissance"] = (self.connaissance)
         liste["production"] = (self.production)
+        liste["population"] = (self.population)
         return liste
     
     #duplique l'objet, si on a besoin de faire des calculs sur une ressources sans la modifier
@@ -74,6 +80,7 @@ class Ressources(object):
         copie.credit = self.credit
         copie.connaissance = self.connaissance 
         copie.production = self.production 
+        copie.population = self.population 
         return copie
     
     #renvoie seulement les ressources globales - pour simplifier le code des calculs de consommation et d'exploitation
@@ -91,4 +98,11 @@ class Ressources(object):
         ressourcesLocales.energie = self.energie
         ressourcesLocales.gaz = self.gaz
         ressourcesLocales.production = self.production
+        ressourcesLocales.population = self.population
         return ressourcesLocales
+
+if __name__ == "__main__":    
+    r1 = Ressources(2)
+    r2 = Ressources(3)
+    r1.multiplier(r2)
+    print r1.toList()
