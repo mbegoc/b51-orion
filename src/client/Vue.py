@@ -346,16 +346,16 @@ class ZoneDeJeu(Canvas):
         for i in systemes:
             self.dessinerImage("systeme3", systemes[i].x, systemes[i].y, systemes[i].id)
         
-    def nouveauVaisseau(self, vaisseau, proprietaire = 1, reference = 0):
+    def nouveauVaisseau(self, vaisseau, couleur, proprietaire = 1, reference = 0):
         x = vaisseau.x
         y = vaisseau.y
         l = self.baseUnites #largeur des unites
         if(vaisseau.classe == "civil"):
-            vaisseau = self.create_rectangle(x-l, y-l, x+l, y+l, fill=self.parent.vert, tags=vaisseau.id)
+            vaisseau = self.create_rectangle(x-l, y-l, x+l, y+l, fill=couleur, tags=vaisseau.id)
         elif(vaisseau.classe == "militaire"):
-            vaisseau = self.create_polygon(x, y-l, x+l, y+l, x-l, y+l, fill=self.parent.rouge, tags=vaisseau.id)
+            vaisseau = self.create_polygon(x, y-l, x+l, y+l, x-l, y+l, fill=couleur, tags=vaisseau.id)
         elif(vaisseau.classe == "drone"):
-            vaisseau = self.create_oval(x-l, y-l, x+l, y+l, fill=self.parent.bleu, tags=vaisseau.id)
+            vaisseau = self.create_oval(x-l, y-l, x+l, y+l, fill=couleur, tags=vaisseau.id)
         
         if reference:
             self.referenceProfondeur = vaisseau

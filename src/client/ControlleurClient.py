@@ -24,22 +24,22 @@ class Controlleur(object):
         #self.tDeplacement.cancel()
             
     def ConnecterAuServeur(self):
-        self.serveur = xmlrpclib.Server('http://127.0.0.1:8000')
+        self.serveur = xmlrpclib.Server('http://10.57.70.20:8000')
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
         
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
 
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), reference = 1)
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), self.player.couleur, reference = 1)
         self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
         self.player.getVaisseau(2).classe="militaire"
         self.player.getVaisseau(2).vitesse = 10
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(2))
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(2), self.player.couleur)
         self.player.ajouterVaisseau(150,150,self.BatemeVaisseau())
         self.player.getVaisseau(3).classe="drone"
         self.player.getVaisseau(3).vitesse = 20
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(3))
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(3), self.player.couleur)
 
         #self.tDeplacement.start()
         self.vue.root.after(100, self.RefreshDeplacement)
@@ -140,7 +140,7 @@ class Controlleur(object):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
             unVaisseau = self.univers.joueurs[NomduJoueur].getVaisseau(i+1)
             if self.vue.zoneJeu.existe(unVaisseau.id) <= 0:
-                self.vue.zoneJeu.nouveauVaisseau(unVaisseau, proprietaire = 0)
+                self.vue.zoneJeu.nouveauVaisseau(unVaisseau,self.univers.joueurs[NomduJoueur].couleur, proprietaire = 0)
             self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
     def TypeAction(self,x,y):
@@ -225,7 +225,6 @@ class Controlleur(object):
             return
         
         self.ip = ip
-        self.couleur = "vert"
         self.vue.demarrerJeu()
         self.ConnecterAuServeur()
 
