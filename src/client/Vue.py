@@ -42,14 +42,14 @@ class Vue(object):
         self.rapportSelection = RapportSelection(self)
         self.rapportSelection.grid(column=2, row = 0)
         
-        self.menuCote = MenuCote(self)
-        self.menuCote.grid(column=2, row=1)
+#        self.menuCote = MenuCote(self)
+#        self.menuCote.grid(column=2, row=1)
         
         self.chat = Chat(self)
-        self.chat.grid(column=0, row=3)
+        self.chat.grid(column=0, row=3, columnspan=3)
 
         self.menuBas = MenuBas(self)
-        self.menuBas.grid(column=0, row=4)
+        self.menuBas.grid(column=0, row=4, columnspan=3)
     
         self.scrollY = Scrollbar(self.root, orient=VERTICAL, command=self.zoneJeu.yview)
         self.scrollY.grid(row=0, column=1, rowspan=2, sticky=N+S)
@@ -235,11 +235,13 @@ class RapportSelection(Frame):
         self.lRapport.pack()
 
     def genererRapport(self, idObjet):
-        rapport = ""
+        rapport = "Ressources globales\n"
+        rapport += "Connaissance: "+str(self.parent.parent.player.ressources.connaissance)+"\n"
+        rapport += "Credit: "+str(self.parent.parent.player.ressources.credit)+"\n\n"
         if idObjet:
             if idObjet[0] == "s":
                 systeme = self.parent.parent.getSysteme(idObjet)
-                rapport = "Systeme\n"
+                rapport += "Systeme: "+systeme.id+"\n"
                 if systeme.owner:
                     rapport += "Proprietaire: "+systeme.owner+"\n"
                 else:
@@ -247,7 +249,7 @@ class RapportSelection(Frame):
                 rapport += "Position\n"
                 rapport += "x: "+str(systeme.x)+"\n"
                 rapport += "y: "+str(systeme.y)+"\n"
-                rapport += "z: "+str(systeme.z)+"\n"
+                rapport += "z: "+str(systeme.z)+"\n\n"
                 rapport += "Potentiel ressources locales\n"
                 rapport += "Nourriture: "+str(systeme.ressourcesPotentielles.nourriture)+"\n"
                 rapport += "Gaz: "+str(systeme.ressourcesPotentielles.gaz)+"\n"
@@ -255,8 +257,16 @@ class RapportSelection(Frame):
                 rapport += "Energie: "+str(systeme.ressourcesPotentielles.energie)+"\n"
                 rapport += "Production: "+str(systeme.ressourcesPotentielles.production)+"\n"
                 rapport += "potentiel ressources globales\n"
+                rapport += "Population: "+str(systeme.ressourcesPotentielles.population)+"\n"
                 rapport += "Connaissance: "+str(systeme.ressourcesPotentielles.connaissance)+"\n"
-                rapport += "Credit: "+str(systeme.ressourcesPotentielles.credit)+"\n"
+                rapport += "Credit: "+str(systeme.ressourcesPotentielles.credit)+"\n\n"
+                rapport += "Ressources locales\n"
+                rapport += "Population: "+str(systeme.ressources.population)+"\n"
+                rapport += "Nourriture: "+str(systeme.ressources.nourriture)+"\n"
+                rapport += "Gaz: "+str(systeme.ressources.gaz)+"\n"
+                rapport += "Metaux: "+str(systeme.ressources.metaux)+"\n"
+                rapport += "Energie: "+str(systeme.ressources.energie)+"\n"
+                rapport += "Production: "+str(systeme.ressources.production)+"\n"
             elif idObjet[0] == "v":
                 vaisseau = self.parent.parent.getVaisseau(idObjet)
                 rapport = "Vaisseau\n"
