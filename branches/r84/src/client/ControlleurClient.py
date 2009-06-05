@@ -1,5 +1,5 @@
 import xmlrpclib
-import pickle
+import cPickle as pickle
 from threading import Timer
 import re
 from modele import *
@@ -25,7 +25,7 @@ class Controlleur(object):
         #self.tDeplacement.cancel()
             
     def ConnecterAuServeur(self):
-        self.serveur = xmlrpclib.Server('http://10.57.70.20:8000')
+        self.serveur = xmlrpclib.Server('http://127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1:8000')
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
         self.gestionDev = GestionDev.GestionDev(self)
