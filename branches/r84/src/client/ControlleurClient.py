@@ -30,6 +30,14 @@ class Controlleur(object):
         self.player = self.univers.joueurs[self.nom]
         self.gestionDev = GestionDev.GestionDev(self)
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
+        
+        self.univers.systemes["s1"].infrastructures.append(Infrastructure.Infrastructure("fdsa"))
+        self.univers.systemes["s1"].infrastructures[0].modificateurRessources.nourriture = 5
+        self.univers.systemes["s1"].infrastructures[0].modificateurRessources.connaissance = 4
+        self.univers.systemes["s1"].infrastructures[0].ressourcesEntretien.energie = 2
+        self.player.systemes.append(self.univers.systemes["s1"])
+        self.univers.systemes["s1"].owner = self.player.id
+
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), self.player.couleur, reference = 1)
         self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
@@ -43,6 +51,7 @@ class Controlleur(object):
 
         #self.tDeplacement.start()
         self.vue.root.after(100, self.RefreshDeplacement)
+        self.calculerRessources()
         self.chatMsgNbr=self.serveur.receptionMessageChat(-1) #initialise le chat
 
         
@@ -77,9 +86,16 @@ class Controlleur(object):
         debug += "Total: "+str(time.time() - debut)
         self.vue.zoneJeu.debugMessage(debug)
         #timer de rappel
+        
         self.vue.root.after(100, self.RefreshDeplacement)
         #self.tDeplacement = Timer(0.1, self.RefreshDeplacement)
         #self.tDeplacement.start()
+        
+    def calculerRessources(self):
+        self.player.exploiterRessources()
+        self.player.calculerRessourcesConsommees()
+
+        self.vue.root.after(5000, self.calculerRessources)
         
     def GetMessage(self):
         debug = ""
