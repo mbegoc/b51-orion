@@ -38,21 +38,34 @@ class Systeme(object):
     on differencie les ressources globales des ressources locales: 
     La fonction ne retourne que la partie globale qui servira au calcul des ressources pour le joueur'''
     def exploiterRessources(self):
-        ressourcesProduitesLocalement = self.ressourcesPotentielles.copier().getRessourcesLocales()
-        ressourcesProduitesGlobalement = self.ressourcesPotentielles.copier().getRessourcesGlobales()
+        ressourcesProduitesLocalement = (self.ressourcesPotentielles.copier()).getRessourcesLocales()
+        ressourcesProduitesGlobalement = (self.ressourcesPotentielles.copier()).getRessourcesGlobales()
         
         for infrastructure in self.infrastructures:
             if infrastructure.actif:
-                ressourcesProduitesLocalement.multiplier(infrastructure.modificateurRessources)
-                ressourcesProduitesGlobalement.multiplier(infrastructure.modificateurRessources)
+                #on a besoin d'un modificateur de ressources pondere par la population
+                population = Ressources(self.ressources.population)
+                population.population = 1
+                modificateurPonderePopulation = infrastructure.modificateurRessources.copier()
+                modificateurPonderePopulation.multiplier(population)
+                
+                ressourcesProduitesLocalement.multiplier(modificateurPonderePopulation)
+                ressourcesProduitesGlobalement.multiplier(modificateurPonderePopulation)
             
         self.ressources.additionner(ressourcesProduitesLocalement)
         return ressourcesProduitesGlobalement
     
     def calculerRessourcesConsommees(self, ressourcesGlobales):
         for infrastructure in self.infrastructures:
-                if not self.ressources.consommer(infrastructure.ressourcesEntretien.getRessourcesLocales()) or not ressourcesGlobales.consommer(infrastructure.ressourcesEntretien.getRessourcesGlobales()):
-                    infrastructure.actif = 0
+                #on a besoin d'un modificateur de ressources pondere par la population
+                population = Ressources(self.ressources.population)
+                population.population = 1
+                entretienLocal = infrastructure.ressourcesEntretien.getRessourcesLocales().copier()
+                entretienLocal.multiplier(population)
+                entretienGlobal = infrastructure.ressourcesEntretien.getRessourcesGlobales().copier()
+                entretienGlobal.multiplier(population)
+                if not self.ressources.consommer(entretienLocal) or not ressourcesGlobales.consommer(entretienGlobal):
+                    infrastructure.actif = 0                
                     self.ressources.additionner(infrastructure.ressourcesEntretien.getRessourcesLocales())
                     ressourcesGlobales.additionner(infrastructure.ressourcesEntretien.getRessourcesGlobales())
                 else:
