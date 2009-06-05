@@ -26,6 +26,22 @@ class Vaisseau(object):
         self.ressourcesPropulsion.gaz = 20
         
         self.ecouteurs = []
+
+        #---combat---#
+        '''
+        il doit toujours y avoir un blindage par defaut. Le blindage differe
+        selon le type de dommage des armes. par exemple, pour un blindage
+        plus eleve contre les faisceaux laser, on creera un blindage
+        blindage['laser'] = 2, par exemple.
+        '''
+        self.blindage = {}
+        self.blindage['defaut'] = 1
+
+        self.armes = {}
+        self.armes[0] = [3, 'laser']
+        #---fin combat ---#
+
+
     def valideArriveSysteme(self): 
         if self.x==self.xArrivee and self.y==self.yArrivee and self.parent.parent.systeme[self.idDestination]:
             return true

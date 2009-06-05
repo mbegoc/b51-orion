@@ -5,22 +5,20 @@ class Combat(object):
 
     #les vaisseaux qui s'attaquent sont passes en parametre
     def __init__(self, attaquant, defenseur):
-        self.termine = False
-
-        
+        pass
 
 
-        while(!self.termine):
+    def attaque(self):
 
-            #cycle des armes de l'attaquant
-            for k,v in attaquant.armes:
+        #cycle des armes de l'attaquant
+        for k,v in attaquant.armes:
                 
-                #verification s'il existe un blindage particulier
-                #pour le dommage de l'attaquant
-                if v[1] in defenseur.blindage:
-                    self.stop = defenseur.blindage[v[1]]
-                else:
-                    self.stop = defenseur.blindage['defaut']
+            #verification s'il existe un blindage particulier
+            #pour le dommage de l'attaquant
+            if v[1] in defenseur.blindage:
+                self.stop = defenseur.blindage[v[1]]
+            else:
+                self.stop = defenseur.blindage['defaut']
 
                 #le dommage ne peut etre negatif
                 self.dommage = v[0] - self.stop
@@ -51,5 +49,10 @@ class Combat(object):
             if attaquant.dommage > 100 or defenseur.dommage > 100:
                 self.termine = True
 
-
+    #calcule la distance entre les deux vaisseaux, 
+    #si la distance est plus petite que 5, attaque
+    def confirmeAttaque(self):
+        self.distance = math.sqrt(math.pow((attaquant.x - defenseur.x), 2) + math.pow((attaquant.y - defenseur.y), 2))
+        if (self.distance <= 5):
+            self.attaque()
 
