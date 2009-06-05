@@ -426,6 +426,28 @@ class ZoneDeJeu(Canvas):
         self.parent.root.after(1000, self.deciblerItem)
 
     def getObjet(self, x, y):
+
+        '''
+        ce bloc sert a determiner si je peux attaquer. pour ce faire je verifie
+        si l'objet selectionne en ce moment est un vaisseau ami. ensuite,
+        je verifie si l'objet selectionne avec le bouton de droite est un
+        vaisseau.finalement, si c'est un ennemi, l'attaque sera amorcee
+        lorsque les vaisseaux seront a portee.
+        si vous avez une methode plus efficace pour attaquer, ou une
+        suggestion d'un autre endroit pour placer cette fonction, il me ferait
+        plaisir de l'entendre :D
+        '''
+        #vaisseau ami selectionne
+        if self.parent.parent.objetSelectionne.rstrip('0123456789') == "v" + self.parent.parent.nom:
+            #vaisseau hostile choisi
+            etiquette = self.gettags("current")[0].rstrip('0123456789')
+            if etiquette[0] == "v":#c'est un vaisseau!
+                if etiquette[1:] != self.parent.parent.nom:#c'est un ennemi!!!
+                    print "ATTAQUE!!!!!!"
+
+        #fin de verification de l'attaque
+
+
         #selection d'un ou plusieurs objets
         objet = self.find_withtag("current")
 

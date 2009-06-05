@@ -1,6 +1,6 @@
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
-import pickle
+import cPickle as pickle
 import datetime
 import random
 from modele.Systeme import Systeme
@@ -244,17 +244,21 @@ class ControlleurServeur(object):
 ################################
 
 
-server.register_instance(ControlleurServeur())
+class bootStrap(object):
+    serveur=ControlleurServeur()
+    server.register_instance(serveur)
 
-# Demarrer la boucle du serveur
-try:
-    print "serveur demarre"
-    print 'Tapez Control-C pour sortir'
-    server.serve_forever()
-except KeyboardInterrupt:
-    #server.shutdown()
-    print 'Termine!'
+    # Demarrer la boucle du serveur
+    try:
+        print "serveur demarre"
+        print 'Tapez Control-C pour sortir'
+        server.serve_forever()
+    except KeyboardInterrupt:
+        serveur.shutdown()
+        print 'Termine!'
 
+if __name__ == "__main__":
+    demarrer=bootStrap()
 
 
     #IMPORTANT:

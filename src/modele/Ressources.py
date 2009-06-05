@@ -45,7 +45,7 @@ class Ressources(object):
     def consommer(self, ressources):
         self.nourriture -= ressources.nourriture
         self.gaz -= ressources.gaz
-        self.metaux -= essources.metaux
+        self.metaux -= ressources.metaux
         self.energie -= ressources.energie 
         self.credit -= ressources.credit
         self.connaissance -= ressources.connaissance 
