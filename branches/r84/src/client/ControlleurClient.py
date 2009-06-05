@@ -25,7 +25,7 @@ class Controlleur(object):
         #self.tDeplacement.cancel()
             
     def ConnecterAuServeur(self):
-        self.serveur = xmlrpclib.Server('http://127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1127.0.0.1:8000')
+        self.serveur = xmlrpclib.Server('http://127.0.0.1:8000')
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
         self.gestionDev = GestionDev.GestionDev(self)
@@ -98,7 +98,7 @@ class Controlleur(object):
 
         self.vue.rapportSelection.genererRapport(self.objetSelectionne)
         debug += "depickle: "+str(time.time() - top)+"\n"
-        print self.mes1
+        #print self.mes1 #commente parce que remplit la console et que je veux m'en servir pour lire autre chose
 
         debug += "Total: "+str(time.time() - debut) 
         #self.vue.zoneJeu.debugMessage(debug)
