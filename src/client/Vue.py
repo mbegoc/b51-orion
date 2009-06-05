@@ -285,8 +285,8 @@ class Connexion(Frame):
         else:
             MBox.showinfo(title="Saisie erronee", message="Toutes les informations demandees sont necessaires.")
             
-    def erreurConnexion(self):
-        MBox.showinfo(title="Erreur de connexion", message="Impossible de se connecter au serveur.")
+    def erreurConnexion(self, message = ""):
+        MBox.showinfo(title="Erreur de connexion", message="Impossible de se connecter au serveur. " + message)
 
 
 
@@ -306,7 +306,9 @@ class ZoneDeJeu(Canvas):
         
         self.itemCible = ""
         self.itemCibleType = ""
-        
+
+        self.referenceProfondeur = 0
+                
         self.debug = 1#mettre a zero pour desactiver les messages de debugage
         self.debugText = 0
 
@@ -336,7 +338,7 @@ class ZoneDeJeu(Canvas):
 
         #binds des evenements
         self.bind("<Button-1>", self.selectionner) #envoie l'objet event au controlleur
-        self.bind("<Button-2>", self.creerVaisseau)
+        #self.bind("<Button-2>", self.creerVaisseau)
         self.bind("<Button-3>", self.cibler) #envoie l'objet event au controlleur
 
     #representer l'ensemble des sytemes initiaux
@@ -344,7 +346,7 @@ class ZoneDeJeu(Canvas):
         for i in systemes:
             self.dessinerImage("systeme3", systemes[i].x, systemes[i].y, systemes[i].id)
         
-    def nouveauVaisseau(self, vaisseau, joueur = ""):
+    def nouveauVaisseau(self, vaisseau, proprietaire = 1, reference = 0):
         x = vaisseau.x
         y = vaisseau.y
         l = self.baseUnites #largeur des unites
@@ -355,13 +357,14 @@ class ZoneDeJeu(Canvas):
         elif(vaisseau.classe == "drone"):
             vaisseau = self.create_oval(x-l, y-l, x+l, y+l, fill=self.parent.bleu, tags=vaisseau.id)
         
-        #self.tag_raise(vaisseau, self.systemeReference)
+        if reference:
+            self.referenceProfondeur = vaisseau
+        elif self.referenceProfondeur:
+            if proprietaire:
+                self.tag_raise(vaisseau, self.referenceProfondeur)
+            else:
+                self.tag_lower(vaisseau, self.referenceProfondeur)
 
-    def creerVaisseau(self, event):
-        x = self.canvasx(event.x)
-        y = self.canvasy(event.y)
-        self.parent.parent.creerVaisseau(x, y)
-        
     def deplacerVaisseau(self, vaisseau):
         x = vaisseau.x
         y = vaisseau.y
