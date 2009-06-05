@@ -10,6 +10,7 @@ import glob, os
 from modele.Vaisseau import Vaisseau
 import tkMessageBox as MBox
 from threading import Timer
+import random
 
 class Vue(object):
     def __init__(self, parent):
@@ -64,27 +65,35 @@ class Vue(object):
 #            r = random.Random()
 #            self.zoneJeu.dessinerImage("systeme3", r.randint(0, 2000), r.randint(0, 2000), "system"+str(i))
     def MenuAction(self,event):
-        if event.widget.cget("text") == "Tech":
-            nomClasse = "Vue.FenetreTech"
-            leFrame = FenetreTech(self)
-            
-        elif event.widget.cget("text") == "Systeme":
-            nomClasse = "Vue.FenetreSysteme"
-            leFrame = FenetreSysteme(self)
-
-        if str(self.fenetreActive.__class__) == nomClasse:
-            self.fenetreActive.grid_forget() 
-            self.fenetreActive = None
         
-        elif self.fenetreActive == None:
-            self.fenetreActive = leFrame
-            self.fenetreActive.grid ( row=0, column=0, rowspan=2)
-
+        if event.widget.cget("state") == "disabled":
+            pass
         else:
-            self.fenetreActive.grid_forget() 
-            self.fenetreActive = None
-            self.fenetreActive = leFrame
-            self.fenetreActive.grid ( row=0, column=0, rowspan=2)
+            if event.widget.cget("text") == "Tech":
+                nomClasse = "Vue.FenetreTech"
+                leFrame = FenetreTech(self)
+                
+            elif event.widget.cget("text") == "Systeme":
+                nomClasse = "Vue.FenetreSysteme"
+                leFrame = FenetreSysteme(self,self.parent.objetSelectionne)
+                
+            elif event.widget.cget("text") == "Gestion Ressource":
+                nomClasse = "Vue.FenetreSysteme"
+                leFrame = FenetreJoueur(self)
+    
+            if str(self.fenetreActive.__class__) == nomClasse:
+                self.fenetreActive.grid_forget() 
+                self.fenetreActive = None
+            
+            elif self.fenetreActive == None:
+                self.fenetreActive = leFrame
+                self.fenetreActive.grid ( row=0, column=0, rowspan=2)
+    
+            else:
+                self.fenetreActive.grid_forget() 
+                self.fenetreActive = None
+                self.fenetreActive = leFrame
+                self.fenetreActive.grid ( row=0, column=0, rowspan=2)
         
 
 
@@ -95,16 +104,19 @@ class MenuBas(Frame):
         #on garde une reference vers la classe parent
         self.parent = parent
 
-        self.nom = Label(self, text="Menu du bas")
+        #self.nom = Label(self, text="Menu du bas")
         
         self.bouton1 = Button(self, text="Tech")
         self.bouton1.bind("<Button-1>", self.parent.MenuAction)
         
         self.bouton2 = Button(self, text="Systeme")
         self.bouton2.bind("<Button-1>", self.parent.MenuAction)
+        self.bouton2.config(state = DISABLED)
         
-        self.bouton3 = Button(self, text="Bouton 3")
-        self.nom.pack(side=LEFT)# test du chat
+        self.bouton3 = Button(self, text="Gestion Ressource")
+        self.bouton3.bind("<Button-1>", self.parent.MenuAction)
+        
+        #self.nom.pack(side=LEFT)# test du chat
         self.bouton1.pack(side=LEFT)
         self.bouton2.pack(side=LEFT)
         self.bouton3.pack(side=LEFT)
@@ -386,12 +398,14 @@ class ZoneDeJeu(Canvas):
         if self.itemSelectionne != None:
             if self.itemSelectionneType == "image":
                 self.delete(self.itemSelectionne)
+                self.parent.menuBas.bouton2.config(state = DISABLED)
             else:
                 self.itemconfigure(self.itemSelectionne, outline="")
                 
         self.itemSelectionne = None
         
         self.parent.parent.objetSelectionne = self.getObjet(x, y)
+        
         self.selectionnerItem(self.find_withtag(self.parent.parent.objetSelectionne))
             
     def cibler(self, event):
@@ -431,6 +445,7 @@ class ZoneDeJeu(Canvas):
             position = self.coords(objet)
             self.itemSelectionneType = "image"
             self.itemSelectionne = self.create_oval(position[0]-self.baseUnites*2, position[1]-self.baseUnites*2, position[0]+self.baseUnites*2, position[1]+self.baseUnites*2, outline=self.parent.blanc)
+            self.parent.menuBas.bouton2.config(state = NORMAL)
 
     def ciblerItem(self, objet):
         type = self.type(objet)
@@ -471,9 +486,9 @@ class ZoneDeJeu(Canvas):
             instance.images[key] = photo
         
     #cette fonction ne sert qu'a simplifier le dessin des images
-    def dessinerImage(self, nom, x, y, tag):
-        if nom in self.images:
-            self.create_image(x, y, image=self.images[nom], tags=tag)
+    def dessinerImage(canvas, nom, x, y, tag):
+        if nom in canvas.images:
+            canvas.create_image(x, y, image=canvas.images[nom], tags=tag)
             return 0
         else:
             return 1
@@ -490,6 +505,9 @@ class ZoneDeJeu(Canvas):
         if self.debug:
             self.debugText = self.create_text(10, 10, text=message, fill="white", anchor=NW)
             
+#################Les menus#############################
+
+
             
 class FenetreTech(Frame):
     def __init__(self, parent):
@@ -535,9 +553,101 @@ class FenetreTech(Frame):
         
         
 class FenetreSysteme(Frame):
+    def __init__(self, parent,systeme):
+        Frame.__init__(self, parent.root,width=200, height=200,background=parent.gris)
+        self.parent = parent
+        self.systeme = systeme
+        print self.systeme
+        self.listeLabelPlanete = {}
+        self.listeLabelSpecialisation = {}
+        self.images = {}
+        self.planeteSelectionne = None
+        self.specialisationSelectionne = None
+        dictionnairePlanete = self.parent.parent.univers.systemes[self.parent.parent.objetSelectionne].planetes
+        dictionnaireSpecialisation = {"Education":"Education", "Militaire":"Militaire"}
+         
+        for planete in dictionnairePlanete:
+            l_planete = Label(self, text=dictionnairePlanete[planete].id,bg=self.parent.gris)
+            l_planete.bind("<Button-1>", self.SelectionnePlanete)
+            l_planete.grid(column=0)
+            self.listeLabelPlanete[planete] = l_planete
+            
+        for specialisation in dictionnaireSpecialisation:
+            l_spec = Button(self, text=specialisation)
+            l_spec.bind("<Button-1>", self.Specialise)
+            l_spec.grid(column=2,sticky=W)
+            self.listeLabelSpecialisation[specialisation] = l_spec 
+         
+
+    
+    def SelectionnePlanete(self,event):
+        if self.planeteSelectionne != None:
+            self.listeLabelPlanete[self.planeteSelectionne].config(bg = self.parent.gris)
+            self.planeteSelectionne = None
+        self.listeLabelPlanete[event.widget.cget("text")].config(bg = self.parent.jaune)
+        self.planeteSelectionne = event.widget.cget("text")
+            
+    def SelectionneSpecialisation(self,event):
+        if self.specialisationSelectionne != None:
+            self.listeLabelSpecialisation[self.specialisationSelectionne].config(bg = self.parent.gris)
+            self.specialisationSelectionne = None     
+        self.listeLabelSpecialisation[event.widget.cget("text")].config(bg = self.parent.rouge)
+        self.specialisationSelectionne = event.widget.cget("text")
+        
+        
+    def Specialise(self,event):
+        self.parent.parent.univers.systemes[self.systeme].planetes[self.planeteSelectionne].specialisation = event.widget.cget("text")
+
+class FenetreJoueur(Frame):
     def __init__(self, parent):
-        Frame.__init__(self, parent.root,width=500, height=400,background=parent.gris)
+        Frame.__init__(self, parent.root,width=200, height=200,background=parent.gris)
         self.parent = parent
         
+        self.l_militaire = Label(self, text="militaire",bg=self.parent.jaune)
+        self.l_militaire.bind("<Button-1>", self.SelectionneDev)
+        self.l_militaire.pack()
         
         
+        self.l_production = Label(self, text="production",bg=self.parent.gris)
+        self.l_production.bind("<Button-1>", self.SelectionneDev)
+        self.l_production.pack()
+        
+        self.l_connaissance = Label(self, text="connaissance",bg=self.parent.gris)
+        self.l_connaissance.bind("<Button-1>", self.SelectionneDev)
+        self.l_connaissance.pack()
+        
+        self.l_economie = Label(self, text="economie",bg=self.parent.gris)
+        self.l_economie.bind("<Button-1>", self.SelectionneDev)
+        self.l_economie.pack()
+        
+        self.l_agriculture = Label(self, text="agriculture",bg=self.parent.gris)
+        self.l_agriculture.bind("<Button-1>", self.SelectionneDev)
+        self.l_agriculture.pack()
+        
+        self.selectionne = "militaire"
+        
+        self.b_plus = Button(self, text="+")#,command=self.Augmente())
+        self.b_plus.bind("<Button-1>", self.ChangePourcentage)
+        self.b_plus.pack()
+        
+        self.b_moins = Button(self, text="-")#,command=self.Diminue())
+        self.b_moins.bind("<Button-1>", self.ChangePourcentage)
+        self.b_moins.pack()
+        
+        self.l_pourcentage = Label(self, text=str(self.parent.parent.gestionDev.dev[self.selectionne])+"%",bg=self.parent.gris)
+        self.l_pourcentage.pack()
+     
+     
+    def SelectionneDev(self,event):
+        self.selectionne = None
+        self.selectionne = event.widget.cget("text")
+        self.l_pourcentage.config(text = str(self.parent.parent.gestionDev.dev[self.selectionne])+"%")
+        
+    def ChangePourcentage(self,event):
+        if event.widget.cget("text") == "+":
+            self.parent.parent.gestionDev.dev[self.selectionne] += 1
+            self.parent.parent.gestionDev.total +=1
+        else:
+            self.parent.parent.gestionDev.dev[self.selectionne] -= 1
+            self.parent.parent.gestionDev.total -= 1
+        self.l_pourcentage.config(text = str(self.parent.parent.gestionDev.dev[self.selectionne])+"%")
