@@ -1,5 +1,7 @@
 from modele.Ressources import Ressources
 from modele.Infrastructure import Infrastructure
+from modele.Planete import Planete
+import random
 
 # un systeme stellaire
 # un systeme stellaire a une position fixe 
@@ -17,10 +19,17 @@ class Systeme(object):
         self.ressourcesPotentielles = Ressources(1)
         #les ressources locales au systeme
         self.ressources = Ressources(10).getRessourcesLocales()
-        
+        self.planetes = {}
+        self.creerPlanetes()
         self.infrastructures = []
         
         self.ecouteurs = []
+    
+    
+    def creerPlanetes(self):
+        for i in range (random.randint(0,10)):
+            nom = "p" + self.id +"." + str(len(self.planetes))
+            self.planetes[nom] = Planete(self,nom)
         
     def ajouterInfrastructure(self, infrastructure):
         self.infrastructures.append(infrastructure)
