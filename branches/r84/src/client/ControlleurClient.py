@@ -31,7 +31,7 @@ class Controlleur(object):
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
 
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1))
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), reference = 1)
         self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
         self.player.getVaisseau(2).classe="militaire"
         self.player.getVaisseau(2).vitesse = 10
@@ -51,9 +51,11 @@ class Controlleur(object):
     
     def Action(self, x, y):
         typeDeplacement = "deplacement"
-        if typeDeplacement == "deplacement":  
-            self.player.vaisseaux[self.objetSelectionne].xArrivee = x
-            self.player.vaisseaux[self.objetSelectionne].yArrivee = y
+        if typeDeplacement == "deplacement":
+            self.getVaisseau(self.objetSelectionne).xArrivee = x
+            self.getVaisseau(self.objetSelectionne).yArrivee = y
+#            self.player.vaisseaux[].xArrivee = x
+#            self.player.vaisseaux[self.objetSelectionne].yArrivee = y
         
     def RefreshDeplacement(self):
         debug = ""
@@ -72,7 +74,7 @@ class Controlleur(object):
         top = time.time()
         self.vue.rapportSelection.genererRapport(self.objetSelectionne)
         debug += "rapportSelection: "+str(time.time() - top)+"\n"
-        debug += "Total: "+str(time.time() - debut) 
+        debug += "Total: "+str(time.time() - debut)
         self.vue.zoneJeu.debugMessage(debug)
         #timer de rappel
         self.vue.root.after(100, self.RefreshDeplacement)
@@ -103,7 +105,7 @@ class Controlleur(object):
             
     def getVaisseau(self, idVaisseau):
         for joueur in self.univers.joueurs:
-            if re.search(self.univers.joueurs[joueur].id, idVaisseau):
+            if re.search(self.univers.joueurs[joueur].id+"\d*$", idVaisseau):
                 return self.univers.joueurs[joueur].vaisseaux[idVaisseau]
         return ""
             
@@ -138,7 +140,7 @@ class Controlleur(object):
         for i in range (len(self.univers.joueurs[NomduJoueur].vaisseaux)):
             unVaisseau = self.univers.joueurs[NomduJoueur].getVaisseau(i+1)
             if self.vue.zoneJeu.existe(unVaisseau.id) <= 0:
-                self.vue.zoneJeu.nouveauVaisseau(unVaisseau)
+                self.vue.zoneJeu.nouveauVaisseau(unVaisseau, proprietaire = 0)
             self.vue.zoneJeu.deplacerVaisseau(unVaisseau)
     
     def TypeAction(self,x,y):
@@ -147,11 +149,13 @@ class Controlleur(object):
         self.Action(x,y)
         
     def DecodeMessage(self,listeDesMessages):
-        if len(listeDesMessages) > 0:           
+        if len(listeDesMessages) > 0:       
             for i in listeDesMessages:
                 messageADecoder = listeDesMessages.pop()
                 if (messageADecoder[1] == "vai"):
                     self.univers.joueurs[messageADecoder[0]].vaisseaux = messageADecoder[2]
+                    for i in self.univers.joueurs[messageADecoder[0]].vaisseaux:
+                        self.univers.joueurs[messageADecoder[0]].vaisseaux[i].desecuriser(self.univers.joueurs[messageADecoder[0]])
                     self.RefreshVue(messageADecoder[0])
             
     #nomme un vaisseau, premiere lettre v pour vaisseau + nom du jouer + un id   
@@ -214,7 +218,12 @@ class Controlleur(object):
 
         
     def BoiteConnection(self,nomJoueur,ip,couleur=""):
-        self.nom = nomJoueur
+        if not re.search("\d$", nomJoueur):
+            self.nom = nomJoueur
+        else:
+            self.vue.connexion.erreurConnexion("Le nom de joueur ne doit pas se terminer par un chiffre.")
+            return
+        
         self.ip = ip
         self.couleur = "vert"
         self.vue.demarrerJeu()
