@@ -16,6 +16,7 @@ class Controlleur(object):
         self.serveur = None
         self.univers = None
         self.player = None
+        self.gestionDev = None
         self.objetSelectionne = ""
         self.objetCible = ""
         self.messageADecoder = None
@@ -27,9 +28,8 @@ class Controlleur(object):
         self.serveur = xmlrpclib.Server('http://10.57.70.20:8000')
         self.univers = pickle.loads(self.serveur.ConnecterJoueur(self.nom))
         self.player = self.univers.joueurs[self.nom]
-        
+        self.gestionDev = GestionDev.GestionDev(self)
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
-
         self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
         self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), self.player.couleur, reference = 1)
         self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
