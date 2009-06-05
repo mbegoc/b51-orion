@@ -435,7 +435,7 @@ class ZoneDeJeu(Canvas):
     def ciblerItem(self, objet):
         type = self.type(objet)
         if type == "polygon" or type == "oval" or type == "rectangle":
-            self.itemconfigure(objet, outline=couleur)
+            self.itemconfigure(objet, outline=self.parent.blanc)
             self.itemCibleType = "forme"
             self.itemCible = objet
         elif type == "image":
