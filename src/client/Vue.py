@@ -78,8 +78,8 @@ class Vue(object):
                 leFrame = FenetreSysteme(self,self.parent.objetSelectionne)
                 
             elif event.widget.cget("text") == "Gestion Ressource":
-                nomClasse = "Vue.FenetreSysteme"
-                leFrame = FenetreJoueur(self)
+                nomClasse = "Vue.FenetreGestion"
+                leFrame = FenetreGestion(self)
     
             if str(self.fenetreActive.__class__) == nomClasse:
                 self.fenetreActive.grid_forget() 
@@ -598,31 +598,31 @@ class FenetreSysteme(Frame):
     def Specialise(self,event):
         self.parent.parent.univers.systemes[self.systeme].planetes[self.planeteSelectionne].specialisation = event.widget.cget("text")
 
-class FenetreJoueur(Frame):
+class FenetreGestion(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent.root,width=200, height=200,background=parent.gris)
         self.parent = parent
-        
         self.l_militaire = Label(self, text="militaire",bg=self.parent.jaune)
         self.l_militaire.bind("<Button-1>", self.SelectionneDev)
         self.l_militaire.pack()
-        
-        
         self.l_production = Label(self, text="production",bg=self.parent.gris)
         self.l_production.bind("<Button-1>", self.SelectionneDev)
         self.l_production.pack()
-        
         self.l_connaissance = Label(self, text="connaissance",bg=self.parent.gris)
         self.l_connaissance.bind("<Button-1>", self.SelectionneDev)
         self.l_connaissance.pack()
-        
         self.l_economie = Label(self, text="economie",bg=self.parent.gris)
         self.l_economie.bind("<Button-1>", self.SelectionneDev)
         self.l_economie.pack()
-        
         self.l_agriculture = Label(self, text="agriculture",bg=self.parent.gris)
         self.l_agriculture.bind("<Button-1>", self.SelectionneDev)
         self.l_agriculture.pack()
+        self.dictionnairelabelDev={}
+        self.dictionnairelabelDev ["militaire"]=self.l_militaire
+        self.dictionnairelabelDev ["production"]=self.l_production
+        self.dictionnairelabelDev ["connaissance"]=self.l_connaissance
+        self.dictionnairelabelDev ["agriculture"]=self.l_agriculture
+        self.dictionnairelabelDev ["economie"]=self.l_economie
         
         self.selectionne = "militaire"
         
@@ -639,15 +639,19 @@ class FenetreJoueur(Frame):
      
      
     def SelectionneDev(self,event):
+        self.dictionnairelabelDev[self.selectionne].config(bg = self.parent.gris)
         self.selectionne = None
         self.selectionne = event.widget.cget("text")
         self.l_pourcentage.config(text = str(self.parent.parent.gestionDev.dev[self.selectionne])+"%")
+        self.dictionnairelabelDev[event.widget.cget("text")].config(bg = self.parent.jaune)
         
     def ChangePourcentage(self,event):
         if event.widget.cget("text") == "+":
-            self.parent.parent.gestionDev.dev[self.selectionne] += 1
-            self.parent.parent.gestionDev.total +=1
+            if self.parent.parent.gestionDev.total < 100:
+                self.parent.parent.gestionDev.dev[self.selectionne] += 1
+                self.parent.parent.gestionDev.total +=1
         else:
-            self.parent.parent.gestionDev.dev[self.selectionne] -= 1
-            self.parent.parent.gestionDev.total -= 1
+            if self.parent.parent.gestionDev.dev[self.selectionne] > 0:
+                self.parent.parent.gestionDev.dev[self.selectionne] -= 1
+                self.parent.parent.gestionDev.total -= 1
         self.l_pourcentage.config(text = str(self.parent.parent.gestionDev.dev[self.selectionne])+"%")
