@@ -189,7 +189,11 @@ class Controlleur(object):
         self.chatMsgActuel = self.serveur.receptionMessageChat(-1)
         if self.chatMsgActuel > self.chatMsgNbr:
             '''
-            le rafraichissement de cette methode est tellement rapide que j'ai des problemes car la fonction est rappelee avant que la methode soit terminee. je vais donc changer la valeur de self.chatMsgNbr avant d'entrer dans la boucle pour eviter de demander plusieurs fois le meme message.
+            le rafraichissement de cette methode est tellement rapide que j'ai
+            des problemes car la fonction est rappelee avant que la methode
+            soit terminee. je vais donc changer la valeur de self.chatMsgNbr
+            avant d'entrer dans la boucle pour eviter de demander plusieurs
+            fois le meme message.
             '''
             self.chatLoop = self.chatMsgNbr #evite que la boucle ne soit executee plusieurs fois.
             self.chatMsgNbr = self.chatMsgActuel #incremente message recu en dernier.
