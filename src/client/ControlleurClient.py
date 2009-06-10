@@ -197,7 +197,7 @@ class Controlleur(object):
             #pour savoir si il faut deplacer,attaquer,conquerir...
             self.TypeAction(event)
             
-    #####################################################
+    ###----------------------------------------------------------###
     #debut methodes chat
 
     def distributionMessageChat(self, message):
@@ -224,7 +224,21 @@ class Controlleur(object):
 
 
     #fin methodes chat
-    ###################################################
+    ###----------------------------------------------------------###
+    #debut methodes combat
+
+    def initierCombat(self, attaquant, defenseur):
+        pass
+
+
+
+    #fin methodes combat
+    ###----------------------------------------------------------###
+
+
+
+
+
 
     def VerifierTech(self,nomTech):
        if nomTech in self.player.arbre:
