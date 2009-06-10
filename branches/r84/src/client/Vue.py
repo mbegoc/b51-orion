@@ -447,13 +447,20 @@ class ZoneDeJeu(Canvas):
         suggestion d'un autre endroit pour placer cette fonction, il me ferait
         plaisir de l'entendre :D
         '''
-        #vaisseau ami selectionne
+        #vaisseau ami selectionne ?
         if self.parent.parent.objetSelectionne.rstrip('0123456789') == "v" + self.parent.parent.nom:
-            #vaisseau hostile choisi
-            etiquette = self.gettags("current")[0].rstrip('0123456789')
-            if etiquette[0] == "v":#c'est un vaisseau!
-                if etiquette[1:] != self.parent.parent.nom:#c'est un ennemi!!!
-                    print "ATTAQUE!!!!!!"
+            #vaisseau hostile choisi ?
+            if self.gettags("current") != ():#test tags null
+                etiquette = self.gettags("current")[0]
+                if etiquette[0] == "v":#c'est un vaisseau!
+                    if etiquette[1:].rstrip('0123456789') != self.parent.parent.nom:#c'est un ennemi!!!
+                        print "ATTAQUE!!!!!!"
+                        #stocke les vaisseaux dans des variables
+                        self.attaquant = self.parent.parent.getVaisseau(self.parent.parent.objetSelectionne)
+                        self.defenseur = self.parent.parent.getVaisseau(etiquette)
+                        #a la vitesse ou les vaisseaux se deplacent, je ne vois pas l'utilite
+                        #de calculer la distance avant d'attaquer pour l'instant.
+                        self.parent.parent.initierCombat(self.attaquant, self.defenseur)
 
         #fin de verification de l'attaque
 

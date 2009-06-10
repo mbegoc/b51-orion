@@ -234,14 +234,23 @@ class ControlleurServeur(object):
 
  
 #fin chat
-#################################
+###--------------------------------------------------------------###
+#debut combat
+
+
+    def initierCombat():
+        pass
+
+
+#fin combat
+###--------------------------------------------------------------###
 #fermer serveur
 
     def shutdown(self):
-        leChat.terminer()
+        self.chat.terminer()
 
 #fin fermer serveur
-################################
+###--------------------------------------------------------------###
 
 
 class bootStrap(object):
