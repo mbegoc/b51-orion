@@ -7,7 +7,7 @@ class Planete(object):
         self.infrastructure = None
         
         
-    def developInfraestructure (self):
+    def developInfrastructure (self):
         if self.specialisation == "education":
             self.typeDev=Education
             self.typeDev.developEducation ()
