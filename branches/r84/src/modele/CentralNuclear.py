@@ -8,7 +8,7 @@ class CentralNuclear (Ressource):
         self.isFini = true
         self.infraestructure =Infraestructure ("CentralNuclear")
                   
-    def developEducation (self):
+    def developCentralNuclear (self):
         if self.niveau=="basic":
             self.credit=0
             self.energie=1
@@ -23,17 +23,17 @@ class CentralNuclear (Ressource):
             self.credit=4
             self.energie=16
             calculCentral()
-    def calculEducation (self):
+    def calculCentralNuclear (self):
         self.infraestructure.modificateurRessouces=self.credit
         self.infraestructure.ressourcesEntretien.energie = self.energie
  
-    def evolutionerEducation(self):
+    def evolutionerCentralNuclear(self):
         if(self.isFini):
             self.isFini=false 
             if self.niveau=="basic":
                 self.niveau="mediane"
                 self.isFini=true
-                ObjTimer=threading.Timer(600.0,EvolutionerEducation)
+                ObjTimer=threading.Timer(600.0,EvolutionerCentralNuclear)
                 ObjTimer.start()     
             if self.niveau=="mediane":
                 self.niveau="avance"
