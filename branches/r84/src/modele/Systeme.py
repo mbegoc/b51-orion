@@ -1,7 +1,7 @@
 from modele.Ressources import Ressources
-from modele.Infrastructure import Infrastructure
 from modele.Planete import Planete
 import random
+
 
 # un systeme stellaire
 # un systeme stellaire a une position fixe 
@@ -80,11 +80,15 @@ class Systeme(object):
             
 
     def ajouterOwnerSysteme(self, vaisseau,joueur):
+        print "arrive a ajouterOwner"
         if vaisseau.valideArriveSysteme() :
             self.owner=joueur.id
             joueur.ajouterSysteme(vaisseau.idDestination)
+            print "********"
             print "Le systeme a ete ajoute"
-            return "ok"
+            print "********"
         else:
+            print "********"
             print "Le systeme n'a pas ete ajoute"
-            return "rien"
+            print "********"
+            
