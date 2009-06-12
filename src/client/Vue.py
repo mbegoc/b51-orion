@@ -331,7 +331,7 @@ class ZoneDeJeu(Canvas):
 
         self.referenceProfondeur = 0
                 
-        self.debug = 1#mettre a zero pour desactiver les messages de debugage
+        self.debug = 0#mettre a zero pour desactiver les messages de debugage
         self.debugText = 0
 
         #appel au constructeur de la super classe
