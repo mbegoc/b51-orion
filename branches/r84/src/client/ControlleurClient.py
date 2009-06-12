@@ -5,6 +5,7 @@ import re
 from modele import *
 from Vue import Vue
 import time
+import random
 
 
 class Controlleur(object):
@@ -31,23 +32,29 @@ class Controlleur(object):
         self.gestionDev = GestionDev.GestionDev(self)
         self.vue.zoneJeu.initialiserSystemes(self.univers.systemes)
         
-        self.univers.systemes["s1"].infrastructures.append(Infrastructure.Infrastructure("fdsa"))
-        self.univers.systemes["s1"].infrastructures[0].modificateurRessources.nourriture = 5
-        self.univers.systemes["s1"].infrastructures[0].modificateurRessources.connaissance = 4
-        self.univers.systemes["s1"].infrastructures[0].ressourcesEntretien.energie = 2
-        self.player.systemes.append(self.univers.systemes["s1"])
-        self.univers.systemes["s1"].owner = self.player.id
+#        self.univers.systemes["s1"].infrastructures.append(Infrastructure.Infrastructure("fdsa"))
+#        self.univers.systemes["s1"].infrastructures[0].modificateurRessources.nourriture = 2
+#        self.univers.systemes["s1"].infrastructures[0].modificateurRessources.connaissance = 2
+#        self.univers.systemes["s1"].infrastructures[0].ressourcesEntretien.energie = 2
+#        self.player.systemes.append(self.univers.systemes["s1"])
+#        self.univers.systemes["s1"].owner = self.player.id
 
-        self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), self.player.couleur, reference = 1)
-        self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
-        self.player.getVaisseau(2).classe="militaire"
-        self.player.getVaisseau(2).vitesse = 10
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(2), self.player.couleur)
-        self.player.ajouterVaisseau(150,150,self.BatemeVaisseau())
-        self.player.getVaisseau(3).classe="drone"
-        self.player.getVaisseau(3).vitesse = 20
-        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(3), self.player.couleur)
+#        self.player.ajouterVaisseau(50,50,self.BatemeVaisseau())
+#        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), self.player.couleur, reference = 1)
+#        self.player.ajouterVaisseau(100,100,self.BatemeVaisseau())
+#        self.player.getVaisseau(2).classe="militaire"
+#        self.player.getVaisseau(2).vitesse = 10
+#        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(2), self.player.couleur)
+        systemeId = self.univers.systemes.keys()[random.randint(0, len(self.univers.systemes))]
+        x = random.randint(-100, 101)
+        y = random.randint(-100, 101)
+        test = {}
+        x += self.univers.systemes[systemeId].x
+        y += self.univers.systemes[systemeId].y
+        self.player.ajouterVaisseau(x,y,self.BatemeVaisseau())
+        self.player.getVaisseau(1).classe="drone"
+        self.player.getVaisseau(1).vitesse = 2
+        self.vue.zoneJeu.nouveauVaisseau(self.player.getVaisseau(1), self.player.couleur)
 
         #self.tDeplacement.start()
         self.vue.root.after(100, self.RefreshDeplacement)
