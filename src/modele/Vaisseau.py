@@ -43,10 +43,12 @@ class Vaisseau(object):
 
 
     def valideArriveSysteme(self): 
-        if self.x==self.xArrivee and self.y==self.yArrivee and self.parent.parent.systeme[self.idDestination]:
-            return true
+        if self.x==self.xArrivee and self.y==self.yArrivee and self.parent.parent.systemes[self.idDestination]:
+            print "here 1"
+            return 1
         else:
-            return false 
+            print "here 2"
+            return 0 
         
     def deplacer(self):
         self.ressourcesPropulsion.consommer(self.ressourcesEntretien)
@@ -95,8 +97,16 @@ class Vaisseau(object):
             else:
                 #on genere un evenement car le vaisseau n'a plus suffisamment de ressources pour se deplacer
                 self.genererEvent("Panne", "Ressources insuffisantes pour se deplacer")
-    '''    else:
-            self.parent.parent.systeme.ajouterOwnerSysteme(self,self.parent)'''
+        else: 
+            for id in self.parent.parent.systemes:    
+                if self.parent.parent.systemes[id].x == self.xArrivee and self.parent.parent.systemes[id].y == self.yArrivee:
+                        self.idDestination=id
+            if self.idDestination != "":       
+                print "*****"
+                print "test arrive "
+                print self.idDestination
+                self.parent.parent.systemes[self.idDestination].ajouterOwnerSysteme(self,self.parent)
+
     ''' GESTION DES EVENEMENTS '''
     #ajout des ecouteurs sur l'objet
     def addVaisseauListener(self, ecouteur):
