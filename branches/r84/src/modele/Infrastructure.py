@@ -1,4 +1,5 @@
 from modele.Ressources import Ressources
+from modele.Joueur import Joueur
 
 class Infrastructure(object):
     def __init__(self, type):
@@ -18,4 +19,8 @@ class Infrastructure(object):
         '''cette fonction va retourner une unite (vaisseau, disciple...)
         en fonction du type d'infrastructure'''
         pass
-             
+     
+        '''infraestructures a creer: farme : nourriture, extracteur : gaz - metaux,  Centres de etudes: (Universite, cegep, ecoles) connaissance'''
+        '''central nucleaire: energie, machine specifique: production'''
+
+        
