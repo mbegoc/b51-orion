@@ -28,7 +28,7 @@ class ControlleurServeur(object):
 
         self.listeJoueurs=[]
         self.listeJoueursEliminer=[]
-        self.localTimer=Timer(10,self.compteurTimer)
+        self.localTimer=Timer(1,self.compteurTimer)
         self.localTimer.start()              
 
         #Attention: TESTS A REGARDER POUR AJOUTER QQCH DE SIMILAIRE DANS CONTROLLEUR_CLIENT!!!!!!!
@@ -148,13 +148,13 @@ class ControlleurServeur(object):
         return tempReponse
     
     def compteurTimer(self):
-        self.localTimer=Timer(10,self.compteurTimer)
+        self.localTimer=Timer(1,self.compteurTimer)
         self.localTimer.start()   
         for s in self.listeJoueursEliminer:
             self.listeJoueursEliminer.remove(s)
         for s in self.univers.joueurs:
             self.univers.joueurs[s].timeout=self.univers.joueurs[s].timeout+1
-            if self.univers.joueurs[s].timeout>3: # 30 secondes!!
+            if self.univers.joueurs[s].timeout>10: # 10 secondes!!
                 self.listeJoueursEliminer.append(s)
                 print "JOUEUR A DECONNECTER: ",
                 print s
@@ -165,7 +165,7 @@ class ControlleurServeur(object):
         self.univers.joueurs[nom].vaisseaux=pickle.loads(messVaisseaux)
         self.chercheMessagesAEffacer(nom,"vai")
         self.MiseAJourMessage(nom,"vai", self.univers.joueurs[nom].vaisseaux)
-        print "Mise a jour des vaisseaux: "
+        #print "Mise a jour des vaisseaux: "
         #print messVaisseaux
         return "ok"
 
@@ -173,7 +173,7 @@ class ControlleurServeur(object):
         for s in self.univers.joueurs:
             if(s <> nom):
                 for tempMessage in self.univers.joueurs[s].message:
-                    print "messageAEffacer???????????????",
+                    #print "messageAEffacer???????????????",
                     print tempMessage
                     if tempMessage[0]==nom and tempMessage[1]=="vai":
                         self.univers.joueurs[s].message.remove(tempMessage)
@@ -184,7 +184,7 @@ class ControlleurServeur(object):
                 self.univers.joueurs[s].message.append([nom, codMess, obj])
                 
     def checkNouveauxJoueurs(self, listeNomsJoueurs):
-        print "Dans checkNouveauxJoueurs"
+        #print "Dans checkNouveauxJoueurs"
         #self.listeJoueurs=listeJoueurs
         for s in self.listeJoueurs:
             self.listeJoueurs.remove(s)
@@ -204,6 +204,7 @@ class ControlleurServeur(object):
                     
     def requeteClient(self, nom):
         print "Dans requeteClient......"
+        self.univers.joueurs[nom].timeout=0
         if(self.univers.joueurs[nom].message):
             return pickle.dumps(self.univers.joueurs[nom].message)
         else:
