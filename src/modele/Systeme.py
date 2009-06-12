@@ -18,7 +18,7 @@ class Systeme(object):
         #ressources potentiellement produites dans un systeme
         self.ressourcesPotentielles = Ressources(1)
         #les ressources locales au systeme
-        self.ressources = Ressources(10).getRessourcesLocales()
+        self.ressources = Ressources(0).getRessourcesLocales()
         self.planetes = {}
         self.creerPlanetes()
         self.infrastructures = []
