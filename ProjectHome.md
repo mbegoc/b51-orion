@@ -1,0 +1,1 @@
+Jeu développé dans le cadre d'un projet des étudiants au cvm (Cégep du Vieux Montréal) inspiré de Master of Orion
